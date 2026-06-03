@@ -1,0 +1,56 @@
+{
+  "nav": {
+    "solutions": "Solutions",
+    "licences": "Licences",
+    "api": "API",
+    "contact": "Contact",
+    "cta": "Commencer"
+  },
+  "hero": {
+    "badge": "Agrégateur licencié · RDC · ARPTC",
+    "title": "Paiements mobiles unifiés pour la RDC",
+    "subtitle": "UniPay Congo connecte votre application à tous les réseaux Mobile Money de la République Démocratique du Congo en une seule intégration sécurisée.",
+    "cta_primary": "Démarrer l'intégration",
+    "cta_secondary": "Voir la documentation"
+  },
+  "stats": {
+    "population": "100M+",
+    "population_label": "Population RDC",
+    "networks": "5",
+    "networks_label": "Réseaux Mobile Money",
+    "since": "2016",
+    "since_label": "Licencié depuis"
+  },
+  "features": {
+    "title": "Tout ce dont vous avez besoin",
+    "subtitle": "Une infrastructure de paiement complète pour intégrer les paiements mobiles en RDC",
+    "f1_title": "API Unifiée",
+    "f1_desc": "Connectez-vous à tous les réseaux Mobile Money en un seul appel API REST bien documenté.",
+    "f2_title": "Sécurité bancaire",
+    "f2_desc": "Chiffrement de bout en bout et conformité totale aux normes réglementaires ARPTC.",
+    "f3_title": "Tableau de bord",
+    "f3_desc": "Suivez et gérez vos transactions en temps réel depuis votre espace opérateur.",
+    "f4_title": "Rapports avancés",
+    "f4_desc": "Exportez vos données financières et analysez vos performances en détail.",
+    "f5_title": "Support 24/7",
+    "f5_desc": "Notre équipe d'experts est disponible en permanence pour vous accompagner.",
+    "f6_title": "Intégration rapide",
+    "f6_desc": "SDK disponibles en JavaScript, PHP, Python et plus encore pour démarrer rapidement."
+  },
+  "license": {
+    "label": "Opérateur licencié",
+    "number": "ASVA-ARPTC n°0573/008/Mars/2023",
+    "company": "Congo Gaming Limited S.a.r.l",
+    "description": "UniPay Congo est opéré par Congo Gaming Limited S.a.r.l, dûment licenciée par l'Autorité de Régulation de la Poste et des Télécommunications du Congo (ARPTC)."
+  },
+  "channels": {
+    "title": "Canaux de paiement",
+    "subtitle": "Tous les principaux réseaux Mobile Money de RDC dans une seule plateforme unifiée.",
+    "status_active": "Actif",
+    "status_pending": "En attente"
+  },
+  "footer": {
+    "copyright": "© 2026 UniPay Congo · Congo Gaming Limited S.a.r.l · RCCM CD/KIN/RCCM/16-B-9723",
+    "rights": "Tous droits réservés."
+  }
+}

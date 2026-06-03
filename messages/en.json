@@ -1,0 +1,56 @@
+{
+  "nav": {
+    "solutions": "Solutions",
+    "licences": "Licences",
+    "api": "API",
+    "contact": "Contact",
+    "cta": "Get started"
+  },
+  "hero": {
+    "badge": "Licensed Aggregator · DRC · ARPTC",
+    "title": "Unified mobile payments for the DRC",
+    "subtitle": "UniPay Congo connects your application to all Mobile Money networks in the Democratic Republic of Congo through a single secure integration.",
+    "cta_primary": "Start integrating",
+    "cta_secondary": "View documentation"
+  },
+  "stats": {
+    "population": "100M+",
+    "population_label": "DRC Population",
+    "networks": "5",
+    "networks_label": "Mobile Money Networks",
+    "since": "2016",
+    "since_label": "Licensed since"
+  },
+  "features": {
+    "title": "Everything you need",
+    "subtitle": "A complete payment infrastructure to integrate mobile payments in the DRC",
+    "f1_title": "Unified API",
+    "f1_desc": "Connect to all Mobile Money networks through a single well-documented REST API.",
+    "f2_title": "Bank-grade security",
+    "f2_desc": "End-to-end encryption and full compliance with ARPTC regulatory standards.",
+    "f3_title": "Dashboard",
+    "f3_desc": "Monitor and manage your transactions in real time from your operator space.",
+    "f4_title": "Advanced reports",
+    "f4_desc": "Export your financial data and analyze your performance in detail.",
+    "f5_title": "24/7 Support",
+    "f5_desc": "Our team of experts is available around the clock to assist you.",
+    "f6_title": "Quick integration",
+    "f6_desc": "SDKs available in JavaScript, PHP, Python and more to get started quickly."
+  },
+  "license": {
+    "label": "Licensed operator",
+    "number": "ASVA-ARPTC n°0573/008/Mars/2023",
+    "company": "Congo Gaming Limited S.a.r.l",
+    "description": "UniPay Congo is operated by Congo Gaming Limited S.a.r.l, duly licensed by the Regulatory Authority for Post and Telecommunications of Congo (ARPTC)."
+  },
+  "channels": {
+    "title": "Payment channels",
+    "subtitle": "All major Mobile Money networks in the DRC in a single unified platform.",
+    "status_active": "Active",
+    "status_pending": "Pending"
+  },
+  "footer": {
+    "copyright": "© 2026 UniPay Congo · Congo Gaming Limited S.a.r.l · RCCM CD/KIN/RCCM/16-B-9723",
+    "rights": "All rights reserved."
+  }
+}
