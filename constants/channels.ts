@@ -32,13 +32,6 @@ export const channels: Channel[] = [
     description: 'Airtel DRC',
   },
   {
-    id: 'usdt',
-    name: 'USDT',
-    color: '#26A17B',
-    status: 'pending',
-    description: 'Tether USD',
-  },
-  {
     id: 'afrimoney',
     name: 'Afrimoney',
     color: '#0057A8',
