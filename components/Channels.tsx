@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { channels } from '@/constants/channels';
-import { CheckCircle2, Clock } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 export default function Channels() {
   const t = useTranslations('channels');
@@ -51,19 +51,9 @@ export default function Channels() {
               </p>
 
               {/* Status badge */}
-              <div
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${
-                  channel.status === 'active'
-                    ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
-                    : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
-                }`}
-              >
-                {channel.status === 'active' ? (
-                  <CheckCircle2 size={12} />
-                ) : (
-                  <Clock size={12} />
-                )}
-                {channel.status === 'active' ? t('status_active') : t('status_pending')}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
+                <CheckCircle2 size={12} />
+                {t('status_active')}
               </div>
             </div>
           ))}

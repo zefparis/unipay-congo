@@ -46,7 +46,7 @@
   "channels": {
     "title": "Payment channels",
     "subtitle": "All major Mobile Money networks in the DRC in a single unified platform.",
-    "status_active": "Active",
+    "status_active": "Available",
     "status_pending": "Pending"
   },
   "footer": {

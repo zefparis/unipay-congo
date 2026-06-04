@@ -46,7 +46,7 @@
   "channels": {
     "title": "Canaux de paiement",
     "subtitle": "Tous les principaux réseaux Mobile Money de RDC dans une seule plateforme unifiée.",
-    "status_active": "Actif",
+    "status_active": "Disponible",
     "status_pending": "En attente"
   },
   "footer": {
