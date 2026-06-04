@@ -19,6 +19,20 @@ export const metadata: Metadata = {
   description:
     'Agrégateur de paiements mobiles licencié en République Démocratique du Congo. Intégrez Vodacash, Orange Money, Airtel Money via une seule API.',
   metadataBase: new URL('https://unipaycongo.com'),
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  openGraph: {
+    title: 'UniPay Congo — Paiements mobiles unifiés pour la RDC',
+    description:
+      'Agrégateur de paiements mobiles licencié en RDC. Intégrez Vodacash, Orange Money, Airtel Money via une seule API.',
+    url: 'https://unipaycongo.com',
+    siteName: 'UniPay Congo',
+    images: [{ url: '/logo.png', width: 1500, height: 1000 }],
+    locale: 'fr_CD',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

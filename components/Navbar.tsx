@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useTheme } from 'next-themes';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { Sun, Moon, Menu, X } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Navbar() {
   const t = useTranslations('nav');
@@ -47,13 +48,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-[#1D9E75] flex items-center justify-center shadow-md shadow-[#1D9E75]/30">
-              <span className="text-white font-heading font-bold text-sm leading-none">U</span>
-            </div>
-            <span className="font-heading font-bold text-xl text-gray-900 dark:text-white">
-              UniPay<span className="text-[#1D9E75]">Congo</span>
-            </span>
+          <Link href="/" className="flex items-center flex-shrink-0">
+            <Image src="/logo.png" alt="UniPay Congo" height={40} width={120} priority />
           </Link>
 
           {/* Desktop Nav Links */}
