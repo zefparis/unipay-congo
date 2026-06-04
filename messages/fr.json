@@ -4,7 +4,9 @@
     "licences": "Licences",
     "api": "API",
     "contact": "Contact",
-    "cta": "Commencer"
+    "cta": "Commencer",
+    "dashboard": "Tableau de bord",
+    "logout": "Déconnexion"
   },
   "hero": {
     "badge": "Agrégateur licencié · RDC · ARPTC",
@@ -159,6 +161,99 @@
     "cookies_body": "Ce site utilise des cookies techniques strictement nécessaires au fonctionnement de la plateforme (préférences de langue, maintien de session). Aucun cookie publicitaire ou de traçage tiers n'est déposé sans votre consentement explicite.",
     "dpo_title": "Contact — Délégué à la Protection des Données",
     "dpo_body": "Pour toute question relative à la protection de vos données personnelles, vous pouvez contacter notre DPO à l'adresse : contact@unipaycongo.com. Nous nous engageons à répondre à toute demande dans un délai de 30 jours."
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "subtitle": "Accédez à votre espace marchand UniPay Congo",
+      "email": "Adresse e-mail",
+      "email_placeholder": "vous@entreprise.com",
+      "password": "Mot de passe",
+      "password_placeholder": "••••••••",
+      "submit": "Se connecter",
+      "loading": "Connexion…",
+      "no_account": "Pas encore de compte ?",
+      "register_link": "Créer un compte",
+      "error": "Email ou mot de passe incorrect"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "subtitle": "Rejoignez UniPay Congo et commencez à intégrer",
+      "name": "Nom de l'entreprise",
+      "name_placeholder": "Ma Société S.a.r.l",
+      "email": "Email professionnel",
+      "email_placeholder": "vous@entreprise.com",
+      "password": "Mot de passe",
+      "password_placeholder": "8 caractères minimum",
+      "phone": "Téléphone",
+      "phone_placeholder": "+243 8XX XXX XXX",
+      "country": "Pays",
+      "country_placeholder": "République Démocratique du Congo",
+      "submit": "Créer le compte",
+      "loading": "Création en cours…",
+      "has_account": "Déjà un compte ?",
+      "login_link": "Se connecter",
+      "error": "Erreur lors de la création du compte",
+      "success": "Compte créé avec succès"
+    }
+  },
+  "dashboard": {
+    "nav": {
+      "overview": "Aperçu",
+      "transactions": "Transactions",
+      "api_keys": "Clés API"
+    },
+    "overview": {
+      "title": "Tableau de bord",
+      "balance_title": "Solde disponible",
+      "recent_title": "Transactions récentes",
+      "refresh": "Actualiser",
+      "no_transactions": "Aucune transaction pour le moment",
+      "view_all": "Voir tout"
+    },
+    "transactions": {
+      "title": "Historique des transactions",
+      "date": "Date",
+      "operator": "Opérateur",
+      "direction": "Type",
+      "amount": "Montant",
+      "fee": "Frais",
+      "net": "Net",
+      "status": "Statut",
+      "collect": "Collecte",
+      "payout": "Paiement",
+      "export_csv": "Exporter CSV",
+      "filter_operator": "Opérateur",
+      "filter_direction": "Type",
+      "filter_status": "Statut",
+      "all": "Tous",
+      "no_results": "Aucune transaction trouvée",
+      "page_info": "Page {page} sur {pages} · {total} transactions",
+      "prev": "Précédent",
+      "next": "Suivant"
+    },
+    "api_keys": {
+      "title": "Clés API",
+      "subtitle": "Authentifiez vos requêtes avec votre clé API.",
+      "label": "Clé API",
+      "masked": "Masquée pour votre sécurité",
+      "prefix_hint": "Préfixe : {prefix}…",
+      "generate": "Générer une nouvelle clé",
+      "loading": "Génération…",
+      "copy": "Copier",
+      "copied": "Copié !",
+      "warning_title": "Attention",
+      "warning": "Renouveler votre clé API l'invalidera immédiatement. Toutes les intégrations utilisant l'ancienne clé cesseront de fonctionner.",
+      "new_key_title": "Votre nouvelle clé API",
+      "new_key_note": "Copiez cette clé maintenant. Elle ne sera plus affichée."
+    },
+    "status": {
+      "pending": "En attente",
+      "processing": "En cours",
+      "success": "Succès",
+      "failed": "Échoué",
+      "cancelled": "Annulé"
+    }
   },
   "terms": {
     "badge": "Conditions d'utilisation",

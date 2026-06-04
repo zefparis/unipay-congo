@@ -4,7 +4,9 @@
     "licences": "Licences",
     "api": "API",
     "contact": "Contact",
-    "cta": "Get started"
+    "cta": "Get started",
+    "dashboard": "Dashboard",
+    "logout": "Log out"
   },
   "hero": {
     "badge": "Licensed Aggregator · DRC · ARPTC",
@@ -159,6 +161,99 @@
     "cookies_body": "This website uses strictly necessary technical cookies for the operation of the platform (language preferences, session maintenance). No advertising or third-party tracking cookies are placed without your explicit consent.",
     "dpo_title": "Contact — Data Protection Officer",
     "dpo_body": "For any questions regarding the protection of your personal data, you may contact our DPO at: contact@unipaycongo.com. We are committed to responding to any request within 30 days."
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Access your UniPay Congo merchant account",
+      "email": "Email address",
+      "email_placeholder": "you@company.com",
+      "password": "Password",
+      "password_placeholder": "••••••••",
+      "submit": "Sign in",
+      "loading": "Signing in…",
+      "no_account": "Don't have an account?",
+      "register_link": "Create account",
+      "error": "Invalid email or password"
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Join UniPay Congo and start integrating",
+      "name": "Company name",
+      "name_placeholder": "My Company Ltd",
+      "email": "Business email",
+      "email_placeholder": "you@company.com",
+      "password": "Password",
+      "password_placeholder": "8 characters minimum",
+      "phone": "Phone",
+      "phone_placeholder": "+243 8XX XXX XXX",
+      "country": "Country",
+      "country_placeholder": "Democratic Republic of Congo",
+      "submit": "Create account",
+      "loading": "Creating account…",
+      "has_account": "Already have an account?",
+      "login_link": "Sign in",
+      "error": "Error creating account",
+      "success": "Account created successfully"
+    }
+  },
+  "dashboard": {
+    "nav": {
+      "overview": "Overview",
+      "transactions": "Transactions",
+      "api_keys": "API Keys"
+    },
+    "overview": {
+      "title": "Dashboard",
+      "balance_title": "Available balance",
+      "recent_title": "Recent transactions",
+      "refresh": "Refresh",
+      "no_transactions": "No transactions yet",
+      "view_all": "View all"
+    },
+    "transactions": {
+      "title": "Transaction history",
+      "date": "Date",
+      "operator": "Operator",
+      "direction": "Type",
+      "amount": "Amount",
+      "fee": "Fee",
+      "net": "Net",
+      "status": "Status",
+      "collect": "Collection",
+      "payout": "Payout",
+      "export_csv": "Export CSV",
+      "filter_operator": "Operator",
+      "filter_direction": "Type",
+      "filter_status": "Status",
+      "all": "All",
+      "no_results": "No transactions found",
+      "page_info": "Page {page} of {pages} · {total} transactions",
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "api_keys": {
+      "title": "API Keys",
+      "subtitle": "Authenticate your API requests with your key.",
+      "label": "API Key",
+      "masked": "Masked for your security",
+      "prefix_hint": "Prefix: {prefix}…",
+      "generate": "Generate new key",
+      "loading": "Generating…",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "warning_title": "Warning",
+      "warning": "Rotating your API key will immediately invalidate the current one. All integrations using the old key will stop working.",
+      "new_key_title": "Your new API key",
+      "new_key_note": "Copy this key now. It will not be shown again."
+    },
+    "status": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "success": "Success",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    }
   },
   "terms": {
     "badge": "Terms of use",

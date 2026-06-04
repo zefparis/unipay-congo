@@ -3,7 +3,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import Navbar from '@/components/Navbar';
+import NavbarWrapper from '@/components/NavbarWrapper';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -24,7 +24,7 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
   return (
     <NextIntlClientProvider messages={messages}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
-        <Navbar />
+        <NavbarWrapper />
         {children}
       </ThemeProvider>
     </NextIntlClientProvider>

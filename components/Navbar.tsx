@@ -7,7 +7,11 @@ import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { Sun, Moon, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 
-export default function Navbar() {
+interface NavbarProps {
+  isAuthenticated?: boolean;
+}
+
+export default function Navbar({ isAuthenticated = false }: NavbarProps) {
   const t = useTranslations('nav');
   const locale = useLocale();
   const { theme, setTheme } = useTheme();
@@ -16,6 +20,12 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/');
+    router.refresh();
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -35,6 +45,7 @@ export default function Navbar() {
     { href: '#licences', label: t('licences'), isRoute: false },
     { href: '#api', label: t('api'), isRoute: false },
     { href: '/contact', label: t('contact'), isRoute: true },
+    ...(isAuthenticated ? [{ href: '/dashboard', label: t('dashboard'), isRoute: true }] : []),
   ];
 
   return (
@@ -98,13 +109,22 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* CTA Button */}
-            <a
-              href="#contact"
-              className="hidden sm:inline-flex items-center px-4 py-2 rounded-lg bg-[#1D9E75] text-white text-sm font-semibold hover:bg-[#178a65] transition-all duration-200 shadow-sm shadow-[#1D9E75]/20"
-            >
-              {t('cta')}
-            </a>
+            {/* CTA / Logout */}
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="hidden sm:inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-semibold hover:border-red-400 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-400 transition-all duration-200"
+              >
+                {t('logout')}
+              </button>
+            ) : (
+              <a
+                href="#contact"
+                className="hidden sm:inline-flex items-center px-4 py-2 rounded-lg bg-[#1D9E75] text-white text-sm font-semibold hover:bg-[#178a65] transition-all duration-200 shadow-sm shadow-[#1D9E75]/20"
+              >
+                {t('cta')}
+              </a>
+            )}
 
             {/* Mobile Menu Toggle */}
             <button
