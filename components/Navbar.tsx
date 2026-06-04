@@ -31,10 +31,10 @@ export default function Navbar() {
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
   const navLinks = [
-    { href: '#solutions', label: t('solutions') },
-    { href: '#licences', label: t('licences') },
-    { href: '#api', label: t('api') },
-    { href: '#contact', label: t('contact') },
+    { href: '#solutions', label: t('solutions'), isRoute: false },
+    { href: '#licences', label: t('licences'), isRoute: false },
+    { href: '#api', label: t('api'), isRoute: false },
+    { href: '/contact', label: t('contact'), isRoute: true },
   ];
 
   return (
@@ -54,15 +54,25 @@ export default function Navbar() {
 
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors duration-200"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) =>
+              link.isRoute ? (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors duration-200"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors duration-200"
+                >
+                  {link.label}
+                </a>
+              )
+            )}
           </div>
 
           {/* Right Controls */}
@@ -111,16 +121,27 @@ export default function Navbar() {
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
         <div className="md:hidden bg-white dark:bg-[#0a0f1e] border-t border-gray-200 dark:border-gray-800 px-4 py-5 flex flex-col gap-4 shadow-lg">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-[#1D9E75] py-1 transition-colors"
-            >
-              {link.label}
-            </a>
-          ))}
+          {navLinks.map((link) =>
+            link.isRoute ? (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-[#1D9E75] py-1 transition-colors"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-[#1D9E75] py-1 transition-colors"
+              >
+                {link.label}
+              </a>
+            )
+          )}
           <div className="flex items-center gap-3 pt-3 border-t border-gray-100 dark:border-gray-800">
             <button
               onClick={switchLocale}

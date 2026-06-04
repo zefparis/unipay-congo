@@ -52,5 +52,34 @@
   "footer": {
     "copyright": "© 2026 UniPay Congo · Congo Gaming Limited S.a.r.l · RCCM CD/KIN/RCCM/16-B-9723",
     "rights": "Tous droits réservés."
+  },
+  "contact_page": {
+    "hero_badge": "Parlez-nous de votre projet",
+    "hero_title": "Contactez-nous",
+    "hero_subtitle": "Notre équipe est disponible pour répondre à toutes vos questions et vous accompagner dans votre intégration.",
+    "info_title": "Nos coordonnées",
+    "address_label": "Adresse",
+    "address": "195 Avenue Colonel Ebeya, Gombe, Kinshasa, République Démocratique du Congo",
+    "phone_label": "Téléphone",
+    "phone": "+243 891 023 520",
+    "email_label": "E-mail",
+    "email": "contact@unipaycongo.com",
+    "website_label": "Site web",
+    "website": "unipaycongo.com",
+    "form_title": "Envoyez-nous un message",
+    "form_name": "Nom complet",
+    "form_name_placeholder": "Jean Dupont",
+    "form_company": "Entreprise",
+    "form_company_placeholder": "Ma Société S.a.r.l",
+    "form_email": "Adresse e-mail",
+    "form_email_placeholder": "jean@masociete.com",
+    "form_phone": "Téléphone",
+    "form_phone_placeholder": "+243 8XX XXX XXX",
+    "form_message": "Message",
+    "form_message_placeholder": "Décrivez votre projet ou posez votre question...",
+    "form_submit": "Envoyer le message",
+    "form_sending": "Envoi en cours…",
+    "toast_success": "Message envoyé ! Nous vous répondrons sous 24 h.",
+    "map_title": "Notre emplacement"
   }
 }

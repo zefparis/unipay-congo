@@ -52,5 +52,34 @@
   "footer": {
     "copyright": "© 2026 UniPay Congo · Congo Gaming Limited S.a.r.l · RCCM CD/KIN/RCCM/16-B-9723",
     "rights": "All rights reserved."
+  },
+  "contact_page": {
+    "hero_badge": "Tell us about your project",
+    "hero_title": "Contact Us",
+    "hero_subtitle": "Our team is available to answer all your questions and guide you through your integration.",
+    "info_title": "Our contact details",
+    "address_label": "Address",
+    "address": "195 Colonel Ebeya Avenue, Gombe, Kinshasa, Democratic Republic of the Congo",
+    "phone_label": "Phone",
+    "phone": "+243 891 023 520",
+    "email_label": "Email",
+    "email": "contact@unipaycongo.com",
+    "website_label": "Website",
+    "website": "unipaycongo.com",
+    "form_title": "Send us a message",
+    "form_name": "Full name",
+    "form_name_placeholder": "John Smith",
+    "form_company": "Company",
+    "form_company_placeholder": "My Company Ltd",
+    "form_email": "Email address",
+    "form_email_placeholder": "john@mycompany.com",
+    "form_phone": "Phone number",
+    "form_phone_placeholder": "+243 8XX XXX XXX",
+    "form_message": "Message",
+    "form_message_placeholder": "Describe your project or ask your question...",
+    "form_submit": "Send message",
+    "form_sending": "Sending…",
+    "toast_success": "Message sent! We'll get back to you within 24 hours.",
+    "map_title": "Our location"
   }
 }
