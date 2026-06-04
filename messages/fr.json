@@ -5,6 +5,7 @@
     "api": "API",
     "contact": "Contact",
     "cta": "Commencer",
+    "login": "Se connecter",
     "dashboard": "Tableau de bord",
     "logout": "Déconnexion"
   },
@@ -12,8 +13,8 @@
     "badge": "Agrégateur licencié · RDC · ARPTC",
     "title": "Paiements mobiles unifiés pour la RDC",
     "subtitle": "UniPay Congo connecte votre application à tous les réseaux Mobile Money de la République Démocratique du Congo en une seule intégration sécurisée.",
-    "cta_primary": "Démarrer l'intégration",
-    "cta_secondary": "Voir la documentation"
+    "cta_primary": "Créer un compte gratuit",
+    "cta_secondary": "Voir la documentation API"
   },
   "stats": {
     "population": "100M+",

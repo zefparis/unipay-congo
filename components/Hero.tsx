@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { ArrowRight, BookOpen, ShieldCheck } from 'lucide-react';
 
 export default function Hero() {
@@ -45,13 +46,13 @@ export default function Hero() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <a
-                href="#contact"
+              <Link
+                href="/register"
                 className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[#1D9E75] text-white font-semibold text-base hover:bg-[#178a65] transition-all duration-200 shadow-lg shadow-[#1D9E75]/25 hover:shadow-[#1D9E75]/40 hover:-translate-y-0.5"
               >
                 {t('cta_primary')}
                 <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
-              </a>
+              </Link>
               <a
                 href="#api"
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-semibold text-base hover:border-[#1D9E75] hover:text-[#1D9E75] dark:hover:border-[#1D9E75] dark:hover:text-[#1D9E75] transition-all duration-200"

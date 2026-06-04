@@ -118,12 +118,20 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
                 {t('logout')}
               </button>
             ) : (
-              <a
-                href="#contact"
-                className="hidden sm:inline-flex items-center px-4 py-2 rounded-lg bg-[#1D9E75] text-white text-sm font-semibold hover:bg-[#178a65] transition-all duration-200 shadow-sm shadow-[#1D9E75]/20"
-              >
-                {t('cta')}
-              </a>
+              <div className="hidden sm:flex items-center gap-2">
+                <Link
+                  href="/login"
+                  className="inline-flex items-center px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-semibold hover:border-[#1D9E75] hover:text-[#1D9E75] dark:hover:border-[#1D9E75] dark:hover:text-[#1D9E75] transition-all duration-200"
+                >
+                  {t('login')}
+                </Link>
+                <Link
+                  href="/register"
+                  className="inline-flex items-center px-4 py-2 rounded-lg bg-[#1D9E75] text-white text-sm font-semibold hover:bg-[#178a65] transition-all duration-200 shadow-sm shadow-[#1D9E75]/20"
+                >
+                  {t('cta')}
+                </Link>
+              </div>
             )}
 
             {/* Mobile Menu Toggle */}
@@ -169,13 +177,31 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
             >
               {locale === 'fr' ? 'EN' : 'FR'}
             </button>
-            <a
-              href="#contact"
-              onClick={() => setMenuOpen(false)}
-              className="flex-1 text-center px-4 py-2 rounded-lg bg-[#1D9E75] text-white text-sm font-semibold hover:bg-[#178a65] transition-colors"
-            >
-              {t('cta')}
-            </a>
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="flex-1 text-center px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-semibold hover:border-red-400 hover:text-red-500 transition-colors"
+              >
+                {t('logout')}
+              </button>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex-1 text-center px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 text-sm font-semibold hover:border-[#1D9E75] hover:text-[#1D9E75] transition-colors"
+                >
+                  {t('login')}
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex-1 text-center px-4 py-2 rounded-lg bg-[#1D9E75] text-white text-sm font-semibold hover:bg-[#178a65] transition-colors"
+                >
+                  {t('cta')}
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

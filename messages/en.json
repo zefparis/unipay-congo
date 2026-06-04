@@ -5,6 +5,7 @@
     "api": "API",
     "contact": "Contact",
     "cta": "Get started",
+    "login": "Sign in",
     "dashboard": "Dashboard",
     "logout": "Log out"
   },
@@ -12,8 +13,8 @@
     "badge": "Licensed Aggregator · DRC · ARPTC",
     "title": "Unified mobile payments for the DRC",
     "subtitle": "UniPay Congo connects your application to all Mobile Money networks in the Democratic Republic of Congo through a single secure integration.",
-    "cta_primary": "Start integrating",
-    "cta_secondary": "View documentation"
+    "cta_primary": "Create a free account",
+    "cta_secondary": "View API documentation"
   },
   "stats": {
     "population": "100M+",
