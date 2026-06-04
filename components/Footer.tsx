@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 export default function Footer() {
   const t = useTranslations('footer');
@@ -39,6 +40,28 @@ export default function Footer() {
               {t('rights')}
             </p>
           </div>
+        </div>
+
+        {/* Legal pages */}
+        <div className="mt-6 pt-5 border-t border-gray-100 dark:border-gray-800 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          <Link
+            href="/legal"
+            className="text-xs text-gray-400 dark:text-gray-500 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors"
+          >
+            {t('legal_link')}
+          </Link>
+          <Link
+            href="/privacy"
+            className="text-xs text-gray-400 dark:text-gray-500 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors"
+          >
+            {t('privacy_link')}
+          </Link>
+          <Link
+            href="/terms"
+            className="text-xs text-gray-400 dark:text-gray-500 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors"
+          >
+            {t('terms_link')}
+          </Link>
         </div>
       </div>
     </footer>
