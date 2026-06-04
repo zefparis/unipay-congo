@@ -71,10 +71,28 @@ export default function LegalLayout({
         </section>
 
         {/* ── Content ──────────────────────────────────────── */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
+
+          {/* Mobile TOC — inline jump list, hidden on lg */}
+          <nav className="lg:hidden mb-8 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-[#0d1420] p-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">{tocLabel}</p>
+            <div className="flex flex-wrap gap-2">
+              {sections.map((s, i) => (
+                <a
+                  key={s.id}
+                  href={`#${s.id}`}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs text-gray-600 dark:text-gray-400 hover:text-[#1D9E75] hover:border-[#1D9E75] transition-colors"
+                >
+                  <span className="text-gray-400 font-mono">{String(i + 1).padStart(2, '0')}</span>
+                  {s.title}
+                </a>
+              ))}
+            </div>
+          </nav>
+
           <div className="lg:grid lg:grid-cols-4 lg:gap-12 lg:items-start">
 
-            {/* TOC — sticky sidebar */}
+            {/* TOC — sticky sidebar, desktop only */}
             <aside className="hidden lg:block lg:col-span-1">
               <div className="sticky top-24 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-[#0d1420] p-6">
                 <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-4">
@@ -103,7 +121,7 @@ export default function LegalLayout({
                 <section
                   key={s.id}
                   id={s.id}
-                  className="scroll-mt-24 py-10 border-b border-gray-100 dark:border-gray-800 last:border-0"
+                  className="scroll-mt-24 py-7 sm:py-10 border-b border-gray-100 dark:border-gray-800 last:border-0"
                 >
                   <div className="flex items-start gap-4">
                     {/* Section number badge */}

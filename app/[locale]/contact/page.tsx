@@ -78,7 +78,7 @@ export default function ContactPage() {
 
             {/* Left: Info card (2/5) */}
             <div className="lg:col-span-2">
-              <div className="h-full rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-[#0d1420] p-8">
+              <div className="h-full rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-[#0d1420] p-5 sm:p-8">
                 <h2 className="text-xl font-heading font-semibold text-gray-900 dark:text-white mb-8">
                   {t('info_title')}
                 </h2>
@@ -120,7 +120,7 @@ export default function ContactPage() {
 
             {/* Right: Form (3/5) */}
             <div className="lg:col-span-3">
-              <div className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-[#0d1420] p-8">
+              <div className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-[#0d1420] p-5 sm:p-8">
                 <h2 className="text-xl font-heading font-semibold text-gray-900 dark:text-white mb-8">
                   {t('form_title')}
                 </h2>

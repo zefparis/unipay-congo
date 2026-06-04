@@ -23,7 +23,7 @@ export default function Channels() {
           {channels.map((channel) => (
             <div
               key={channel.id}
-              className="relative flex flex-col items-center p-7 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0a0f1e] overflow-hidden group hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-xl transition-all duration-300"
+              className="relative flex flex-col items-center p-4 sm:p-7 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0a0f1e] overflow-hidden group hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-xl transition-all duration-300"
             >
               {/* Top color stripe */}
               <div
@@ -33,7 +33,7 @@ export default function Channels() {
 
               {/* Logo avatar */}
               <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 text-2xl font-heading font-bold text-white shadow-lg mt-2"
+                className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-5 text-lg sm:text-2xl font-heading font-bold text-white shadow-lg mt-1 sm:mt-2"
                 style={{
                   backgroundColor: channel.color,
                   boxShadow: `0 8px 24px ${channel.color}40`,

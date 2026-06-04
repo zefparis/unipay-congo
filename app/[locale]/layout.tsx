@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import NavbarWrapper from '@/components/NavbarWrapper';
+import NavbarConditional from '@/components/NavbarConditional';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -24,7 +25,9 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
   return (
     <NextIntlClientProvider messages={messages}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
-        <NavbarWrapper />
+        <NavbarConditional>
+          <NavbarWrapper />
+        </NavbarConditional>
         {children}
       </ThemeProvider>
     </NextIntlClientProvider>
