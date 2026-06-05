@@ -7,7 +7,7 @@ export default function Hero() {
   const t = useTranslations('hero');
 
   return (
-    <section className="relative min-h-[100svh] flex items-center pt-16 overflow-hidden">
+    <section className="relative min-h-screen h-[100svh] flex items-center pt-16 overflow-hidden">
       {/* Background image */}
       <Image
         src="/hero.png"
@@ -18,8 +18,10 @@ export default function Hero() {
         quality={85}
       />
 
-      {/* Dark overlay for text legibility */}
-      <div className="absolute inset-0 bg-black/20" />
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/30" />
+      {/* Bottom gradient so CTA area stays readable */}
+      <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/60 to-transparent" />
 
       {/* Subtle grid texture on top of overlay */}
       <div
@@ -36,18 +38,18 @@ export default function Hero() {
           {/* Left: Text */}
           <div>
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1D9E75]/10 border border-[#1D9E75]/25 text-[#1D9E75] text-sm font-medium mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/40 text-white/90 text-sm font-medium mb-8" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}>
               <ShieldCheck size={15} />
               <span>{t('badge')}</span>
             </div>
 
             {/* Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-white leading-[1.1] tracking-tight mb-6" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-white leading-[1.1] tracking-tight mb-6" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}>
               {t('title')}
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-gray-200 leading-relaxed mb-10 max-w-lg" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
+            <p className="text-lg sm:text-xl text-white leading-relaxed mb-10 max-w-lg" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}>
               {t('subtitle')}
             </p>
 
