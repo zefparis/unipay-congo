@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { ArrowRight, BookOpen, ShieldCheck } from 'lucide-react';
@@ -7,19 +8,25 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/40 to-white dark:from-[#0a0f1e] dark:via-[#0d1a2e] dark:to-[#0a0f1e]" />
+      {/* Background image */}
+      <Image
+        src="/hero.png"
+        alt=""
+        fill
+        className="object-cover object-center"
+        priority
+        quality={85}
+      />
 
-      {/* Decorative blobs */}
-      <div className="absolute top-24 right-[-5%] w-[500px] h-[500px] bg-[#1D9E75]/8 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-12 left-[-5%] w-72 h-72 bg-[#1D9E75]/6 rounded-full blur-3xl pointer-events-none" />
+      {/* Dark overlay for text legibility */}
+      <div className="absolute inset-0 bg-black/55" />
 
-      {/* Grid pattern overlay */}
+      {/* Subtle grid texture on top of overlay */}
       <div
-        className="absolute inset-0 opacity-[0.025] dark:opacity-[0.04]"
+        className="absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage:
-            'linear-gradient(#1D9E75 1px, transparent 1px), linear-gradient(90deg, #1D9E75 1px, transparent 1px)',
+            'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)',
           backgroundSize: '60px 60px',
         }}
       />
@@ -35,12 +42,12 @@ export default function Hero() {
             </div>
 
             {/* Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-gray-900 dark:text-white leading-[1.1] tracking-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-white leading-[1.1] tracking-tight mb-6">
               {t('title')}
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 leading-relaxed mb-10 max-w-lg">
+            <p className="text-lg sm:text-xl text-gray-200 leading-relaxed mb-10 max-w-lg">
               {t('subtitle')}
             </p>
 
@@ -55,7 +62,7 @@ export default function Hero() {
               </Link>
               <a
                 href="#api"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-semibold text-base hover:border-[#1D9E75] hover:text-[#1D9E75] dark:hover:border-[#1D9E75] dark:hover:text-[#1D9E75] transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border-2 border-white/40 text-white font-semibold text-base hover:border-white hover:bg-white/10 transition-all duration-200"
               >
                 <BookOpen size={18} />
                 {t('cta_secondary')}
