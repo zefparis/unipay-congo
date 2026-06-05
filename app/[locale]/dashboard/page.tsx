@@ -93,7 +93,7 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full min-w-[640px] text-sm">
                 <thead>
                   <tr className="border-b border-gray-100 dark:border-gray-800">
                     {['date', 'operator', 'direction', 'amount', 'fee', 'net', 'status'].map((col) => (

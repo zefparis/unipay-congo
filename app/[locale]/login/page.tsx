@@ -49,7 +49,7 @@ export default function LoginPage() {
         </div>
 
         {/* Card */}
-        <div className="bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-8 shadow-xl shadow-black/5 dark:shadow-black/40 backdrop-blur-sm">
+        <div className="bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl shadow-black/5 dark:shadow-black/40 backdrop-blur-sm">
           <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">{t('subtitle')}</p>
 
@@ -106,7 +106,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200 shadow-sm shadow-[#1D9E75]/25"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200 shadow-sm shadow-[#1D9E75]/25"
             >
               {loading && <Loader2 size={16} className="animate-spin" />}
               {loading ? t('loading') : t('submit')}

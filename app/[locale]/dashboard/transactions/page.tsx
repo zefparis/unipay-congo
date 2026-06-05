@@ -83,7 +83,7 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b border-gray-100 dark:border-gray-800">
                   {(['date', 'operator', 'direction', 'amount', 'fee', 'net', 'status'] as const).map((col) => (
@@ -125,7 +125,7 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
 
       {/* Pagination */}
       {pagination.pages > 1 && (
-        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex flex-wrap items-center justify-between gap-y-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
           <span>{t('dashboard.transactions.page_info', { page: pagination.page, pages: pagination.pages, total: pagination.total })}</span>
           <div className="flex items-center gap-2">
             {pagination.page > 1 ? (

@@ -146,7 +146,7 @@ export default function ContactForm() {
 
       {/* Success toast */}
       <div
-        className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-5 py-4 rounded-2xl bg-[#1D9E75] text-white shadow-2xl shadow-[#1D9E75]/30 max-w-sm transition-all duration-500 ${
+        className={`fixed bottom-6 inset-x-4 sm:inset-x-auto sm:right-6 sm:max-w-sm z-[100] flex items-center gap-3 px-5 py-4 rounded-2xl bg-[#1D9E75] text-white shadow-2xl shadow-[#1D9E75]/30 transition-all duration-500 ${
           showToast ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
         role="status"

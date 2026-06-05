@@ -50,7 +50,7 @@ export default function ApiKeysPage() {
           </div>
           <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 ml-13">{t('subtitle')}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 ml-12">{t('subtitle')}</p>
       </div>
 
       {/* Current key indicator */}
@@ -85,7 +85,7 @@ export default function ApiKeysPage() {
               </button>
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#1D9E75] hover:bg-[#178a65] text-white text-xs font-semibold transition-all"
+                className="flex items-center gap-1 px-2.5 py-2 min-h-[36px] rounded-lg bg-[#1D9E75] hover:bg-[#178a65] text-white text-xs font-semibold transition-all"
               >
                 {copied ? <Check size={13} /> : <Copy size={13} />}
                 {copied ? t('copied') : t('copy')}
@@ -126,7 +126,7 @@ export default function ApiKeysPage() {
       <button
         onClick={handleGenerate}
         disabled={loading || (!!newKey && !confirmed)}
-        className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all duration-200 shadow-sm shadow-[#1D9E75]/25"
+        className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all duration-200 shadow-sm shadow-[#1D9E75]/25"
       >
         {loading ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
         {loading ? t('loading') : t('generate')}

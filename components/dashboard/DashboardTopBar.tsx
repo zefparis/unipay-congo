@@ -12,7 +12,7 @@ export default function DashboardTopBar({ onMenuClick }: DashboardTopBarProps) {
       {/* Hamburger */}
       <button
         onClick={onMenuClick}
-        className="p-2 -ml-1 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        className="p-2 -ml-1 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         aria-label="Open navigation"
       >
         <Menu size={22} />
