@@ -62,6 +62,12 @@ export default function Footer() {
           >
             {t('terms_link')}
           </Link>
+          <Link
+            href="/status"
+            className="text-xs text-gray-400 dark:text-gray-500 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors"
+          >
+            {t('status_link')}
+          </Link>
         </div>
       </div>
     </footer>

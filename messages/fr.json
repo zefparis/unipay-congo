@@ -58,7 +58,8 @@
     "rights": "Tous droits réservés.",
     "legal_link": "Mentions légales",
     "privacy_link": "Politique de confidentialité",
-    "terms_link": "CGU"
+    "terms_link": "CGU",
+    "status_link": "Statut des services"
   },
   "contact_page": {
     "hero_badge": "Parlez-nous de votre projet",
@@ -336,6 +337,28 @@
     "faq_5_a": "Créez un compte marchand sur cette page, puis accédez à votre tableau de bord → Clé API. Votre clé est générée instantanément et prête à l'emploi.",
     "cta_title": "Prêt à intégrer les paiements Mobile Money ?",
     "cta_subtitle": "Créez votre compte en 2 minutes. Aucune carte bancaire requise."
+  },
+  "status": {
+    "badge": "Statut en temps réel",
+    "title": "Statut des services",
+    "subtitle": "Statut en direct des réseaux Mobile Money intégrés à l'API UniPay Congo.",
+    "all_operational": "Tous les systèmes opérationnels",
+    "some_issues": "Problèmes détectés sur certains services",
+    "last_updated": "Dernière mise à jour",
+    "refresh": "Actualiser",
+    "auto_refresh": "Actualisation automatique dans",
+    "uptime": "Disponibilité 30j",
+    "col_operator": "Opérateur",
+    "col_status": "Statut",
+    "col_uptime": "Disponibilité",
+    "col_latency": "Latence moy.",
+    "operational": "Opérationnel",
+    "degraded": "Dégradé",
+    "down": "Hors service",
+    "coming_soon": "Bientôt disponible",
+    "incident_none": "Aucun incident en cours",
+    "incident_title": "Incidents récents",
+    "page_info": "Cette page se met à jour automatiquement toutes les 60 secondes."
   },
   "api_doc": {
     "badge": "Référence API",

@@ -58,7 +58,8 @@
     "rights": "All rights reserved.",
     "legal_link": "Legal Notice",
     "privacy_link": "Privacy Policy",
-    "terms_link": "Terms of Use"
+    "terms_link": "Terms of Use",
+    "status_link": "Service Status"
   },
   "contact_page": {
     "hero_badge": "Tell us about your project",
@@ -336,6 +337,28 @@
     "faq_5_a": "Create a merchant account on this page, then go to your dashboard \u2192 API Key. Your key is generated instantly and ready to use.",
     "cta_title": "Ready to integrate Mobile Money payments?",
     "cta_subtitle": "Create your account in 2 minutes. No credit card required."
+  },
+  "status": {
+    "badge": "Real-time status",
+    "title": "Service Status",
+    "subtitle": "Live status of Mobile Money networks integrated with the UniPay Congo API.",
+    "all_operational": "All systems operational",
+    "some_issues": "Issues detected on some services",
+    "last_updated": "Last updated",
+    "refresh": "Refresh",
+    "auto_refresh": "Auto-refresh in",
+    "uptime": "30-day uptime",
+    "col_operator": "Operator",
+    "col_status": "Status",
+    "col_uptime": "Uptime",
+    "col_latency": "Avg. latency",
+    "operational": "Operational",
+    "degraded": "Degraded",
+    "down": "Down",
+    "coming_soon": "Coming soon",
+    "incident_none": "No incidents reported",
+    "incident_title": "Recent incidents",
+    "page_info": "This page refreshes automatically every 60 seconds."
   },
   "api_doc": {
     "badge": "API Reference",
