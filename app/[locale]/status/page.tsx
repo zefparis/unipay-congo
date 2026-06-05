@@ -273,10 +273,11 @@ export default function StatusPage() {
 
         {/* ── Refresh bar ───────────────────────────────────────── */}
         <div className="sticky top-16 z-20 bg-white/90 dark:bg-[#0a0f1e]/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              {t('last_updated')}: <span className="font-mono font-medium text-gray-700 dark:text-gray-300">{formatTime(lastUpdated)}</span>
-              <span className="ml-3 text-gray-400">· {t('auto_refresh')} <span className="font-mono font-medium text-[#1D9E75]">{countdown}s</span></span>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-3">
+            <span className="text-xs text-gray-500 dark:text-gray-400 min-w-0">
+              <span className="hidden sm:inline">{t('last_updated')}: </span>
+              <span className="font-mono font-medium text-gray-700 dark:text-gray-300">{formatTime(lastUpdated)}</span>
+              <span className="ml-2 text-gray-400">· <span className="font-mono font-medium text-[#1D9E75]">{countdown}s</span></span>
             </span>
             <button
               onClick={refresh}

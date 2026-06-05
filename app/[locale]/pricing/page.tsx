@@ -103,7 +103,7 @@ export default function PricingPage() {
               <div className="h-1.5 bg-gradient-to-r from-[#1D9E75] via-[#22b587] to-[#178a65]" />
 
               {/* Plan header */}
-              <div className="px-8 pt-8 pb-6 border-b border-gray-100 dark:border-gray-800">
+              <div className="px-5 sm:px-8 pt-7 sm:pt-8 pb-6 border-b border-gray-100 dark:border-gray-800">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm font-bold text-[#1D9E75] uppercase tracking-widest">{t('plan_name')}</span>
                   <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#1D9E75]/10 text-[#1D9E75] border border-[#1D9E75]/20">
@@ -122,7 +122,7 @@ export default function PricingPage() {
               </div>
 
               {/* Features list */}
-              <div className="px-8 py-6">
+              <div className="px-5 sm:px-8 py-6">
                 <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-6">{t('plan_desc')}</p>
                 <ul className="space-y-3">
                   {features.map((f) => (
@@ -135,7 +135,7 @@ export default function PricingPage() {
               </div>
 
               {/* CTA */}
-              <div className="px-8 pb-8">
+              <div className="px-5 sm:px-8 pb-7 sm:pb-8">
                 <Link
                   href="/register"
                   className="group w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#1D9E75] text-white font-semibold text-base hover:bg-[#178a65] transition-all duration-200 shadow-lg shadow-[#1D9E75]/25 hover:shadow-[#1D9E75]/40 hover:-translate-y-0.5"

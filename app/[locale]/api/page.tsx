@@ -68,7 +68,7 @@ function MethodBadge({ m }: { m: string }) {
 function ParamTable({ params, labels }: { params: Param[]; labels: { field: string; type: string; req: string; desc: string; yes: string; no: string } }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 text-sm">
-      <table className="w-full">
+      <table className="w-full min-w-[480px]">
         <thead>
           <tr className="bg-gray-50 dark:bg-[#0d1420] border-b border-gray-200 dark:border-gray-800">
             {[labels.field, labels.type, labels.req, labels.desc].map(h => (
@@ -79,9 +79,9 @@ function ParamTable({ params, labels }: { params: Param[]; labels: { field: stri
         <tbody>
           {params.map((p, i) => (
             <tr key={i} className="border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
-              <td className="px-4 py-2.5 font-mono text-xs text-[#1D9E75]">{p.field}</td>
-              <td className="px-4 py-2.5 font-mono text-xs text-gray-500 dark:text-gray-400">{p.type}</td>
-              <td className="px-4 py-2.5">
+              <td className="px-4 py-2.5 font-mono text-xs text-[#1D9E75] whitespace-nowrap">{p.field}</td>
+              <td className="px-4 py-2.5 font-mono text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{p.type}</td>
+              <td className="px-4 py-2.5 whitespace-nowrap">
                 <span className={`text-xs font-semibold ${p.req ? 'text-red-500' : 'text-gray-400'}`}>
                   {p.req ? labels.yes : labels.no}
                 </span>
@@ -432,9 +432,9 @@ export default function ApiDocPage() {
   const EndpointTitle = ({ id, label, method, path }: { id: string; label: string; method: string; path: string }) => (
     <div className="scroll-mt-20" id={id}>
       <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white mb-3">{label}</h2>
-      <div className="flex flex-wrap items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1 -mx-0.5 px-0.5">
         <MethodBadge m={method} />
-        <code className="text-sm font-mono text-gray-300 bg-[#0d1117] border border-gray-700/60 px-3 py-1 rounded-lg">
+        <code className="text-sm font-mono text-gray-300 bg-[#0d1117] border border-gray-700/60 px-3 py-1 rounded-lg whitespace-nowrap flex-shrink-0">
           {BASE}{path}
         </code>
         <CopyButton text={`${BASE}${path}`} label={cp} labelDone={cpd} />
@@ -527,7 +527,7 @@ export default function ApiDocPage() {
                   </div>
                   <div className="rounded-xl overflow-hidden border border-gray-700/60 bg-[#0d1117]">
                     <div className="px-4 py-2 bg-[#161b22] border-b border-gray-700/60 text-xs font-mono text-gray-500">Base URL</div>
-                    <pre className="p-4 text-[13px] font-mono text-gray-300 leading-relaxed">{`# Production
+                    <pre className="p-4 text-[13px] font-mono text-gray-300 leading-relaxed overflow-x-auto">{`# Production
 ${BASE}
 
 # All endpoints are prefixed with /v1

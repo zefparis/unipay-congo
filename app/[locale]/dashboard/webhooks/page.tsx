@@ -179,7 +179,7 @@ export default function WebhooksPage() {
           </div>
           <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 ml-13">{t('subtitle')}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 ml-12">{t('subtitle')}</p>
       </div>
 
       {/* ── Status pill ───────────────────────────────────────── */}
@@ -222,7 +222,7 @@ export default function WebhooksPage() {
           </p>
         )}
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={handleSave}
             disabled={saving || !urlInput}
@@ -360,14 +360,14 @@ export default function WebhooksPage() {
                 <button
                   onClick={handleDelete}
                   disabled={deleting}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold disabled:opacity-50 transition-all"
+                  className="flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold disabled:opacity-50 transition-all"
                 >
                   {deleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                   {deleting ? t('deleting') : t('delete_btn')}
                 </button>
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
-                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                  className="px-4 py-2.5 min-h-[44px] rounded-xl border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
                 >
                   Annuler
                 </button>

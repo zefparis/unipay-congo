@@ -154,7 +154,7 @@ export default function AdminPage() {
           <div className="flex items-center gap-2">
             <ShieldCheck size={20} className="text-[#1D9E75]" />
             <h1 className="text-base font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">{t('total', { count: total })}</span>
+            <span className="hidden sm:inline text-xs text-gray-500 dark:text-gray-400 font-mono">{t('total', { count: total })}</span>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -246,7 +246,7 @@ export default function AdminPage() {
                           <button
                             onClick={() => handleApprove(m.id)}
                             disabled={!!isActioning}
-                            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold disabled:opacity-50 transition-all"
+                            className="flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold disabled:opacity-50 transition-all"
                           >
                             {isActioning === 'approving' ? <Loader2 size={12} className="animate-spin" /> : <Check size={12} />}
                             {isActioning === 'approving' ? t('approving') : t('approve')}
@@ -255,7 +255,7 @@ export default function AdminPage() {
                             <button
                               onClick={() => setShowReject((s) => ({ ...s, [m.id]: !s[m.id] }))}
                               disabled={!!isActioning}
-                              className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-red-200 dark:border-red-800/50 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-semibold disabled:opacity-50 transition-all"
+                              className="flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl border border-red-200 dark:border-red-800/50 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-xs font-semibold disabled:opacity-50 transition-all"
                             >
                               <XIcon size={12} />
                               {t('reject')}
@@ -279,14 +279,14 @@ export default function AdminPage() {
                           <button
                             onClick={() => handleReject(m.id)}
                             disabled={!rejectNotes[m.id]?.trim() || !!isActioning}
-                            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white text-xs font-semibold disabled:opacity-50 transition-all"
+                            className="flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-red-500 hover:bg-red-600 text-white text-xs font-semibold disabled:opacity-50 transition-all"
                           >
                             {isActioning === 'rejecting' ? <Loader2 size={12} className="animate-spin" /> : <XIcon size={12} />}
                             {isActioning === 'rejecting' ? t('rejecting') : t('notes_confirm')}
                           </button>
                           <button
                             onClick={() => setShowReject((s) => ({ ...s, [m.id]: false }))}
-                            className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                            className="px-3 py-2.5 min-h-[44px] rounded-xl border border-gray-200 dark:border-gray-700 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
                           >
                             {t('cancel')}
                           </button>

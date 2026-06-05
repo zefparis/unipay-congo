@@ -127,7 +127,7 @@ export default function KycPage() {
           </div>
           <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 ml-13">{t('subtitle')}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 ml-12">{t('subtitle')}</p>
       </div>
 
       {/* ── Status card ───────────────────────────────────────── */}
@@ -213,7 +213,7 @@ export default function KycPage() {
           <button
             onClick={handleSubmit}
             disabled={submitting || !companyName.trim()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm shadow-[#1D9E75]/20"
+            className="flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm shadow-[#1D9E75]/20"
           >
             {submitting ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
             {submitting ? t('submitting') : (data?.kyc_submitted_at ? t('resubmit') : t('submit'))}

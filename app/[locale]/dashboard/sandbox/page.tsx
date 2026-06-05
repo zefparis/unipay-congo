@@ -127,12 +127,12 @@ export default function SandboxPage() {
           </div>
           <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 ml-13">{t('subtitle')}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 ml-12">{t('subtitle')}</p>
       </div>
 
       {/* ── Mode toggle card ──────────────────────────────────── */}
       <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 space-y-4">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">{t('current_mode')}</p>
             <div className="flex items-center gap-2">
@@ -271,7 +271,7 @@ export default function SandboxPage() {
               <span className="ml-auto px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-semibold border border-amber-200 dark:border-amber-800/40">sandbox</span>
             )}
           </div>
-          <pre className="bg-[#0d1117] text-[#e6edf3] text-xs leading-relaxed p-5 overflow-x-auto font-mono">
+          <pre className="bg-[#0d1117] text-[#e6edf3] text-xs leading-relaxed p-5 overflow-x-auto overflow-y-auto max-h-64 font-mono">
             {JSON.stringify(testResult, null, 2)}
           </pre>
         </div>
