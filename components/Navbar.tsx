@@ -43,6 +43,7 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
   const navLinks = [
     { href: '#solutions', label: t('solutions'), isRoute: false },
     { href: '#licences', label: t('licences'), isRoute: false },
+    { href: '/pricing', label: t('pricing'), isRoute: true },
     { href: '/api', label: t('api'), isRoute: true },
     { href: '/contact', label: t('contact'), isRoute: true },
     ...(isAuthenticated ? [{ href: '/dashboard', label: t('dashboard'), isRoute: true }] : []),
