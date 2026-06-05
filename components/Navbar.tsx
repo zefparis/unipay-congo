@@ -61,7 +61,13 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center flex-shrink-0">
-            <Image src="/logo.png" alt="UniPay Congo" height={40} width={120} priority />
+            <Image
+              src={mounted && theme === 'dark' ? '/logodark.png' : '/logo.png'}
+              alt="UniPay Congo"
+              height={40}
+              width={120}
+              priority
+            />
           </Link>
 
           {/* Desktop Nav Links */}
