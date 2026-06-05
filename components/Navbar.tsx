@@ -5,7 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useTheme } from 'next-themes';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { Sun, Moon, Menu, X } from 'lucide-react';
-import Image from 'next/image';
+import NavbarLogo from './NavbarLogo';
 
 interface NavbarProps {
   isAuthenticated?: boolean;
@@ -60,15 +60,7 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center flex-shrink-0">
-            <Image
-              src={mounted && theme === 'dark' ? '/logodark.png' : '/logo.png'}
-              alt="UniPay Congo"
-              height={40}
-              width={120}
-              priority
-            />
-          </Link>
+          <NavbarLogo />
 
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-8">
