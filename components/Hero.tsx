@@ -49,7 +49,7 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/register"
-                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[#1D9E75] text-white font-semibold text-base hover:bg-[#178a65] transition-all duration-200 shadow-lg shadow-[#1D9E75]/25 hover:shadow-[#1D9E75]/40 hover:-translate-y-0.5"
+                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-orange-500/25 backdrop-blur-md border border-orange-400/50 text-white font-semibold text-base hover:bg-orange-500/40 transition-all duration-200"
               >
                 {t('cta_primary')}
                 <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
