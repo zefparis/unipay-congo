@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { ArrowRight, BookOpen, ShieldCheck } from 'lucide-react';
@@ -7,17 +6,10 @@ export default function Hero() {
   const t = useTranslations('hero');
 
   return (
-    <section className="relative min-h-screen h-[100svh] flex items-center pt-16 overflow-hidden">
-      {/* Background image */}
-      <Image
-        src="/hero.png"
-        alt=""
-        fill
-        className="object-cover object-center"
-        priority
-        quality={85}
-      />
-
+    <section
+      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-cover bg-[center_40%] md:bg-center"
+      style={{ backgroundImage: "url('/hero.png')" }}
+    >
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/30" />
       {/* Bottom gradient so CTA area stays readable */}
