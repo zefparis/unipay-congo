@@ -13,7 +13,7 @@ export default function Hero() {
         src="/hero.png"
         alt=""
         fill
-        className="object-cover object-center"
+        className="object-cover object-[65%_center] sm:object-center"
         priority
         quality={85}
       />
