@@ -206,7 +206,8 @@
       "transactions": "Transactions",
       "api_keys": "API Keys",
       "webhooks": "Webhooks",
-      "kyc": "KYC Verification"
+      "kyc": "KYC Verification",
+      "sandbox": "Test Mode"
     },
     "overview": {
       "title": "Dashboard",
@@ -258,6 +259,33 @@
       "success": "Success",
       "failed": "Failed",
       "cancelled": "Cancelled"
+    },
+    "sandbox": {
+      "title": "Test Mode (Sandbox)",
+      "subtitle": "Test your integration without making real transactions.",
+      "mode_live": "Live",
+      "mode_sandbox": "Sandbox",
+      "current_mode": "Current mode",
+      "switch_to_live": "Switch to Live mode",
+      "switch_to_sandbox": "Switch to Sandbox mode",
+      "switching": "Switching\u2026",
+      "live_requires_kyc": "Live mode requires approved KYC. Submit your KYC file first.",
+      "kyc_link": "Submit KYC",
+      "banner_sandbox": "You are in test mode \u2014 no real transactions will be processed.",
+      "banner_live": "Live mode active",
+      "test_form_title": "Test a transaction",
+      "operator_label": "Operator",
+      "phone_label": "Phone number",
+      "phone_placeholder": "+243812345678",
+      "amount_label": "Amount (CDF)",
+      "direction_collect": "Collect (C2B)",
+      "direction_payout": "Payout (B2C)",
+      "run_test": "Run test",
+      "running": "Sending\u2026",
+      "result_title": "Result",
+      "code_title": "Using sandbox via the API",
+      "switch_success_sandbox": "Sandbox mode activated",
+      "switch_success_live": "Live mode activated"
     },
     "kyc": {
       "title": "KYC Verification",
