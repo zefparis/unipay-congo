@@ -204,7 +204,8 @@
     "nav": {
       "overview": "Overview",
       "transactions": "Transactions",
-      "api_keys": "API Keys"
+      "api_keys": "API Keys",
+      "webhooks": "Webhooks"
     },
     "overview": {
       "title": "Dashboard",
@@ -256,6 +257,38 @@
       "success": "Success",
       "failed": "Failed",
       "cancelled": "Cancelled"
+    },
+    "webhooks": {
+      "title": "Webhooks",
+      "subtitle": "Receive real-time notifications when your transaction statuses change.",
+      "status_configured": "Webhook configured",
+      "status_none": "No webhook configured",
+      "url_label": "Webhook URL",
+      "url_placeholder": "https://your-server.com/webhooks/unipay",
+      "url_hint": "Must be a public HTTPS URL",
+      "save": "Save",
+      "saving": "Saving…",
+      "save_success": "Webhook saved successfully",
+      "secret_label": "Signing secret",
+      "secret_hint": "Shown only once — copy it now",
+      "secret_rotate": "Rotate secret",
+      "secret_configured": "Signing secret configured",
+      "secret_none": "No signing secret",
+      "test_btn": "Send test",
+      "test_sending": "Sending…",
+      "test_success": "Test sent — response",
+      "test_error": "Delivery failed",
+      "delete_btn": "Remove webhook",
+      "deleting": "Removing…",
+      "delete_confirm": "Are you sure? This will remove the URL and signing secret.",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "warning_title": "Warning",
+      "warning_secret": "Copy this secret now. It will not be shown again.",
+      "code_title": "Verify the signature in Node.js",
+      "event_label": "Events sent",
+      "event_payment": "payment.status_update — status change",
+      "event_test": "webhook.test — manual test"
     }
   },
   "terms": {

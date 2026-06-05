@@ -204,7 +204,8 @@
     "nav": {
       "overview": "Aperçu",
       "transactions": "Transactions",
-      "api_keys": "Clés API"
+      "api_keys": "Clés API",
+      "webhooks": "Webhooks"
     },
     "overview": {
       "title": "Tableau de bord",
@@ -256,6 +257,38 @@
       "success": "Succès",
       "failed": "Échoué",
       "cancelled": "Annulé"
+    },
+    "webhooks": {
+      "title": "Webhooks",
+      "subtitle": "Recevez des notifications en temps réel lors des changements de statut de vos transactions.",
+      "status_configured": "Webhook configuré",
+      "status_none": "Aucun webhook configuré",
+      "url_label": "URL du webhook",
+      "url_placeholder": "https://votre-serveur.com/webhooks/unipay",
+      "url_hint": "Doit être une URL HTTPS publique",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "save_success": "Webhook enregistré avec succès",
+      "secret_label": "Clé de signature",
+      "secret_hint": "Affichée une seule fois — copiez-la maintenant",
+      "secret_rotate": "Régénérer la clé",
+      "secret_configured": "Clé de signature configurée",
+      "secret_none": "Aucune clé de signature",
+      "test_btn": "Envoyer un test",
+      "test_sending": "Envoi…",
+      "test_success": "Test envoyé — réponse",
+      "test_error": "Échec de l'envoi",
+      "delete_btn": "Supprimer le webhook",
+      "deleting": "Suppression…",
+      "delete_confirm": "Êtes-vous sûr ? Cela supprimera l’URL et la clé de signature.",
+      "copy": "Copier",
+      "copied": "Copié !",
+      "warning_title": "Attention",
+      "warning_secret": "Copiez cette clé maintenant. Elle ne sera plus affichée.",
+      "code_title": "Vérification de la signature en Node.js",
+      "event_label": "Événements envoyés",
+      "event_payment": "payment.status_update — changement de statut",
+      "event_test": "webhook.test — test manuel"
     }
   },
   "terms": {

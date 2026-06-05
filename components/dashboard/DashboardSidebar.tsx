@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { LayoutDashboard, ArrowLeftRight, Key, LogOut, X } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftRight, Key, Webhook, LogOut, X } from 'lucide-react';
 import clsx from 'clsx';
 
 interface DashboardSidebarProps {
@@ -26,6 +26,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose }: Dashbo
     { href: '/dashboard', label: t('dashboard.nav.overview'), icon: LayoutDashboard, exact: true },
     { href: '/dashboard/transactions', label: t('dashboard.nav.transactions'), icon: ArrowLeftRight, exact: false },
     { href: '/dashboard/api-keys', label: t('dashboard.nav.api_keys'), icon: Key, exact: false },
+    { href: '/dashboard/webhooks', label: t('dashboard.nav.webhooks'), icon: Webhook, exact: false },
   ];
 
   const isActive = (href: string, exact: boolean) =>
