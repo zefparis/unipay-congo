@@ -301,5 +301,33 @@
     "droit_body": "These Terms are governed exclusively by the laws of the Democratic Republic of the Congo. Any dispute relating to their interpretation, performance or termination shall be submitted, after an attempt at amicable resolution, to the exclusive jurisdiction of the courts of Kinshasa, Democratic Republic of the Congo.",
     "contact_title": "Contact",
     "contact_body": "For any questions regarding these Terms, you may contact us by email at contact@unipaycongo.com, by phone at +243 891 023 520, or by post at: Congo Gaming Limited S.a.r.l, 195 Colonel Ebeya Avenue, Gombe, Kinshasa, Democratic Republic of the Congo."
+  },
+  "api_doc": {
+    "badge": "API Reference",
+    "title": "API Documentation",
+    "subtitle": "Integrate Mobile Money payments in the DRC in minutes with our secure REST API.",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "on_this_page": "On this page",
+    "mobile_nav": "Go to section…",
+    "request": "Request",
+    "response": "Response",
+    "param_field": "Field",
+    "param_type": "Type",
+    "param_required": "Required",
+    "param_desc": "Description",
+    "required": "Yes",
+    "optional": "No",
+    "s_base_url": "Base URL",
+    "s_auth": "Authentication",
+    "s_collect": "Collect (C2B)",
+    "s_payout": "Payout (B2C)",
+    "s_status": "Transaction Status",
+    "s_balance": "Merchant Balance",
+    "s_history": "History",
+    "s_apikey": "API Key",
+    "s_operators": "Operators",
+    "s_errors": "Error Codes",
+    "s_fees": "Pricing"
   }
 }

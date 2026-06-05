@@ -301,5 +301,33 @@
     "droit_body": "Les présentes CGU sont régies exclusivement par le droit de la République Démocratique du Congo. Tout litige relatif à leur interprétation, leur exécution ou leur résiliation sera soumis, après tentative de règlement amiable, à la compétence exclusive des tribunaux de Kinshasa, République Démocratique du Congo.",
     "contact_title": "Contact",
     "contact_body": "Pour toute question relative aux présentes CGU, vous pouvez nous contacter par e-mail à contact@unipaycongo.com, par téléphone au +243 891 023 520, ou par courrier à l'adresse : Congo Gaming Limited S.a.r.l, 195 Avenue Colonel Ebeya, Gombe, Kinshasa, République Démocratique du Congo."
+  },
+  "api_doc": {
+    "badge": "Référence API",
+    "title": "Documentation API",
+    "subtitle": "Intégrez les paiements Mobile Money en RDC en quelques minutes avec notre API REST sécurisée.",
+    "copy": "Copier",
+    "copied": "Copié !",
+    "on_this_page": "Sur cette page",
+    "mobile_nav": "Aller à la section…",
+    "request": "Requête",
+    "response": "Réponse",
+    "param_field": "Champ",
+    "param_type": "Type",
+    "param_required": "Requis",
+    "param_desc": "Description",
+    "required": "Oui",
+    "optional": "Non",
+    "s_base_url": "URL de Base",
+    "s_auth": "Authentification",
+    "s_collect": "Collecte (C2B)",
+    "s_payout": "Paiement (B2C)",
+    "s_status": "Statut Transaction",
+    "s_balance": "Solde Marchand",
+    "s_history": "Historique",
+    "s_apikey": "Clé API",
+    "s_operators": "Opérateurs",
+    "s_errors": "Codes d'Erreur",
+    "s_fees": "Tarification"
   }
 }
