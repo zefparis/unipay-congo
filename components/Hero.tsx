@@ -7,19 +7,19 @@ export default function Hero() {
   const t = useTranslations('hero');
 
   return (
-    <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
+    <section className="relative min-h-[100svh] flex items-center pt-16 overflow-hidden">
       {/* Background image */}
       <Image
         src="/hero.png"
         alt=""
         fill
-        className="object-cover object-[65%_center] sm:object-center"
+        className="object-cover object-center"
         priority
         quality={85}
       />
 
       {/* Dark overlay for text legibility */}
-      <div className="absolute inset-0 bg-black/55" />
+      <div className="absolute inset-0 bg-black/20" />
 
       {/* Subtle grid texture on top of overlay */}
       <div
@@ -42,12 +42,12 @@ export default function Hero() {
             </div>
 
             {/* Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-white leading-[1.1] tracking-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-white leading-[1.1] tracking-tight mb-6" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
               {t('title')}
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-gray-200 leading-relaxed mb-10 max-w-lg">
+            <p className="text-lg sm:text-xl text-gray-200 leading-relaxed mb-10 max-w-lg" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
               {t('subtitle')}
             </p>
 
