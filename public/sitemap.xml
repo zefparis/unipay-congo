@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.unipaycongo.com/fr</loc><priority>1.0</priority></url>
+  <url><loc>https://www.unipaycongo.com/fr/pricing</loc><priority>0.9</priority></url>
+  <url><loc>https://www.unipaycongo.com/fr/api</loc><priority>0.9</priority></url>
+  <url><loc>https://www.unipaycongo.com/fr/status</loc><priority>0.8</priority></url>
+  <url><loc>https://www.unipaycongo.com/fr/contact</loc><priority>0.7</priority></url>
+  <url><loc>https://www.unipaycongo.com/fr/register</loc><priority>0.8</priority></url>
+  <url><loc>https://www.unipaycongo.com/fr/login</loc><priority>0.6</priority></url>
+  <url><loc>https://www.unipaycongo.com/fr/legal</loc><priority>0.3</priority></url>
+  <url><loc>https://www.unipaycongo.com/fr/privacy</loc><priority>0.3</priority></url>
+  <url><loc>https://www.unipaycongo.com/fr/terms</loc><priority>0.3</priority></url>
+  <url><loc>https://www.unipaycongo.com/en</loc><priority>1.0</priority></url>
+  <url><loc>https://www.unipaycongo.com/en/pricing</loc><priority>0.9</priority></url>
+  <url><loc>https://www.unipaycongo.com/en/api</loc><priority>0.9</priority></url>
+  <url><loc>https://www.unipaycongo.com/en/status</loc><priority>0.8</priority></url>
+  <url><loc>https://www.unipaycongo.com/en/contact</loc><priority>0.7</priority></url>
+  <url><loc>https://www.unipaycongo.com/en/register</loc><priority>0.8</priority></url>
+  <url><loc>https://www.unipaycongo.com/en/legal</loc><priority>0.3</priority></url>
+  <url><loc>https://www.unipaycongo.com/en/privacy</loc><priority>0.3</priority></url>
+  <url><loc>https://www.unipaycongo.com/en/terms</loc><priority>0.3</priority></url>
+</urlset>
