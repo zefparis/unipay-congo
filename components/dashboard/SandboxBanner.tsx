@@ -11,12 +11,16 @@ export default function SandboxBanner() {
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    fetch('/api/merchant/mode')
+    const check = () => fetch('/api/merchant/mode')
       .then((r) => r.ok ? r.json() : null)
       .then((d: { mode?: string } | null) => {
-        if (d?.mode === 'sandbox') setIsSandbox(true);
+        setIsSandbox(d?.mode === 'sandbox');
       })
-      .catch(() => {});
+      .catch((e: unknown) => console.error('[sandbox-banner] mode fetch failed:', e));
+
+    check();
+    const interval = setInterval(check, 30_000);
+    return () => clearInterval(interval);
   }, []);
 
   if (!isSandbox || dismissed) return null;
