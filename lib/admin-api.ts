@@ -85,7 +85,11 @@ export function getStats(): Promise<WalletStats> {
 }
 
 export function getUsers(params: Record<string, string | number | boolean>): Promise<{ data: WalletUser[]; pagination: Pagination }> {
-  const qs = new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)]));
+  const qs = new URLSearchParams(
+    Object.entries(params)
+      .filter(([, v]) => v !== '' && v !== undefined && v !== null)
+      .map(([k, v]) => [k, String(v)]),
+  );
   return get(`${BASE}/users?${qs}`);
 }
 
@@ -106,7 +110,11 @@ export function adjustBalance(wallet_user_id: string, amount: number, reason: st
 }
 
 export function getTransactions(params: Record<string, string | number>): Promise<{ data: WalletTransaction[]; pagination: Pagination }> {
-  const qs = new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)]));
+  const qs = new URLSearchParams(
+    Object.entries(params)
+      .filter(([, v]) => v !== '' && v !== undefined && v !== null)
+      .map(([k, v]) => [k, String(v)]),
+  );
   return get(`${BASE}/transactions?${qs}`);
 }
 

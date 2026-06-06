@@ -48,19 +48,7 @@ export default function AdjustmentsPage() {
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
 
   const [history, setHistory] = useState<(LedgerEntry & { phone?: string })[]>([]);
-  const [histLoading, setHistLoading] = useState(true);
-
-  // Load admin adjustment history
-  useEffect(() => {
-    fetch('/api/admin/wallet/transactions?direction=&status=&limit=20&page=1')
-      .then(() => {})
-      .catch(() => {});
-
-    // Load ledger history for admin adjustments
-    fetch('/api/admin/wallet/users?page=1&limit=1')
-      .then(() => setHistLoading(false))
-      .catch(() => setHistLoading(false));
-  }, []);
+  const [histLoading, setHistLoading] = useState(false);
 
   const handleSearch = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
