@@ -133,6 +133,11 @@ export interface Merchant {
   mode: 'sandbox' | 'live';
   kyc_status: string;
   status: string;
+  company_name: string | null;
+  company_rccm: string | null;
+  company_idnat: string | null;
+  kyc_submitted_at: string | null;
+  kyc_notes: string | null;
 }
 
 export function getMerchants(): Promise<{ data: Merchant[] }> {
@@ -141,4 +146,12 @@ export function getMerchants(): Promise<{ data: Merchant[] }> {
 
 export function setMerchantMode(id: string, mode: 'sandbox' | 'live'): Promise<{ ok: boolean; merchant: Merchant }> {
   return post<{ ok: boolean; merchant: Merchant }>(`${BASE}/merchants/${id}/mode`, { mode });
+}
+
+export function approveKyc(id: string): Promise<{ ok: boolean; merchant: Partial<Merchant> }> {
+  return post<{ ok: boolean; merchant: Partial<Merchant> }>(`${BASE}/merchants/${id}/kyc/approve`);
+}
+
+export function rejectKyc(id: string, notes?: string): Promise<{ ok: boolean; merchant: Partial<Merchant> }> {
+  return post<{ ok: boolean; merchant: Partial<Merchant> }>(`${BASE}/merchants/${id}/kyc/reject`, { notes });
 }

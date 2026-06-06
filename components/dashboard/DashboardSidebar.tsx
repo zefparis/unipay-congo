@@ -54,7 +54,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navItems.map(({ href, label, icon: Icon, exact }) => (
+        {!isAdmin && navItems.map(({ href, label, icon: Icon, exact }) => (
           <Link
             key={href}
             href={href}
