@@ -22,9 +22,9 @@ export interface TransactionsResponse {
 }
 
 export interface BalanceResponse {
-  merchant_id: string;
-  balance_cdf: number;
+  balance: number;
   currency: string;
+  mode: string;
 }
 
 export interface ApiKeyResponse {

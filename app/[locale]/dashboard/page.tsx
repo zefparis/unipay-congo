@@ -13,8 +13,10 @@ const STATUS_STYLES: Record<string, string> = {
   cancelled: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
 };
 
-function fmt(n: number) {
-  return new Intl.NumberFormat('fr-CD', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+function fmt(n: number | undefined | null) {
+  const num = Number(n ?? NaN);
+  if (isNaN(num)) return '—';
+  return new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
 }
 
 function fmtDate(iso: string) {
@@ -66,7 +68,7 @@ export default async function DashboardPage() {
             <span className="text-sm font-medium text-white/70">{t('dashboard.overview.balance_title')}</span>
           </div>
           <div className="text-4xl font-heading font-bold tracking-tight">
-            {balance !== null ? fmt(balance.balance_cdf) : '—'}
+            {balance !== null ? fmt(balance.balance) : '—'}
           </div>
           <div className="text-sm text-white/60 mt-1">{balance?.currency ?? 'CDF'}</div>
         </div>
