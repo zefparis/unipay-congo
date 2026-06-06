@@ -7,17 +7,11 @@ export default function Hero() {
 
   return (
     <section
-      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-cover bg-[center_40%] md:bg-center"
-      style={{ backgroundImage: "url('/hero.png')" }}
+      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-gradient-to-br from-gray-900 via-[#0a1f14] to-gray-900"
     >
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/30" />
-      {/* Bottom gradient so CTA area stays readable */}
-      <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/60 to-transparent" />
-
-      {/* Subtle grid texture on top of overlay */}
+      {/* Subtle grid texture */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.06]"
         style={{
           backgroundImage:
             'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)',
@@ -30,18 +24,18 @@ export default function Hero() {
           {/* Left: Text */}
           <div>
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/40 text-white/90 text-sm font-medium mb-8" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/40 text-white/90 text-sm font-medium mb-8">
               <ShieldCheck size={15} />
               <span>{t('badge')}</span>
             </div>
 
             {/* Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-white leading-[1.1] tracking-tight mb-6" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-white leading-[1.1] tracking-tight mb-6">
               {t('title')}
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-white leading-relaxed mb-10 max-w-lg" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.9)' }}>
+            <p className="text-lg sm:text-xl text-white/80 leading-relaxed mb-10 max-w-lg">
               {t('subtitle')}
             </p>
 
