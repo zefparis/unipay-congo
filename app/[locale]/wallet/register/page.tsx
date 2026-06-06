@@ -19,6 +19,14 @@ export default function WalletRegisterPage() {
     e.preventDefault();
     setError('');
 
+    if (!/^\+?[0-9]{8,15}$/.test(phone)) {
+      setError('Numéro de téléphone invalide. Format attendu : +243XXXXXXXXX');
+      return;
+    }
+    if (pin.length !== 6) {
+      setError('Le PIN doit contenir exactement 6 chiffres.');
+      return;
+    }
     if (pin !== pinConfirm) {
       setError('Les codes PIN ne correspondent pas.');
       return;
@@ -40,6 +48,7 @@ export default function WalletRegisterPage() {
         return;
       }
 
+      localStorage.setItem('wallet_phone', phone);
       router.push(`/${locale}/wallet/login`);
     } catch {
       setError('Erreur réseau, réessayez.');
@@ -87,18 +96,20 @@ export default function WalletRegisterPage() {
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Code PIN (4 à 8 chiffres)
+              Code PIN (6 chiffres)
             </label>
             <input
               type="password"
               value={pin}
-              onChange={(e) => setPin(e.target.value)}
-              placeholder="••••"
-              maxLength={8}
+              onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
+              placeholder="••••••"
+              maxLength={6}
               required
               inputMode="numeric"
-              className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#00A651]"
+              pattern="[0-9]{6}"
+              className="border border-gray-300 rounded-lg px-3 py-3 text-lg tracking-[0.5em] text-center bg-white focus:outline-none focus:ring-2 focus:ring-[#00A651]"
             />
+            <p className="text-xs text-gray-400 text-center">{pin.length}/6 chiffres</p>
           </div>
 
           <div className="flex flex-col gap-1">
@@ -108,12 +119,13 @@ export default function WalletRegisterPage() {
             <input
               type="password"
               value={pinConfirm}
-              onChange={(e) => setPinConfirm(e.target.value)}
-              placeholder="••••"
-              maxLength={8}
+              onChange={(e) => setPinConfirm(e.target.value.replace(/\D/g, '').slice(0, 6))}
+              placeholder="••••••"
+              maxLength={6}
               required
               inputMode="numeric"
-              className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#00A651]"
+              pattern="[0-9]{6}"
+              className="border border-gray-300 rounded-lg px-3 py-3 text-lg tracking-[0.5em] text-center bg-white focus:outline-none focus:ring-2 focus:ring-[#00A651]"
             />
           </div>
 

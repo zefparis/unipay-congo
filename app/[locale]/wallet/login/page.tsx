@@ -16,6 +16,7 @@ export default function WalletLoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    if (pin.length !== 6) { setError('Le PIN doit contenir 6 chiffres.'); return; }
     setLoading(true);
 
     try {
@@ -28,11 +29,13 @@ export default function WalletLoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? 'Connexion échouée');
+        setError(data.error ?? 'Numéro ou PIN incorrect');
         return;
       }
 
+      localStorage.setItem('wallet_phone', phone);
       router.push(`/${locale}/wallet`);
+      router.refresh();
     } catch {
       setError('Erreur réseau, réessayez.');
     } finally {
@@ -71,13 +74,15 @@ export default function WalletLoginPage() {
             <input
               type="password"
               value={pin}
-              onChange={(e) => setPin(e.target.value)}
-              placeholder="••••"
-              maxLength={8}
+              onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
+              placeholder="••••••"
+              maxLength={6}
               required
               inputMode="numeric"
-              className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#00A651]"
+              pattern="[0-9]{6}"
+              className="border border-gray-300 rounded-lg px-3 py-3 text-lg tracking-[0.5em] text-center bg-white focus:outline-none focus:ring-2 focus:ring-[#00A651]"
             />
+            <p className="text-xs text-gray-400 text-center">{pin.length}/6 chiffres</p>
           </div>
 
           {error && (
@@ -89,8 +94,14 @@ export default function WalletLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#00A651] hover:bg-[#008f45] text-white font-semibold py-2.5 rounded-lg transition disabled:opacity-60"
+            className="w-full bg-[#00A651] hover:bg-[#008f45] text-white font-semibold py-3 rounded-xl transition disabled:opacity-60 flex items-center justify-center gap-2"
           >
+            {loading && (
+              <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+            )}
             {loading ? 'Connexion…' : 'Se connecter'}
           </button>
         </form>
