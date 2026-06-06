@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link } from '@/i18n/navigation';
 import {
   Users, ShieldCheck, ArrowDownLeft, ArrowUpRight, ArrowLeftRight,
-  CalendarDays, RefreshCw, Loader2, TrendingUp,
+  CalendarDays, RefreshCw, TrendingUp, Wallet, AlertCircle,
 } from 'lucide-react';
-import { getStats, type WalletStats } from '@/lib/admin-api';
+import { getStats, getAvadaBalance, type WalletStats } from '@/lib/admin-api';
 import clsx from 'clsx';
 
 function fmt(n: number) {
@@ -33,14 +33,19 @@ export default function AdminOverviewPage() {
   const [stats, setStats] = useState<WalletStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [avadaBal, setAvadaBal] = useState<number | null>(null);
+  const [avadaErr, setAvadaErr] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
+    setAvadaErr(false);
     try {
-      setStats(await getStats());
-    } catch (e) {
-      setError((e as Error).message);
+      const [s, ab] = await Promise.allSettled([getStats(), getAvadaBalance()]);
+      if (s.status === 'fulfilled') setStats(s.value);
+      else setError((s.reason as Error).message);
+      if (ab.status === 'fulfilled') setAvadaBal(ab.value.balance);
+      else setAvadaErr(true);
     } finally {
       setLoading(false);
     }
@@ -86,6 +91,43 @@ export default function AdminOverviewPage() {
           {error}
         </div>
       )}
+
+      {/* Avada Pay caisse card */}
+      <div className={clsx(
+        'relative overflow-hidden rounded-2xl p-5 border shadow-sm flex items-center justify-between gap-4',
+        'bg-gradient-to-r from-[#1D9E75]/10 to-emerald-500/5 border-[#1D9E75]/30 dark:border-[#1D9E75]/20',
+      )}>
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-[#1D9E75]/15">
+            <Wallet size={22} className="text-[#1D9E75]" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-[#1D9E75] uppercase tracking-wider mb-0.5">Caisse Avada Pay</p>
+            {loading ? (
+              <div className="h-7 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+            ) : avadaErr ? (
+              <div className="flex items-center gap-1.5 text-sm text-orange-500">
+                <AlertCircle size={14} />
+                <span>Indisponible</span>
+              </div>
+            ) : (
+              <p className="text-2xl font-heading font-bold text-gray-900 dark:text-white">
+                {fmt(avadaBal ?? 0)}
+                <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ml-2">CDF</span>
+              </p>
+            )}
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+              Solde disponible pour créditer les wallets utilisateurs
+            </p>
+          </div>
+        </div>
+        <a
+          href="/fr/dashboard/admin/adjustments"
+          className="flex-shrink-0 px-4 py-2 rounded-xl bg-[#1D9E75] text-white text-xs font-semibold hover:bg-[#17876A] transition-colors"
+        >
+          Créditer un wallet
+        </a>
+      </div>
 
       {/* KPI cards */}
       {loading && !stats ? (
@@ -146,7 +188,7 @@ export default function AdminOverviewPage() {
           { href: '/dashboard/admin/wallet-users', label: 'Wallet Users', icon: Users },
           { href: '/dashboard/admin/transactions', label: 'Transactions', icon: ArrowLeftRight },
           { href: '/dashboard/admin/adjustments', label: 'Ajustements', icon: TrendingUp },
-          { href: '/dashboard/kyc', label: 'KYC Merchants', icon: ShieldCheck },
+          { href: '/dashboard/admin/kyc-merchants', label: 'KYC Merchants', icon: ShieldCheck },
         ].map(({ href, label, icon: Icon }) => (
           <Link
             key={href}
