@@ -121,3 +121,21 @@ export function getTransactions(params: Record<string, string | number>): Promis
 export function searchUserByPhone(phone: string): Promise<{ data: WalletUser[]; pagination: Pagination }> {
   return getUsers({ phone, page: 1, limit: 5 });
 }
+
+export interface Merchant {
+  id: string;
+  name: string | null;
+  email: string;
+  mode: 'sandbox' | 'live';
+  kyc_status: string;
+  status: string;
+  created_at: string;
+}
+
+export function getMerchants(): Promise<{ data: Merchant[] }> {
+  return get<{ data: Merchant[] }>(`${BASE}/merchants`);
+}
+
+export function setMerchantMode(id: string, mode: 'sandbox' | 'live'): Promise<{ ok: boolean; merchant: Merchant }> {
+  return post<{ ok: boolean; merchant: Merchant }>(`${BASE}/merchants/${id}/mode`, { mode });
+}

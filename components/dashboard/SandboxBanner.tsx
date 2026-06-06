@@ -5,12 +5,13 @@ import { useTranslations } from 'next-intl';
 import { FlaskConical, X } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 
-export default function SandboxBanner() {
+export default function SandboxBanner({ isAdmin = false }: { isAdmin?: boolean }) {
   const t = useTranslations('dashboard.sandbox');
   const [isSandbox, setIsSandbox] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
+    if (isAdmin) return;
     const check = () => fetch('/api/merchant/mode')
       .then((r) => r.ok ? r.json() : null)
       .then((d: { mode?: string } | null) => {
@@ -21,9 +22,9 @@ export default function SandboxBanner() {
     check();
     const interval = setInterval(check, 30_000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isAdmin]);
 
-  if (!isSandbox || dismissed) return null;
+  if (isAdmin || !isSandbox || dismissed) return null;
 
   return (
     <div className="w-full bg-amber-400 dark:bg-amber-500/90 text-amber-900 dark:text-amber-950">
