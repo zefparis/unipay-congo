@@ -18,6 +18,19 @@ export default function middleware(request: NextRequest) {
     }
   }
 
+  // Protect /{locale}/dashboard/admin routes — require admin_session cookie
+  // The login page itself is excluded so the user can authenticate
+  if (/^\/(fr|en)\/dashboard\/admin(\/(?!login).*)?$/.test(pathname)) {
+    const adminSession = request.cookies.get('admin_session');
+    const adminSecret = process.env.ADMIN_SECRET ?? '';
+    if (!adminSecret || adminSession?.value !== adminSecret) {
+      const locale = pathname.startsWith('/en/') ? 'en' : 'fr';
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}/dashboard/admin/login`;
+      return NextResponse.redirect(url);
+    }
+  }
+
   // Protect all /{locale}/wallet routes (B2C wallet) — except login & register
   if (/^\/(fr|en)\/wallet(\/.*)?$/.test(pathname)) {
     const isPublicWalletPath = /^\/(fr|en)\/wallet\/(login|register)(\/.*)?$/.test(pathname);

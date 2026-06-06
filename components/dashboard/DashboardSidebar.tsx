@@ -3,15 +3,16 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X, Shield, Users, SlidersHorizontal } from 'lucide-react';
 import clsx from 'clsx';
 
 interface DashboardSidebarProps {
   mobileOpen?: boolean;
   onClose?: () => void;
+  isAdmin?: boolean;
 }
 
-export default function DashboardSidebar({ mobileOpen = false, onClose }: DashboardSidebarProps) {
+export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin = false }: DashboardSidebarProps) {
   const t = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
@@ -21,6 +22,13 @@ export default function DashboardSidebar({ mobileOpen = false, onClose }: Dashbo
     router.push('/');
     router.refresh();
   };
+
+  const adminItems = [
+    { href: '/dashboard/admin', label: 'Vue d\'ensemble', icon: Shield, exact: true },
+    { href: '/dashboard/admin/wallet-users', label: 'Wallet Users', icon: Users, exact: false },
+    { href: '/dashboard/admin/transactions', label: 'Transactions', icon: ArrowLeftRight, exact: false },
+    { href: '/dashboard/admin/adjustments', label: 'Ajustements', icon: SlidersHorizontal, exact: false },
+  ];
 
   const navItems = [
     { href: '/dashboard', label: t('dashboard.nav.overview'), icon: LayoutDashboard, exact: true },
@@ -61,6 +69,32 @@ export default function DashboardSidebar({ mobileOpen = false, onClose }: Dashbo
             {label}
           </Link>
         ))}
+
+        {isAdmin && (
+          <>
+            <div className="pt-4 pb-1 px-3">
+              <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest">
+                Administration Wallet
+              </p>
+            </div>
+            {adminItems.map(({ href, label, icon: Icon, exact }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={onItemClick}
+                className={clsx(
+                  'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
+                  isActive(href, exact)
+                    ? 'bg-purple-500/10 text-purple-600 dark:bg-purple-500/15 dark:text-purple-400'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
+                )}
+              >
+                <Icon size={18} />
+                {label}
+              </Link>
+            ))}
+          </>
+        )}
       </nav>
 
       {/* Logout */}
