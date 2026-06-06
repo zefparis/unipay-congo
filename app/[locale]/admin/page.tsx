@@ -26,7 +26,6 @@ interface Merchant {
 
 type FilterType = 'all' | KycStatus;
 
-const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? '';
 
 const STATUS_CFG: Record<KycStatus, { icon: typeof CheckCircle2; badge: string }> = {
   pending:  { icon: Clock,        badge: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/40' },
@@ -47,6 +46,7 @@ export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
   const [pwInput, setPwInput] = useState('');
   const [pwError, setPwError] = useState('');
+  const [pwLoading, setPwLoading] = useState(false);
 
   /* data */
   const [merchants, setMerchants] = useState<Merchant[]>([]);
@@ -73,12 +73,25 @@ export default function AdminPage() {
     if (authed) load(filter);
   }, [authed, filter, load]);
 
-  const handleLogin = () => {
-    if (!ADMIN_PASSWORD || pwInput === ADMIN_PASSWORD) {
-      setAuthed(true);
-      setPwError('');
-    } else {
-      setPwError(t('wrong_password'));
+  const handleLogin = async () => {
+    setPwLoading(true);
+    setPwError('');
+    try {
+      const res = await fetch('/api/admin/legacy-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwInput }),
+      });
+      if (res.ok) {
+        setAuthed(true);
+      } else {
+        const d = await res.json() as { error?: string };
+        setPwError(d.error ?? t('wrong_password'));
+      }
+    } catch {
+      setPwError('Erreur réseau');
+    } finally {
+      setPwLoading(false);
     }
   };
 
@@ -121,15 +134,17 @@ export default function AdminPage() {
               type="password"
               value={pwInput}
               onChange={(e) => setPwInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+              onKeyDown={(e) => e.key === 'Enter' && void handleLogin()}
               placeholder={t('password_placeholder')}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40 focus:border-[#1D9E75]"
             />
             {pwError && <p className="text-sm text-red-500">{pwError}</p>}
             <button
-              onClick={handleLogin}
-              className="w-full py-3 rounded-xl bg-[#1D9E75] hover:bg-[#178a65] text-white font-semibold text-sm transition-all"
+              onClick={() => void handleLogin()}
+              disabled={pwLoading || !pwInput}
+              className="w-full py-3 rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all flex items-center justify-center gap-2"
             >
+              {pwLoading && <Loader2 size={15} className="animate-spin" />}
               {t('enter')}
             </button>
           </div>
