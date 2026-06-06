@@ -5,10 +5,6 @@ import { ShieldCheck, RefreshCw, CheckCircle2, AlertCircle, FlaskConical, Globe 
 import { getMerchants, setMerchantMode, type Merchant } from '@/lib/admin-api';
 import clsx from 'clsx';
 
-function fmt(iso: string) {
-  return new Date(iso).toLocaleDateString('fr-CD', { day: '2-digit', month: 'short', year: 'numeric' });
-}
-
 const KYC_LABELS: Record<string, string> = {
   pending: 'En attente',
   submitted: 'Soumis',
@@ -115,7 +111,7 @@ export default function KycMerchantsPage() {
             <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b border-gray-100 dark:border-gray-800">
-                  {['Email', 'Nom', 'Mode', 'KYC', 'Statut', 'Créé le', 'Action'].map((col) => (
+                  {['Email', 'Nom', 'Mode', 'KYC', 'Statut', 'Action'].map((col) => (
                     <th key={col} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider whitespace-nowrap">
                       {col}
                     </th>
@@ -152,9 +148,6 @@ export default function KycMerchantsPage() {
                     </td>
                     <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap capitalize">
                       {m.status}
-                    </td>
-                    <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                      {fmt(m.created_at)}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <button

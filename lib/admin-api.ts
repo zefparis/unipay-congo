@@ -129,7 +129,6 @@ export interface Merchant {
   mode: 'sandbox' | 'live';
   kyc_status: string;
   status: string;
-  created_at: string;
 }
 
 export function getMerchants(): Promise<{ data: Merchant[] }> {
