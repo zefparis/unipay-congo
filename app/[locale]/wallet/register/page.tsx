@@ -34,11 +34,13 @@ export default function WalletRegisterPage() {
 
     setLoading(true);
 
+    const cleanPhone = phone.replace(/\s+/g, '').replace(/-/g, '');
+
     try {
       const res = await fetch('/api/wallet/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, full_name: fullName || undefined, pin }),
+        body: JSON.stringify({ phone: cleanPhone, full_name: fullName || undefined, pin }),
       });
 
       const data = await res.json();

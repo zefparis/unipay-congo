@@ -19,11 +19,13 @@ export default function WalletLoginPage() {
     if (pin.length !== 6) { setError('Le PIN doit contenir 6 chiffres.'); return; }
     setLoading(true);
 
+    const cleanPhone = phone.replace(/\s+/g, '').replace(/-/g, '');
+
     try {
       const res = await fetch('/api/wallet/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, pin }),
+        body: JSON.stringify({ phone: cleanPhone, pin }),
       });
 
       const data = await res.json();
