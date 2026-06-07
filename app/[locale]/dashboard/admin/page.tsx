@@ -34,18 +34,18 @@ export default function AdminOverviewPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [avadaBal, setAvadaBal] = useState<number | null>(null);
-  const [avadaErr, setAvadaErr] = useState(false);
+  const [avadaErr, setAvadaErr] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
-    setAvadaErr(false);
+    setAvadaErr('');
     try {
       const [s, ab] = await Promise.allSettled([getStats(), getAvadaBalance()]);
       if (s.status === 'fulfilled') setStats(s.value);
       else setError((s.reason as Error).message);
       if (ab.status === 'fulfilled') setAvadaBal(ab.value.balance);
-      else setAvadaErr(true);
+      else setAvadaErr((ab.reason as Error).message);
     } finally {
       setLoading(false);
     }
@@ -106,9 +106,9 @@ export default function AdminOverviewPage() {
             {loading ? (
               <div className="h-7 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             ) : avadaErr ? (
-              <div className="flex items-center gap-1.5 text-sm text-orange-500">
+              <div className="flex items-center gap-1.5 text-sm text-orange-500 max-w-xl">
                 <AlertCircle size={14} />
-                <span>Indisponible</span>
+                <span>{avadaErr}</span>
               </div>
             ) : (
               <p className="text-2xl font-heading font-bold text-gray-900 dark:text-white">
