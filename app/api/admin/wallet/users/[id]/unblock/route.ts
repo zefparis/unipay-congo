@@ -7,8 +7,17 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
   if (!ADMIN_SECRET) return NextResponse.json({ error: 'Admin not configured' }, { status: 503 });
   const up = await fetch(`${API}/v1/admin/wallet/users/${params.id}/unblock`, {
     method: 'POST',
-    headers: { 'x-admin-secret': ADMIN_SECRET, 'Content-Type': 'application/json' },
+    headers: { 'x-admin-secret': ADMIN_SECRET },
   });
-  const data = await up.json();
+  const text = await up.text();
+  const data = text
+    ? (() => {
+        try {
+          return JSON.parse(text);
+        } catch {
+          return { error: text };
+        }
+      })()
+    : { ok: up.ok };
   return NextResponse.json(data, { status: up.status });
 }
