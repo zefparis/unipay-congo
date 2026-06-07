@@ -102,7 +102,7 @@ export default function AdminOverviewPage() {
             <Wallet size={22} className="text-[#1D9E75]" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-[#1D9E75] uppercase tracking-wider mb-0.5">Caisse Avada Pay</p>
+            <p className="text-xs font-semibold text-[#1D9E75] uppercase tracking-wider mb-0.5">Caisse wallet disponible</p>
             {loading ? (
               <div className="h-7 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             ) : avadaErr ? (
@@ -117,7 +117,7 @@ export default function AdminOverviewPage() {
               </p>
             )}
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-              Solde disponible pour créditer les wallets utilisateurs
+              Solde calculé depuis les dépôts, retraits et ajustements admin
             </p>
           </div>
         </div>
