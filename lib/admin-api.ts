@@ -106,6 +106,10 @@ export function unblockUser(id: string): Promise<{ ok: boolean }> {
   return post(`${BASE}/users/${id}/unblock`);
 }
 
+export function approveUserKyc(id: string): Promise<{ ok: boolean; user: WalletUser }> {
+  return post(`${BASE}/users/${id}/kyc/approve`);
+}
+
 export function adjustBalance(wallet_user_id: string, amount: number, reason: string): Promise<{ ok: boolean; new_balance_cdf: number }> {
   return post(`${BASE}/adjust`, { wallet_user_id, amount, reason });
 }

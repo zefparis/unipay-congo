@@ -8,7 +8,7 @@ import {
   ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Loader2,
   CheckCircle2, XCircle, AlertCircle, Plus, Minus,
 } from 'lucide-react';
-import { getUserDetail, blockUser, unblockUser, adjustBalance, type WalletUser, type WalletTransaction, type LedgerEntry } from '@/lib/admin-api';
+import { getUserDetail, blockUser, unblockUser, adjustBalance, approveUserKyc, type WalletUser, type WalletTransaction, type LedgerEntry } from '@/lib/admin-api';
 import clsx from 'clsx';
 
 function fmt(n: number) {
@@ -59,6 +59,7 @@ export default function WalletUserDetailPage() {
   const [adjustReason, setAdjustReason] = useState('');
   const [adjusting, setAdjusting] = useState(false);
   const [blocking, setBlocking] = useState(false);
+  const [approvingKyc, setApprovingKyc] = useState(false);
 
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
 
@@ -127,6 +128,22 @@ export default function WalletUserDetailPage() {
     }
   };
 
+  const handleApproveKyc = async () => {
+    if (!user) return;
+    setApprovingKyc(true);
+    try {
+      console.log('[wallet-user] approve kyc click', { id, user });
+      const res = await approveUserKyc(id);
+      console.log('[wallet-user] approve kyc response', res);
+      setUser(res.user);
+      showToast('KYC wallet validé', 'success');
+    } catch (e) {
+      showToast((e as Error).message, 'error');
+    } finally {
+      setApprovingKyc(false);
+    }
+  };
+
   const dirIcon = (dir: string) => {
     if (dir === 'collect') return <ArrowDownLeft size={13} className="text-green-500" />;
     if (dir === 'payout') return <ArrowUpRight size={13} className="text-orange-500" />;
@@ -172,6 +189,16 @@ export default function WalletUserDetailPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {user.kyc_level < 1 && (
+              <button
+                onClick={handleApproveKyc}
+                disabled={approvingKyc}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all disabled:opacity-50 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/30"
+              >
+                {approvingKyc ? <Loader2 size={13} className="animate-spin" /> : <ShieldCheck size={13} />}
+                Valider KYC
+              </button>
+            )}
             {user.is_active ? (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
                 <CheckCircle2 size={13} /> Actif
