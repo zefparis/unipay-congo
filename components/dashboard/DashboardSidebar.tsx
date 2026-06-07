@@ -28,6 +28,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
     { href: '/dashboard/admin/wallet-users', label: 'Wallet Users', icon: Users, exact: false },
     { href: '/dashboard/admin/transactions', label: 'Transactions', icon: ArrowLeftRight, exact: false },
     { href: '/dashboard/admin/adjustments', label: 'Ajustements', icon: SlidersHorizontal, exact: false },
+    { href: '/dashboard/admin/wallet-kyc', label: 'KYC Wallet', icon: ShieldCheck, exact: false },
     { href: '/dashboard/admin/kyc-merchants', label: 'KYC Merchants', icon: ShieldCheck, exact: false },
   ];
 

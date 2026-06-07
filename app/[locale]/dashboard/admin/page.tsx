@@ -112,8 +112,8 @@ export default function AdminOverviewPage() {
               </div>
             ) : (
               <p className="text-2xl font-heading font-bold text-gray-900 dark:text-white">
-                {fmt(avadaBal ?? 0)}
-                <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ml-2">CDF</span>
+                {avadaBal === null ? '—' : fmt(avadaBal)}
+                {avadaBal !== null && <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ml-2">CDF</span>}
               </p>
             )}
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">

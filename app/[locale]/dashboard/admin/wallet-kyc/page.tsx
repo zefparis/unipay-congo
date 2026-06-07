@@ -280,7 +280,10 @@ export default function WalletKycPage() {
     try {
       const qs = new URLSearchParams({ page: String(page), limit: '50' });
       if (status) qs.set('status', status);
-      const data = await requestJson<{ data: KycSubmission[]; pagination: Pagination }>(`/api/admin/wallet/kyc?${qs}`);
+      const path = `/api/admin/wallet/kyc?${qs}`;
+      console.log('[wallet-kyc] mount/list fetch', { path, page, status });
+      const data = await requestJson<{ data: KycSubmission[]; pagination: Pagination }>(path);
+      console.log('[wallet-kyc] fetched submissions', { count: data.data.length, pagination: data.pagination });
       setRows(data.data);
       setPagination(data.pagination);
     } catch (e) {

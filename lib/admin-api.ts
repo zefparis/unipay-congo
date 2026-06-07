@@ -81,8 +81,8 @@ export function getStats(): Promise<WalletStats> {
   return get<WalletStats>(`${BASE}/stats`);
 }
 
-export function getAvadaBalance(): Promise<{ balance: number; currency: string }> {
-  return get<{ balance: number; currency: string }>(`${BASE}/avada-balance`);
+export function getAvadaBalance(): Promise<{ balance: number | null; currency: string; error?: string }> {
+  return get<{ balance: number | null; currency: string; error?: string }>(`${BASE}/avada-balance`);
 }
 
 export function getUsers(params: Record<string, string | number | boolean>): Promise<{ data: WalletUser[]; pagination: Pagination }> {
