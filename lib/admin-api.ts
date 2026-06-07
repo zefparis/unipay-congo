@@ -44,8 +44,6 @@ export interface WalletUser {
   created_at: string;
   updated_at: string | null;
   kyc_submitted_at?: string | null;
-  kyc_approved_at?: string | null;
-  kyc_document_urls?: string[] | null;
 }
 
 export interface WalletTransaction {
