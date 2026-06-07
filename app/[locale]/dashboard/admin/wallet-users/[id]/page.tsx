@@ -169,7 +169,6 @@ export default function WalletUserDetailPage() {
                 {user.full_name ?? <span className="text-gray-400 font-normal">Nom inconnu</span>}
               </h1>
               <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{user.phone}</p>
-              {user.email && <p className="text-xs text-gray-400 dark:text-gray-500">{user.email}</p>}
             </div>
           </div>
           <div className="flex items-center gap-2">

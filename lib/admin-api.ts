@@ -37,7 +37,6 @@ export interface WalletUser {
   id: string;
   phone: string;
   full_name: string | null;
-  email: string | null;
   balance_cdf: number;
   kyc_level: number;
   is_active: boolean;
