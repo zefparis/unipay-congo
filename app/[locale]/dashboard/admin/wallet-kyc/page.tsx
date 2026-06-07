@@ -105,6 +105,7 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
   const [error, setError] = useState('');
 
   async function approve() {
+    console.log('[wallet-kyc] approve click modal', { id: submission.id, submission });
     setBusy('approve');
     setError('');
     try {
@@ -118,6 +119,7 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
   }
 
   async function reject() {
+    console.log('[wallet-kyc] reject confirm modal', { id: submission.id, note });
     if (!note.trim()) {
       setError('Le motif est obligatoire');
       return;
@@ -254,8 +256,10 @@ function Info({ label, value, mono }: { label: string; value: string; mono?: boo
 }
 
 async function requestJson<T>(path: string, options?: RequestInit): Promise<T> {
+  console.log('[wallet-kyc] request', { method: options?.method ?? 'GET', path });
   const res = await fetch(path, { ...options, cache: 'no-store' });
   const data = await res.json().catch(() => ({}));
+  console.log('[wallet-kyc] response', { method: options?.method ?? 'GET', path, status: res.status, data });
   if (!res.ok) throw new Error((data as { error?: string }).error ?? `HTTP ${res.status}`);
   return data as T;
 }
@@ -289,14 +293,20 @@ export default function WalletKycPage() {
   useEffect(() => { void load(); }, [load]);
 
   async function approve(id: string) {
-    await requestJson<{ ok: boolean }>(`/api/admin/wallet/kyc/${id}/approve`, { method: 'POST' });
+    console.log('[wallet-kyc] approve click', { id });
+    if (!id) throw new Error('KYC submission id is missing');
+    const path = `/api/admin/wallet/kyc/${id}/approve`;
+    await requestJson<{ ok: boolean }>(path, { method: 'POST' });
     setRows((prev) => prev.map((row) => row.id === id ? { ...row, status: 'approved', reviewer_note: null } : row));
     setSelected((prev) => prev?.id === id ? { ...prev, status: 'approved', reviewer_note: null } : prev);
     setToast({ msg: 'Soumission KYC approuvée', type: 'success' });
   }
 
   async function reject(id: string, note: string) {
-    await requestJson<{ ok: boolean }>(`/api/admin/wallet/kyc/${id}/reject`, {
+    console.log('[wallet-kyc] reject submit', { id, note });
+    if (!id) throw new Error('KYC submission id is missing');
+    const path = `/api/admin/wallet/kyc/${id}/reject`;
+    await requestJson<{ ok: boolean }>(path, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ note }),
@@ -381,10 +391,10 @@ export default function WalletKycPage() {
                         <button onClick={() => setSelected(row)} className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1 text-xs font-medium text-gray-600 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800">
                           <Eye size={12} /> Voir
                         </button>
-                        <button onClick={() => approve(row.id)} disabled={row.status === 'approved'} className="inline-flex items-center gap-1 rounded-lg border border-emerald-200 px-2.5 py-1 text-xs font-medium text-emerald-600 transition hover:bg-emerald-50 disabled:opacity-40 dark:border-emerald-800/50 dark:text-emerald-400 dark:hover:bg-emerald-900/20">
+                        <button onClick={() => { console.log('[wallet-kyc] approve row button', { id: row.id, row }); void approve(row.id); }} disabled={row.status === 'approved'} className="inline-flex items-center gap-1 rounded-lg border border-emerald-200 px-2.5 py-1 text-xs font-medium text-emerald-600 transition hover:bg-emerald-50 disabled:opacity-40 dark:border-emerald-800/50 dark:text-emerald-400 dark:hover:bg-emerald-900/20">
                           <CheckCircle2 size={12} /> Approuver
                         </button>
-                        <button onClick={() => setSelected(row)} disabled={row.status === 'rejected'} className="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2.5 py-1 text-xs font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-40 dark:border-red-800/50 dark:text-red-400 dark:hover:bg-red-900/20">
+                        <button onClick={() => { console.log('[wallet-kyc] reject row button', { id: row.id, row }); setSelected(row); }} disabled={row.status === 'rejected'} className="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2.5 py-1 text-xs font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-40 dark:border-red-800/50 dark:text-red-400 dark:hover:bg-red-900/20">
                           <XCircle size={12} /> Rejeter
                         </button>
                       </div>
