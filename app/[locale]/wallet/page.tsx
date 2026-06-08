@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowDownCircle, ArrowUpCircle, ArrowLeftRight, QrCode } from 'lucide-react';
+import { ArrowDownCircle, ArrowUpCircle, ArrowLeftRight, Repeat2 } from 'lucide-react';
 
 interface Tx {
   id: string;
@@ -41,8 +41,9 @@ export default function WalletHomePage() {
   const router = useRouter();
   const base = `/${locale}/wallet`;
 
-  const [balance, setBalance] = useState<number | null>(null);
-  const [txList, setTxList] = useState<Tx[]>([]);
+  const [balance, setBalance]     = useState<number | null>(null);
+  const [usdBalance, setUsdBalance] = useState<number | null>(null);
+  const [txList, setTxList]         = useState<Tx[]>([]);
   const [loadingBal, setLoadingBal] = useState(true);
 
   useEffect(() => {
@@ -51,7 +52,12 @@ export default function WalletHomePage() {
         if (r.status === 401) { router.replace(`${base}/login`); return null; }
         return r.json();
       })
-      .then((d) => { if (d) setBalance(Number(d.balance_cdf ?? 0)); })
+      .then((d) => {
+          if (d) {
+            setBalance(Number(d.balance_cdf ?? 0));
+            setUsdBalance(Number(d.usd_balance ?? 0));
+          }
+        })
       .catch(() => {})
       .finally(() => setLoadingBal(false));
 
@@ -73,6 +79,11 @@ export default function WalletHomePage() {
           <p className="text-[2.6rem] font-bold leading-tight tracking-tight">
             {balance !== null ? fmt(balance) : '—'}
             <span className="text-2xl font-normal opacity-80"> CDF</span>
+          </p>
+        )}
+        {!loadingBal && usdBalance !== null && usdBalance > 0 && (
+          <p className="text-sm font-semibold mt-1" style={{ color: '#6ee7b7' }}>
+            {usdBalance.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
           </p>
         )}
         <p className="text-xs opacity-50 mt-2">UniPay Wallet · RDC</p>
@@ -104,13 +115,13 @@ export default function WalletHomePage() {
           <span className="text-sm font-semibold text-gray-700">Envoyer</span>
         </Link>
 
-        <div className="flex flex-col items-center gap-2.5 rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-5 opacity-50 cursor-not-allowed">
-          <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-            <QrCode className="text-gray-400" size={26} />
+        <Link href={`${base}/swap`}
+          className="flex flex-col items-center gap-2.5 rounded-2xl border border-gray-100 bg-white shadow-sm p-5 active:scale-95 transition-transform">
+          <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center">
+            <Repeat2 className="text-purple-600" size={26} />
           </div>
-          <span className="text-sm font-semibold text-gray-400">Scanner QR</span>
-          <span className="text-[10px] text-gray-400 -mt-1.5">Bientôt</span>
-        </div>
+          <span className="text-sm font-semibold text-gray-700">Convertir</span>
+        </Link>
       </div>
 
       {/* ── Recent transactions ──────────────────────────────── */}
