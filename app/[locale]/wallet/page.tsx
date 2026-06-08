@@ -81,9 +81,9 @@ export default function WalletHomePage() {
             <span className="text-2xl font-normal opacity-80"> CDF</span>
           </p>
         )}
-        {!loadingBal && usdBalance !== null && usdBalance > 0 && (
+        {!loadingBal && (usdBalance ?? 0) > 0 && (
           <p className="text-sm font-semibold mt-1" style={{ color: '#6ee7b7' }}>
-            {usdBalance.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
+            {(usdBalance ?? 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
           </p>
         )}
         <p className="text-xs opacity-50 mt-2">UniPay Wallet · RDC</p>
