@@ -20,15 +20,17 @@ interface SwapOption {
   color: string;
 }
 
+const USD_CDF_RATE = 2850;
+
 const SWAP_OPTIONS: SwapOption[] = [
-  { value: 'usd_to_cdf',   label: 'USD → CDF',   note: 'Taux officiel (FIAT_USD_CDF_RATE)', from: 'USD',  to: 'CDF',  color: 'text-emerald-700' },
-  { value: 'cdf_to_usd',   label: 'CDF → USD',   note: 'Taux officiel (FIAT_USD_CDF_RATE)', from: 'CDF',  to: 'USD',  color: 'text-emerald-700' },
-  { value: 'usd_to_usdt',  label: 'USD → USDT',  note: 'Parité 1:1',                        from: 'USD',  to: 'USDT', color: 'text-teal-700'    },
-  { value: 'usdt_to_usd',  label: 'USDT → USD',  note: 'Parité 1:1',                        from: 'USDT', to: 'USD',  color: 'text-teal-700'    },
-  { value: 'cdf_to_cglt',  label: 'CDF → CGLT',  note: 'Parité 1:1',                        from: 'CDF',  to: 'CGLT', color: 'text-blue-700'    },
-  { value: 'cglt_to_cdf',  label: 'CGLT → CDF',  note: 'Parité 1:1',                        from: 'CGLT', to: 'CDF',  color: 'text-blue-700'    },
-  { value: 'cglt_to_usdt', label: 'CGLT → USDT', note: 'Swap AMM on-chain',                 from: 'CGLT', to: 'USDT', color: 'text-purple-700'  },
-  { value: 'usdt_to_cglt', label: 'USDT → CGLT', note: 'Swap AMM on-chain',                 from: 'USDT', to: 'CGLT', color: 'text-purple-700'  },
+  { value: 'usd_to_cdf',   label: 'USD → CDF',   note: `1 USD = ${USD_CDF_RATE.toLocaleString('fr-FR')} CDF`, from: 'USD',  to: 'CDF',  color: 'text-emerald-700' },
+  { value: 'cdf_to_usd',   label: 'CDF → USD',   note: `1 USD = ${USD_CDF_RATE.toLocaleString('fr-FR')} CDF`, from: 'CDF',  to: 'USD',  color: 'text-emerald-700' },
+  { value: 'usd_to_usdt',  label: 'USD → USDT',  note: 'Parité 1:1',                                          from: 'USD',  to: 'USDT', color: 'text-teal-700'    },
+  { value: 'usdt_to_usd',  label: 'USDT → USD',  note: 'Parité 1:1',                                          from: 'USDT', to: 'USD',  color: 'text-teal-700'    },
+  { value: 'cdf_to_cglt',  label: 'CDF → CGLT',  note: 'Parité 1:1',                                          from: 'CDF',  to: 'CGLT', color: 'text-blue-700'    },
+  { value: 'cglt_to_cdf',  label: 'CGLT → CDF',  note: 'Parité 1:1',                                          from: 'CGLT', to: 'CDF',  color: 'text-blue-700'    },
+  { value: 'cglt_to_usdt', label: 'CGLT → USDT', note: 'Swap AMM on-chain',                                   from: 'CGLT', to: 'USDT', color: 'text-purple-700'  },
+  { value: 'usdt_to_cglt', label: 'USDT → CGLT', note: 'Swap AMM on-chain',                                   from: 'USDT', to: 'CGLT', color: 'text-purple-700'  },
 ];
 
 interface Balances {
@@ -127,27 +129,15 @@ export default function WalletSwapPage() {
 
       {/* Balances summary */}
       {balances && (
-        <div className="mx-4 mt-4 bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 grid grid-cols-2 gap-y-1 text-xs">
+        <div className="mx-4 mt-4 bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 grid grid-cols-2 gap-y-1.5 text-xs">
           <span className="text-gray-500">CDF</span>
           <span className="font-semibold text-right">{balances.balance_cdf.toLocaleString('fr-FR')} CDF</span>
-          {balances.usd_balance > 0 && (
-            <>
-              <span className="text-gray-500">USD</span>
-              <span className="font-semibold text-right text-emerald-700">{balances.usd_balance.toFixed(2)} USD</span>
-            </>
-          )}
-          {balances.cglt_balance > 0 && (
-            <>
-              <span className="text-gray-500">CGLT</span>
-              <span className="font-semibold text-right text-blue-700">{Math.floor(balances.cglt_balance).toLocaleString('fr-FR')} CGLT</span>
-            </>
-          )}
-          {balances.usdt_balance > 0 && (
-            <>
-              <span className="text-gray-500">USDT</span>
-              <span className="font-semibold text-right text-teal-700">{balances.usdt_balance.toFixed(2)} USDT</span>
-            </>
-          )}
+          <span className="text-gray-500">USD</span>
+          <span className="font-semibold text-right text-emerald-700">{balances.usd_balance.toFixed(2)} USD</span>
+          <span className="text-gray-500">CGLT</span>
+          <span className="font-semibold text-right text-blue-700">{Math.floor(balances.cglt_balance).toLocaleString('fr-FR')} CGLT</span>
+          <span className="text-gray-500">USDT</span>
+          <span className="font-semibold text-right text-teal-700">{balances.usdt_balance.toFixed(2)} USDT</span>
         </div>
       )}
 

@@ -4,11 +4,18 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, ArrowUpCircle } from 'lucide-react';
 import Link from 'next/link';
+import type { WalletBalance } from '../../../../lib/wallet-types';
 
-const OPERATORS = [
+const CDF_OPERATORS = [
   { value: 'orange',    label: 'Orange Money', activeClass: 'border-orange-400 bg-orange-50 text-orange-700' },
   { value: 'airtel',    label: 'Airtel Money',  activeClass: 'border-red-400 bg-red-50 text-red-700' },
   { value: 'afrimoney', label: 'Afrimoney',     activeClass: 'border-blue-400 bg-blue-50 text-blue-700' },
+];
+
+const USD_OPERATORS = [
+  { value: 'airtel', label: 'Airtel USD',  activeClass: 'border-red-400 bg-red-50 text-red-700' },
+  { value: 'mpesa',  label: 'Mpesa USD',   activeClass: 'border-green-500 bg-green-50 text-green-700' },
+  { value: 'orange', label: 'Orange USD',  activeClass: 'border-orange-400 bg-orange-50 text-orange-700' },
 ];
 
 function fmtNum(n: number) { return new Intl.NumberFormat('fr-FR').format(n); }
@@ -29,7 +36,7 @@ export default function WalletWithdrawPage() {
   const [tab, setTab]           = useState<'cdf' | 'usd'>('cdf');
   const [balance, setBalance]   = useState<number | null>(null);
   const [usdBalance, setUsdBal] = useState<number | null>(null);
-  const [phoneMM, setPhoneMM]   = useState('');
+  const [phone, setPhone]       = useState('');
   const [operator, setOperator] = useState('orange');
   const [amount, setAmount]     = useState('');
   const [error, setError]       = useState('');
@@ -39,14 +46,15 @@ export default function WalletWithdrawPage() {
   useEffect(() => {
     fetch('/api/wallet/balance')
       .then((r) => { if (r.status === 401) { router.replace(`/${locale}/wallet/login`); return null; } return r.json(); })
-      .then((d) => { if (d) { setBalance(Number(d.balance_cdf ?? 0)); setUsdBal(Number(d.usd_balance ?? 0)); } })
+      .then((d: WalletBalance | null) => { if (d) { setBalance(Number(d.balance_cdf ?? 0)); setUsdBal(Number(d.usd_balance ?? 0)); } })
       .catch(() => {});
 
     const saved = typeof window !== 'undefined' ? localStorage.getItem('wallet_phone') ?? '' : '';
-    if (saved) setPhoneMM(saved);
+    if (saved) setPhone(saved);
   }, []);
 
   const isCdf      = tab === 'cdf';
+  const operators  = isCdf ? CDF_OPERATORS : USD_OPERATORS;
   const minAmt     = isCdf ? 100 : 1;
   const activeBalance = isCdf ? balance : usdBalance;
   const fee        = amount ? Math.round(Number(amount) * 0.03 * 100) / 100 : 0;
@@ -69,13 +77,13 @@ export default function WalletWithdrawPage() {
         res = await fetch('/api/wallet/withdraw', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone_mm: phoneMM, operator, amount: num }),
+          body: JSON.stringify({ phone_mm: phone, operator, amount: num }),
         });
       } else {
         res = await fetch('/api/wallet/unipesa/withdraw', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone_mm: phoneMM, operator, amount_usd: num }),
+          body: JSON.stringify({ phone, operator, amount: num }),
         });
       }
       const data = await res.json();
@@ -135,7 +143,7 @@ export default function WalletWithdrawPage() {
         <div className="flex flex-col gap-2">
           <label className="text-sm font-semibold text-gray-600">Opérateur de destination</label>
           <div className="grid grid-cols-3 gap-2">
-            {OPERATORS.map((op) => (
+            {operators.map((op) => (
               <button key={op.value} type="button" onClick={() => setOperator(op.value)}
                 className={`py-3 rounded-xl border-2 text-sm font-semibold transition ${operator === op.value ? op.activeClass : 'border-gray-200 bg-white text-gray-500'}`}>
                 {op.label}
@@ -144,10 +152,10 @@ export default function WalletWithdrawPage() {
           </div>
         </div>
 
-        {/* Phone MM */}
+        {/* Phone */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-semibold text-gray-600">Numéro de réception</label>
-          <input type="tel" value={phoneMM} onChange={(e) => setPhoneMM(e.target.value)}
+          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
             placeholder="+243 XXX XXX XXX" required
             className="border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-400" />
         </div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowDownCircle, ArrowUpCircle, ArrowLeftRight, Repeat2 } from 'lucide-react';
+import type { WalletBalance } from '../../../lib/wallet-types';
 
 interface Tx {
   id: string;
@@ -52,7 +53,7 @@ export default function WalletHomePage() {
         if (r.status === 401) { router.replace(`${base}/login`); return null; }
         return r.json();
       })
-      .then((d) => {
+      .then((d: WalletBalance | null) => {
           if (d) {
             setBalance(Number(d.balance_cdf ?? 0));
             setUsdBalance(Number(d.usd_balance ?? 0));
@@ -81,10 +82,13 @@ export default function WalletHomePage() {
             <span className="text-2xl font-normal opacity-80"> CDF</span>
           </p>
         )}
-        {!loadingBal && (usdBalance ?? 0) > 0 && (
-          <p className="text-sm font-semibold mt-1" style={{ color: '#6ee7b7' }}>
-            {(usdBalance ?? 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
-          </p>
+        {!loadingBal && (
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-xs opacity-60">Solde USD</span>
+            <span className="text-base font-bold" style={{ color: '#6ee7b7' }}>
+              {(usdBalance ?? 0).toFixed(2)} USD
+            </span>
+          </div>
         )}
         <p className="text-xs opacity-50 mt-2">UniPay Wallet · RDC</p>
       </div>
