@@ -30,7 +30,17 @@ export interface WalletStats {
   total_withdrawn_cdf: number;
   total_p2p_cdf: number;
   transactions_today: number;
+  total_cglt_circulating?: number;
+  swaps_today?: number;
   chart: { date: string; collect: number; payout: number; p2p: number }[];
+}
+
+export interface SwapRate {
+  rate: number;
+  fee: number;
+  paused: boolean;
+  pool_usdt: number;
+  pool_cglt: number;
 }
 
 export interface WalletUser {
@@ -48,7 +58,7 @@ export interface WalletUser {
 export interface WalletTransaction {
   id: string;
   wallet_user_id: string | null;
-  direction: 'collect' | 'payout' | 'p2p';
+  direction: 'collect' | 'payout' | 'p2p' | 'swap' | 'p2p_usdt' | 'cglt_gaming_debit' | 'cglt_gaming_credit' | string;
   operator: string;
   phone: string;
   amount: number;
@@ -59,6 +69,10 @@ export interface WalletTransaction {
   reference: string | null;
   created_at: string;
   updated_at: string;
+  swap_direction?: string | null;
+  cglt_amount?: number | null;
+  usdt_amount?: number | null;
+  blockchain_tx_hash?: string | null;
   wallet_users?: { phone: string; full_name: string | null } | null;
 }
 
@@ -79,6 +93,10 @@ export interface Pagination {
 
 export function getStats(): Promise<WalletStats> {
   return get<WalletStats>(`${BASE}/stats`);
+}
+
+export function getSwapRate(): Promise<SwapRate> {
+  return get<SwapRate>('/api/wallet/swap-rate');
 }
 
 export function getAvadaBalance(): Promise<{ balance: number | null; currency: string; error?: string }> {

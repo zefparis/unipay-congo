@@ -4,12 +4,23 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   ArrowLeftRight, Download, ChevronLeft, ChevronRight,
   Loader2, RefreshCw, ArrowDownLeft, ArrowUpRight,
+  Repeat, Coins, Gamepad2, ExternalLink,
 } from 'lucide-react';
 import { getTransactions, type WalletTransaction, type Pagination } from '@/lib/admin-api';
 import clsx from 'clsx';
 
+const BLOCKSCOUT_URL = process.env.NEXT_PUBLIC_BLOCKSCOUT_URL ?? 'https://explorer.cglt.io';
+
 function fmt(n: number) {
   return new Intl.NumberFormat('fr-CD').format(Math.round(n));
+}
+
+function fmtCglt(n: number) {
+  return new Intl.NumberFormat('fr-CD', { maximumFractionDigits: 4 }).format(n);
+}
+
+function shortHash(h: string) {
+  return `${h.slice(0, 6)}…${h.slice(-4)}`;
 }
 
 function fmtDate(iso: string) {
@@ -25,9 +36,23 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const DIR_ICON: Record<string, React.ReactNode> = {
-  collect: <ArrowDownLeft size={13} className="text-green-500" />,
-  payout:  <ArrowUpRight size={13} className="text-orange-500" />,
-  p2p:     <ArrowLeftRight size={13} className="text-purple-500" />,
+  collect:             <ArrowDownLeft size={13} className="text-green-500" />,
+  payout:              <ArrowUpRight size={13} className="text-orange-500" />,
+  p2p:                 <ArrowLeftRight size={13} className="text-purple-500" />,
+  swap:                <Repeat size={13} className="text-sky-500" />,
+  p2p_usdt:            <Coins size={13} className="text-teal-500" />,
+  cglt_gaming_debit:   <Gamepad2 size={13} className="text-pink-500" />,
+  cglt_gaming_credit:  <Gamepad2 size={13} className="text-emerald-500" />,
+};
+
+const DIR_LABEL: Record<string, string> = {
+  collect:            'collect',
+  payout:             'payout',
+  p2p:                'p2p',
+  swap:               'swap',
+  p2p_usdt:           'p2p usdt',
+  cglt_gaming_debit:  'mise cglt',
+  cglt_gaming_credit: 'gain cglt',
 };
 
 export default function AdminTransactionsPage() {
@@ -135,6 +160,10 @@ export default function AdminTransactionsPage() {
           <option value="collect">Collect</option>
           <option value="payout">Payout</option>
           <option value="p2p">P2P</option>
+          <option value="swap">Swap</option>
+          <option value="p2p_usdt">P2P USDT</option>
+          <option value="cglt_gaming_debit">Mise CGLT</option>
+          <option value="cglt_gaming_credit">Gain CGLT</option>
         </select>
         <select
           value={filterStatus}
@@ -189,10 +218,10 @@ export default function AdminTransactionsPage() {
           <div className="text-center py-12 text-sm text-gray-400">Aucune transaction.</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[900px] text-sm">
+            <table className="w-full min-w-[1100px] text-sm">
               <thead>
                 <tr className="border-b border-gray-100 dark:border-gray-800">
-                  {['Date', 'User', 'Type', 'Opérateur', 'Montant', 'Frais', 'Net', 'Statut'].map((h) => (
+                  {['Date', 'User', 'Type', 'Opérateur', 'Montant', 'CGLT', 'Tx Chain', 'Frais', 'Net', 'Statut'].map((h) => (
                     <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
@@ -211,11 +240,36 @@ export default function AdminTransactionsPage() {
                       </td>
                       <td className="px-4 py-3">
                         <span className="inline-flex items-center gap-1 text-xs">
-                          {DIR_ICON[tx.direction]} {tx.direction}
+                          {DIR_ICON[tx.direction] ?? <ArrowLeftRight size={13} className="text-gray-400" />} {DIR_LABEL[tx.direction] ?? tx.direction}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-xs capitalize text-gray-700 dark:text-gray-300">{tx.operator}</td>
                       <td className="px-4 py-3 text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.amount)}</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-xs">
+                        {tx.cglt_amount != null ? (
+                          <span className="inline-flex items-center gap-1 text-sky-600 dark:text-sky-400 font-medium">
+                            <Coins size={12} /> {fmtCglt(Number(tx.cglt_amount))}
+                          </span>
+                        ) : (
+                          <span className="text-gray-300 dark:text-gray-600">—</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-xs">
+                        {tx.blockchain_tx_hash ? (
+                          <a
+                            href={`${BLOCKSCOUT_URL}/tx/${tx.blockchain_tx_hash}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 font-mono text-[#1D9E75] hover:underline"
+                            title={tx.blockchain_tx_hash}
+                          >
+                            {shortHash(tx.blockchain_tx_hash)}
+                            <ExternalLink size={11} />
+                          </a>
+                        ) : (
+                          <span className="text-gray-300 dark:text-gray-600">—</span>
+                        )}
+                      </td>
                       <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmt(tx.fee)}</td>
                       <td className="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.net_amount)}</td>
                       <td className="px-4 py-3">

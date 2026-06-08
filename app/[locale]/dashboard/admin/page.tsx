@@ -5,12 +5,17 @@ import { Link } from '@/i18n/navigation';
 import {
   Users, ShieldCheck, ArrowDownLeft, ArrowUpRight, ArrowLeftRight,
   CalendarDays, RefreshCw, TrendingUp, Wallet, AlertCircle,
+  Coins, Landmark, Repeat,
 } from 'lucide-react';
-import { getStats, getAvadaBalance, type WalletStats } from '@/lib/admin-api';
+import { getStats, getAvadaBalance, getSwapRate, type WalletStats, type SwapRate } from '@/lib/admin-api';
 import clsx from 'clsx';
 
 function fmt(n: number) {
   return new Intl.NumberFormat('fr-CD').format(Math.round(n));
+}
+
+function fmtDec(n: number) {
+  return new Intl.NumberFormat('fr-CD', { maximumFractionDigits: 2 }).format(n);
 }
 
 function ChartBar({ value, max, label, color }: { value: number; max: number; label: string; color: string }) {
@@ -35,17 +40,19 @@ export default function AdminOverviewPage() {
   const [error, setError] = useState('');
   const [avadaBal, setAvadaBal] = useState<number | null>(null);
   const [avadaErr, setAvadaErr] = useState('');
+  const [swap, setSwap] = useState<SwapRate | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
     setAvadaErr('');
     try {
-      const [s, ab] = await Promise.allSettled([getStats(), getAvadaBalance()]);
+      const [s, ab, sr] = await Promise.allSettled([getStats(), getAvadaBalance(), getSwapRate()]);
       if (s.status === 'fulfilled') setStats(s.value);
       else setError((s.reason as Error).message);
       if (ab.status === 'fulfilled') setAvadaBal(ab.value.balance);
       else setAvadaErr((ab.reason as Error).message);
+      setSwap(sr.status === 'fulfilled' ? sr.value : null);
     } finally {
       setLoading(false);
     }
@@ -61,6 +68,33 @@ export default function AdminOverviewPage() {
     { label: 'Volume P2P (CDF)', value: fmt(stats.total_p2p_cdf), icon: ArrowLeftRight, color: 'text-purple-500', bg: 'bg-purple-500/10' },
     { label: "Transactions aujourd'hui", value: fmt(stats.transactions_today), icon: CalendarDays, color: 'text-[#1D9E75]', bg: 'bg-[#1D9E75]/10' },
   ] : [];
+
+  const cgltKpis = [
+    {
+      label: 'CGLT en circulation',
+      value: stats?.total_cglt_circulating != null ? fmtDec(stats.total_cglt_circulating) : '—',
+      unit: 'CGLT',
+      icon: Coins,
+      color: 'text-sky-500',
+      bg: 'bg-sky-500/10',
+    },
+    {
+      label: 'Réserve USDT (pool)',
+      value: swap ? fmtDec(swap.pool_usdt) : '—',
+      unit: 'USDT',
+      icon: Landmark,
+      color: 'text-teal-500',
+      bg: 'bg-teal-500/10',
+    },
+    {
+      label: "Swaps aujourd'hui",
+      value: stats?.swaps_today != null ? fmt(stats.swaps_today) : '—',
+      unit: '',
+      icon: Repeat,
+      color: 'text-indigo-500',
+      bg: 'bg-indigo-500/10',
+    },
+  ];
 
   const chart = stats?.chart ?? [];
   const maxChart = Math.max(1, ...chart.flatMap((d) => [d.collect, d.payout, d.p2p]));
@@ -151,6 +185,30 @@ export default function AdminOverviewPage() {
           ))}
         </div>
       )}
+
+      {/* CGLT KPI cards */}
+      <div>
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+          <Coins size={16} className="text-sky-500" />
+          Blockchain CGLT
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {cgltKpis.map(({ label, value, unit, icon: Icon, color, bg }) => (
+            <div key={label} className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 space-y-3 shadow-sm">
+              <div className={clsx('inline-flex p-2 rounded-xl', bg)}>
+                <Icon size={18} className={color} />
+              </div>
+              <div>
+                <div className="text-xl font-heading font-bold text-gray-900 dark:text-white">
+                  {value}
+                  {unit && value !== '—' && <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ml-1.5">{unit}</span>}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{label}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Bar chart — 7 days */}
       <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">

@@ -5,6 +5,15 @@
 		},
 		{
 			"path": "../unipay-api"
+		},
+		{
+			"path": "../cglt-chain"
+		},
+		{
+			"path": "../unipay-app"
+		},
+		{
+			"path": "../congogaming-auth-test/congogaming-main"
 		}
 	],
 	"settings": {}
