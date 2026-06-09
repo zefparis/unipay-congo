@@ -33,7 +33,7 @@ export default function WalletWithdrawPage() {
   const router = useRouter();
   const { locale } = useParams<{ locale: string }>();
 
-  const [tab, setTab]           = useState<'cdf' | 'usd'>('cdf');
+  const [tab, setTab]           = useState<'cdf' | 'usd' | 'cglt'>('cdf');
   const [balance, setBalance]   = useState<number | null>(null);
   const [usdBalance, setUsdBal] = useState<number | null>(null);
   const [phone, setPhone]       = useState('');
@@ -42,6 +42,8 @@ export default function WalletWithdrawPage() {
   const [error, setError]       = useState('');
   const [success, setSuccess]   = useState('');
   const [loading, setLoading]   = useState(false);
+  const [bscAddress, setBscAddress] = useState('');
+  const [cgltBalance, setCgltBalance] = useState<number | null>(null);
 
   useEffect(() => {
     fetch('/api/wallet/balance')
@@ -49,17 +51,23 @@ export default function WalletWithdrawPage() {
       .then((d: WalletBalance | null) => { if (d) { setBalance(Number(d.balance_cdf ?? 0)); setUsdBal(Number(d.usd_balance ?? 0)); } })
       .catch(() => {});
 
+    fetch('/api/wallet/cglt/balance')
+      .then(r => r.json())
+      .then((d: { cglt_balance?: number }) => setCgltBalance(Number(d.cglt_balance ?? 0)))
+      .catch(() => {});
+
     const saved = typeof window !== 'undefined' ? localStorage.getItem('wallet_phone') ?? '' : '';
     if (saved) setPhone(saved);
   }, []);
 
   const isCdf      = tab === 'cdf';
+  const isCglt     = tab === 'cglt';
   const operators  = isCdf ? CDF_OPERATORS : USD_OPERATORS;
-  const minAmt     = isCdf ? 100 : 1;
-  const activeBalance = isCdf ? balance : usdBalance;
-  const fee        = amount ? Math.round(Number(amount) * 0.03 * 100) / 100 : 0;
+  const minAmt     = isCglt ? 10 : (isCdf ? 100 : 1);
+  const activeBalance = isCglt ? cgltBalance : (isCdf ? balance : usdBalance);
+  const fee        = (amount && !isCglt) ? Math.round(Number(amount) * 0.03 * 100) / 100 : 0;
   const totalCost  = amount ? Math.round((Number(amount) + fee) * 100) / 100 : 0;
-  const overBudget = activeBalance !== null && Number(amount) > 0 && totalCost > activeBalance;
+  const overBudget = activeBalance !== null && Number(amount) > 0 && (isCglt ? Number(amount) > activeBalance : totalCost > activeBalance);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -72,6 +80,22 @@ export default function WalletWithdrawPage() {
 
     setLoading(true);
     try {
+      if (isCglt) {
+        if (!/^0x[0-9a-fA-F]{40}$/.test(bscAddress)) {
+          setError('Adresse BSC invalide (format 0x...)');
+          return;
+        }
+        const res = await fetch('/api/wallet/cglt/withdraw-bsc', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: num, bsc_address: bscAddress }),
+        });
+        const data = await res.json();
+        if (!res.ok) { setError(data.error ?? 'Retrait CGLT échoué'); return; }
+        setSuccess(`${num} wCGLT envoyés sur BSC. Tx: ${data.bsc_tx_hash?.slice(0, 12)}...`);
+        setTimeout(() => router.push(`/${locale}/wallet`), 5000);
+        return;
+      }
       let res: Response;
       if (isCdf) {
         res = await fetch('/api/wallet/withdraw', {
@@ -99,7 +123,7 @@ export default function WalletWithdrawPage() {
     }
   }
 
-  const currency = isCdf ? 'CDF' : 'USD';
+  const currency = isCglt ? 'CGLT' : (isCdf ? 'CDF' : 'USD');
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -125,6 +149,10 @@ export default function WalletWithdrawPage() {
           className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition ${tab === 'usd' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-gray-200 bg-white text-gray-500'}`}>
           USD via Unipesa
         </button>
+        <button type="button" onClick={() => { setTab('cglt'); setAmount(''); setError(''); }}
+          className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition ${tab === 'cglt' ? 'border-purple-500 bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' : 'border-gray-200 bg-white text-gray-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-400'}`}>
+          CGLT
+        </button>
       </div>
 
       {/* Balance banner */}
@@ -140,7 +168,7 @@ export default function WalletWithdrawPage() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-5 px-4 py-5">
 
         {/* Operator */}
-        <div className="flex flex-col gap-2">
+        {!isCglt && <div className="flex flex-col gap-2">
           <label className="text-sm font-semibold text-gray-600">Opérateur de destination</label>
           <div className="grid grid-cols-3 gap-2">
             {operators.map((op) => (
@@ -150,15 +178,32 @@ export default function WalletWithdrawPage() {
               </button>
             ))}
           </div>
-        </div>
+        </div>}
 
         {/* Phone */}
+        {!isCglt && (
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-semibold text-gray-600">Numéro de réception</label>
           <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
-            placeholder="+243 XXX XXX XXX" required
+            placeholder="+243 XXX XXX XXX"
             className="border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-400" />
         </div>
+        )}
+        {/* BSC Address */}
+        {isCglt && (
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-semibold text-gray-600 dark:text-slate-300">
+              Adresse BSC (MetaMask)
+            </label>
+            <input
+              type="text"
+              value={bscAddress}
+              onChange={(e) => setBscAddress(e.target.value)}
+              placeholder="0x..."
+              className="border border-gray-200 dark:border-slate-600 rounded-xl px-4 py-3 text-base bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 font-mono focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
+            />
+          </div>
+        )}
 
         {/* Amount */}
         <div className="flex flex-col gap-1.5">
@@ -166,7 +211,7 @@ export default function WalletWithdrawPage() {
           <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
             placeholder={isCdf ? '5 000' : '10'} min={minAmt} required
             className={`border rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 ${overBudget ? 'border-red-400 focus:ring-red-300' : 'border-gray-200 focus:ring-orange-400'}`} />
-          {amount && Number(amount) >= minAmt && (
+          {!isCglt && amount && Number(amount) >= minAmt && (
             <div className="bg-gray-50 rounded-lg px-3 py-2 flex justify-between text-xs text-gray-500">
               <span>Frais (3 %) : <strong>{isCdf ? fmtNum(fee) : fee.toFixed(2)} {currency}</strong></span>
               <span className={overBudget ? 'text-red-600 font-bold' : ''}>
