@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X, Shield, Users, SlidersHorizontal } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X, Shield, Users, SlidersHorizontal, Landmark } from 'lucide-react';
 import clsx from 'clsx';
 
 interface DashboardSidebarProps {
@@ -30,6 +30,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
     { href: '/dashboard/admin/adjustments', label: 'Ajustements', icon: SlidersHorizontal, exact: false },
     { href: '/dashboard/admin/wallet-kyc', label: 'KYC Wallet', icon: ShieldCheck, exact: false },
     { href: '/dashboard/admin/kyc-merchants', label: 'KYC Merchants', icon: ShieldCheck, exact: false },
+    { href: '/dashboard/admin/treasury', label: 'Trésorerie', icon: Landmark, exact: false },
   ];
 
   const navItems = [
