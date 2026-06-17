@@ -43,3 +43,22 @@ export async function PATCH(
   const data = await up.json();
   return NextResponse.json(data, { status: up.status });
 }
+
+/* ── DELETE /api/admin/treasury/crypto-receipts/:id ─────────────────── */
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } },
+) {
+  if (!ADMIN_SECRET) return notConfigured();
+
+  const { searchParams } = new URL(req.url);
+  const deleted_by = searchParams.get('deleted_by') ?? '';
+  const qs = deleted_by ? `?deleted_by=${encodeURIComponent(deleted_by)}` : '';
+
+  const up = await fetch(`${API}/v1/admin/treasury/crypto-receipts/${params.id}${qs}`, {
+    method:  'DELETE',
+    headers: { 'x-admin-secret': ADMIN_SECRET },
+  });
+  const data = await up.json();
+  return NextResponse.json(data, { status: up.status });
+}
