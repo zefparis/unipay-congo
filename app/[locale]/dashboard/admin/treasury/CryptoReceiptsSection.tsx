@@ -5,6 +5,7 @@ import {
   FileText, PlusCircle, CheckCircle2, XCircle,
   Loader2, RefreshCw, AlertCircle, Copy, Check,
   ChevronDown, ChevronUp, ShieldCheck, Zap,
+  Archive, Trash2, RotateCcw,
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -30,6 +31,17 @@ export interface CryptoReceipt {
   confirmed_at:      string | null;
   created_at:        string;
   updated_at:        string;
+  is_archived:       boolean;
+  archived_at:       string | null;
+  archived_by:       string | null;
+  archive_reason:    string | null;
+}
+
+/* ── Safe-to-delete predicate (mirrors backend logic) ───────────────── */
+function isSafeToDelete(row: CryptoReceipt): boolean {
+  const SAFE = new Set(['pending', 'rejected', 'cancelled']);
+  return (!row.tx_hash && SAFE.has(row.status)) ||
+         (row.receipt_kind === 'test_payment' && row.status !== 'confirmed');
 }
 
 /* ── Status config ──────────────────────────────────────────────────── */
@@ -161,17 +173,25 @@ export default function CryptoReceiptsSection() {
   const [verifyRes,     setVerifyRes]     = useState<Record<string, unknown> | null>(null);
   const [overrideReason, setOverrideReason] = useState('');
 
+  /* ── Archive / delete modal ─────────────────────────────────────── */
+  const [includeArchived,  setIncludeArchived]  = useState(false);
+  const [actionModal,      setActionModal]      = useState<{ mode: 'archive' | 'delete'; row: CryptoReceipt } | null>(null);
+  const [actionModalReason,setActionModalReason] = useState('');
+  const [actionModalBusy,  setActionModalBusy]  = useState(false);
+  const [actionModalRes,   setActionModalRes]   = useState<{ ok: boolean; msg: string } | null>(null);
+
   /* ── Load list ──────────────────────────────────────────────────── */
   const loadReceipts = useCallback(async () => {
     setLoading(true);
     setListError('');
     try {
       const p = new URLSearchParams({ limit: '100' });
-      if (fAsset)   p.set('asset',             fAsset);
-      if (fNetwork) p.set('network',           fNetwork);
-      if (fStatus)  p.set('status',            fStatus);
-      if (fPayer)   p.set('payer_name',        fPayer);
-      if (fRef)     p.set('invoice_reference', fRef);
+      if (fAsset)          p.set('asset',             fAsset);
+      if (fNetwork)        p.set('network',           fNetwork);
+      if (fStatus)         p.set('status',            fStatus);
+      if (fPayer)          p.set('payer_name',        fPayer);
+      if (fRef)            p.set('invoice_reference', fRef);
+      if (includeArchived) p.set('include_archived',  'true');
 
       const res  = await fetch(`/api/admin/treasury/crypto-receipts?${p}`, { cache: 'no-store' });
       const data = await res.json() as { data?: CryptoReceipt[]; total?: number; error?: string };
@@ -183,7 +203,7 @@ export default function CryptoReceiptsSection() {
     } finally {
       setLoading(false);
     }
-  }, [fAsset, fNetwork, fStatus, fPayer, fRef]);
+  }, [fAsset, fNetwork, fStatus, fPayer, fRef, includeArchived]);
 
   useEffect(() => { void loadReceipts(); }, [loadReceipts]);
 
@@ -291,6 +311,53 @@ export default function CryptoReceiptsSection() {
         void loadReceipts();
       }
     } finally { setActionBusy(false); }
+  };
+
+  /* ── Archive ─────────────────────────────────────────────────────── */
+  const handleArchive = async (row: CryptoReceipt, reason: string) => {
+    setActionModalBusy(true); setActionModalRes(null);
+    try {
+      const res  = await fetch(`/api/admin/treasury/crypto-receipts/${row.id}/archive`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason }),
+      });
+      const data = await res.json() as { error?: string; message?: string };
+      if (!res.ok) { setActionModalRes({ ok: false, msg: data.message ?? data.error ?? `Erreur ${res.status}` }); return; }
+      setActionModal(null); setActionModalReason('');
+      setExpandedId(null);
+      void loadReceipts();
+    } catch (e) {
+      setActionModalRes({ ok: false, msg: (e as Error).message });
+    } finally { setActionModalBusy(false); }
+  };
+
+  /* ── Restore ─────────────────────────────────────────────────────── */
+  const handleRestore = async (row: CryptoReceipt) => {
+    setActionBusy(true); setActionRes(null);
+    try {
+      const res  = await fetch(`/api/admin/treasury/crypto-receipts/${row.id}/restore`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}),
+      });
+      const data = await res.json() as { error?: string; message?: string };
+      if (!res.ok) { setActionRes({ ok: false, msg: data.message ?? data.error ?? `Erreur ${res.status}` }); return; }
+      setActionRes({ ok: true, msg: 'Reçu restauré.' });
+      void loadReceipts();
+    } finally { setActionBusy(false); }
+  };
+
+  /* ── Hard delete ─────────────────────────────────────────────────── */
+  const handleDelete = async (row: CryptoReceipt) => {
+    setActionModalBusy(true); setActionModalRes(null);
+    try {
+      const res  = await fetch(`/api/admin/treasury/crypto-receipts/${row.id}`, { method: 'DELETE' });
+      const data = await res.json() as { error?: string; message?: string };
+      if (!res.ok) { setActionModalRes({ ok: false, msg: data.message ?? data.error ?? `Erreur ${res.status}` }); return; }
+      setActionModal(null);
+      setExpandedId(null);
+      void loadReceipts();
+    } catch (e) {
+      setActionModalRes({ ok: false, msg: (e as Error).message });
+    } finally { setActionModalBusy(false); }
   };
 
   /* ── Cancel ──────────────────────────────────────────────────────── */
@@ -491,6 +558,11 @@ export default function CryptoReceiptsSection() {
           className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-purple-500 w-36" />
         <input value={fRef}   onChange={(e) => setFRef(e.target.value)}   placeholder="Référence…"
           className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-purple-500 w-36" />
+        <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 cursor-pointer select-none">
+          <input type="checkbox" checked={includeArchived} onChange={(e) => setIncludeArchived(e.target.checked)}
+            className="rounded border-gray-600 bg-gray-700 text-purple-500 focus:ring-purple-500" />
+          Afficher les reçus archivés
+        </label>
         {total > 0 && (
           <span className="text-xs text-gray-400 ml-auto">{total} reçu{total > 1 ? 's' : ''}</span>
         )}
@@ -523,7 +595,10 @@ export default function CryptoReceiptsSection() {
                     <>
                       <tr key={row.id}
                         onClick={() => expand(row)}
-                        className="border-b border-gray-50 dark:border-gray-800/60 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition cursor-pointer">
+                        className={clsx(
+                          'border-b border-gray-50 dark:border-gray-800/60 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition cursor-pointer',
+                          row.is_archived && 'opacity-50',
+                        )}>
                         <td className="pl-3 pr-1 py-3 text-gray-400">
                           {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                         </td>
@@ -534,6 +609,11 @@ export default function CryptoReceiptsSection() {
                           {row.receipt_kind === 'internal_regularization' && (
                             <span className="inline-block mt-0.5 px-1.5 py-0.5 rounded bg-indigo-900/40 border border-indigo-700/40 text-indigo-300 text-[10px] font-semibold">
                               Régularisation
+                            </span>
+                          )}
+                          {row.is_archived && (
+                            <span className="inline-block mt-0.5 px-1.5 py-0.5 rounded bg-gray-700/60 border border-gray-600/40 text-gray-400 text-[10px] font-semibold">
+                              Archivé
                             </span>
                           )}
                         </td>
@@ -681,6 +761,28 @@ export default function CryptoReceiptsSection() {
                                     <XCircle size={12} className="inline mr-1" />Annuler
                                   </button>
                                 )}
+                                {!row.is_archived && (
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); setActionModal({ mode: 'archive', row }); setActionModalReason(''); setActionModalRes(null); }}
+                                    disabled={actionBusy}
+                                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gray-700/50 hover:bg-gray-600/60 text-gray-300 text-xs font-semibold border border-gray-600/40 transition disabled:opacity-40">
+                                    <Archive size={12} />Archiver
+                                  </button>
+                                )}
+                                {row.is_archived && (
+                                  <button onClick={() => void handleRestore(row)} disabled={actionBusy}
+                                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-900/40 hover:bg-indigo-800/60 text-indigo-300 text-xs font-semibold border border-indigo-700/40 transition disabled:opacity-40">
+                                    <RotateCcw size={12} />Restaurer
+                                  </button>
+                                )}
+                                {isSafeToDelete(row) && (
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); setActionModal({ mode: 'delete', row }); setActionModalRes(null); }}
+                                    disabled={actionBusy}
+                                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-900/60 hover:bg-red-800 text-red-300 text-xs font-semibold border border-red-700/40 transition disabled:opacity-40">
+                                    <Trash2 size={12} />Supprimer
+                                  </button>
+                                )}
                                 {row.tx_hash && row.network === 'BSC' && row.receipt_kind !== 'internal_regularization' && (
                                   <button onClick={() => void handleVerify(row.id)} disabled={actionBusy}
                                     className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-purple-900/40 hover:bg-purple-800/60 text-purple-300 text-xs font-semibold border border-purple-700/40 transition disabled:opacity-40">
@@ -713,6 +815,69 @@ export default function CryptoReceiptsSection() {
           </div>
         )}
       </div>
+      {/* ── Archive / Delete confirmation modal ─────────────────────── */}
+      {actionModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            {actionModal.mode === 'archive' ? (
+              <>
+                <h3 className="font-semibold text-gray-800 dark:text-white flex items-center gap-2">
+                  <Archive size={16} className="text-amber-400" />Archiver ce reçu
+                </h3>
+                <div className="flex gap-2 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs">
+                  <AlertCircle size={13} className="shrink-0 mt-0.5" />
+                  <span>Cette action masque le reçu de la vue opérationnelle mais conserve l&apos;historique et l&apos;audit.</span>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Reçu : <strong className="text-gray-700 dark:text-gray-200">{actionModal.row.invoice_reference ?? actionModal.row.id}</strong>
+                </p>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Motif (obligatoire, min. 5 caractères)</label>
+                  <input type="text" value={actionModalReason} onChange={(e) => setActionModalReason(e.target.value)}
+                    placeholder="Ex : Doublon, test, reçu remplacé…" className={inputCls} autoFocus />
+                </div>
+                <Feedback res={actionModalRes} />
+                <div className="flex gap-2 justify-end">
+                  <button onClick={() => { setActionModal(null); setActionModalReason(''); }}
+                    className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-200 transition">
+                    Annuler
+                  </button>
+                  <button onClick={() => void handleArchive(actionModal.row, actionModalReason)}
+                    disabled={actionModalReason.trim().length < 5 || actionModalBusy}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-sm font-semibold transition disabled:opacity-50">
+                    {actionModalBusy && <Loader2 size={14} className="animate-spin" />}Archiver
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h3 className="font-semibold text-red-400 flex items-center gap-2">
+                  <Trash2 size={16} />Suppression définitive
+                </h3>
+                <div className="flex gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs">
+                  <AlertCircle size={13} className="shrink-0 mt-0.5" />
+                  <span>Suppression définitive autorisée uniquement pour les tests / brouillons sans preuve de paiement.</span>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Reçu : <strong className="text-gray-700 dark:text-gray-200">{actionModal.row.invoice_reference ?? actionModal.row.id}</strong>
+                  {' '}· Statut : <strong>{actionModal.row.status}</strong>
+                </p>
+                <Feedback res={actionModalRes} />
+                <div className="flex gap-2 justify-end">
+                  <button onClick={() => setActionModal(null)}
+                    className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-200 transition">
+                    Annuler
+                  </button>
+                  <button onClick={() => void handleDelete(actionModal.row)} disabled={actionModalBusy}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-sm font-semibold transition disabled:opacity-50">
+                    {actionModalBusy && <Loader2 size={14} className="animate-spin" />}Supprimer définitivement
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </section>
   );
 }
