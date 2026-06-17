@@ -142,9 +142,10 @@ export default function CryptoReceiptsSection() {
   const [expandedId,  setExpandedId]  = useState<string | null>(null);
   const [editTxHash,  setEditTxHash]  = useState('');
   const [editRecvAmt, setEditRecvAmt] = useState('');
-  const [actionBusy,  setActionBusy]  = useState(false);
-  const [actionRes,   setActionRes]   = useState<{ ok: boolean; msg: string } | null>(null);
-  const [verifyRes,   setVerifyRes]   = useState<Record<string, unknown> | null>(null);
+  const [actionBusy,    setActionBusy]    = useState(false);
+  const [actionRes,     setActionRes]     = useState<{ ok: boolean; msg: string } | null>(null);
+  const [verifyRes,     setVerifyRes]     = useState<Record<string, unknown> | null>(null);
+  const [overrideReason, setOverrideReason] = useState('');
 
   /* ── Load list ──────────────────────────────────────────────────── */
   const loadReceipts = useCallback(async () => {
@@ -180,6 +181,7 @@ export default function CryptoReceiptsSection() {
     setEditRecvAmt(row.received_amount ? parseFloat(row.received_amount).toString() : '');
     setActionRes(null);
     setVerifyRes(null);
+    setOverrideReason('');
   };
 
   /* ── Create pending receipt ─────────────────────────────────────── */
@@ -243,10 +245,16 @@ export default function CryptoReceiptsSection() {
     setActionBusy(true); setActionRes(null);
     try {
       const body: Record<string, unknown> = { status: newStatus };
-      if (editTxHash.trim())  body.tx_hash        = editTxHash.trim();
-      if (editRecvAmt.trim()) body.received_amount = parseFloat(editRecvAmt);
+      if (editTxHash.trim())     body.tx_hash        = editTxHash.trim();
+      if (editRecvAmt.trim())    body.received_amount = parseFloat(editRecvAmt);
+      if (overrideReason.trim()) body.override_reason = overrideReason.trim();
       const ok = await patch(row.id, body);
-      if (ok) { setActionRes({ ok: true, msg: `Statut → ${newStatus}` }); void loadReceipts(); }
+      if (ok) {
+        setActionRes({ ok: true, msg: `Statut → ${newStatus}` });
+        setOverrideReason('');
+        setVerifyRes(null);
+        void loadReceipts();
+      }
     } finally { setActionBusy(false); }
   };
 
@@ -509,6 +517,32 @@ export default function CryptoReceiptsSection() {
                                 </div>
                               )}
 
+                              {/* ── Verify failure warning + override input ─── */}
+                              {verifyRes && !(verifyRes.verified as boolean) && (
+                                <div className="p-3 rounded-xl text-xs border bg-red-500/10 border-red-500/30 text-red-300 space-y-2">
+                                  <p className="font-semibold flex items-center gap-1">
+                                    <XCircle size={13} className="shrink-0" />
+                                    Vérification échouée — Confirmation bloquée
+                                  </p>
+                                  <p>Raison : {verifyRes.reason as string}</p>
+                                  {(verifyRes.blocking_reasons as string[])?.map((r) => (
+                                    <span key={r} className="inline-block mr-1 px-1.5 py-0.5 rounded bg-red-900/40 border border-red-700/40 font-mono">{r}</span>
+                                  ))}
+                                  <div className="pt-1">
+                                    <label className="block text-xs font-medium text-red-300/80 mb-1">
+                                      Motif de dérogation (obligatoire pour forcer la confirmation)
+                                    </label>
+                                    <input
+                                      type="text"
+                                      value={overrideReason}
+                                      onChange={(e) => setOverrideReason(e.target.value)}
+                                      placeholder="Ex : Virement partiel accepté par direction"
+                                      className="w-full px-3 py-1.5 rounded-xl bg-gray-900 border border-red-700/40 text-xs text-white placeholder-red-300/40 focus:outline-none focus:ring-1 focus:ring-red-500"
+                                    />
+                                  </div>
+                                </div>
+                              )}
+
                               {/* Status action buttons */}
                               <div className="flex flex-wrap gap-2">
                                 {row.status === 'pending' && (
@@ -517,12 +551,27 @@ export default function CryptoReceiptsSection() {
                                     ✓ Marquer reçu
                                   </button>
                                 )}
-                                {(row.status === 'pending' || row.status === 'received') && (
-                                  <button onClick={() => void handleStatus(row, 'confirmed')} disabled={actionBusy || !editTxHash.trim()}
-                                    className="px-3 py-1.5 rounded-lg bg-green-600 hover:bg-green-500 text-white text-xs font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed">
-                                    <CheckCircle2 size={12} className="inline mr-1" />Confirmer
-                                  </button>
-                                )}
+                                {(row.status === 'pending' || row.status === 'received') && (() => {
+                                  const verifyBlocking = verifyRes && !(verifyRes.verified as boolean);
+                                  const needsOverride  = verifyBlocking && !overrideReason.trim();
+                                  return (
+                                    <button
+                                      onClick={() => void handleStatus(row, 'confirmed')}
+                                      disabled={actionBusy || !editTxHash.trim() || needsOverride}
+                                      title={needsOverride ? 'Vérification échouée — saisir un motif de dérogation' : undefined}
+                                      className={clsx(
+                                        'px-3 py-1.5 rounded-lg text-white text-xs font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed',
+                                        verifyBlocking && overrideReason.trim()
+                                          ? 'bg-orange-600 hover:bg-orange-500'
+                                          : 'bg-green-600 hover:bg-green-500',
+                                      )}
+                                    >
+                                      <CheckCircle2 size={12} className="inline mr-1" />
+                                      {verifyBlocking && overrideReason.trim() ? 'Confirmer (dérogation)' : 'Confirmer'}
+                                    </button>
+                                  );
+                                })()}
+                              
                                 {(row.status === 'pending' || row.status === 'received') && (
                                   <button onClick={() => void handleStatus(row, 'rejected')} disabled={actionBusy}
                                     className="px-3 py-1.5 rounded-lg bg-red-900/60 hover:bg-red-800 text-red-300 text-xs font-semibold border border-red-700/40 transition disabled:opacity-40">
@@ -543,19 +592,14 @@ export default function CryptoReceiptsSection() {
                                 )}
                               </div>
 
-                              {/* Verify result */}
-                              {verifyRes && (
-                                <div className={clsx('p-3 rounded-xl text-xs border space-y-1',
-                                  (verifyRes.verified as boolean)
-                                    ? 'bg-green-500/10 border-green-500/30 text-green-300'
-                                    : 'bg-yellow-500/10 border-yellow-500/30 text-yellow-300',
-                                )}>
-                                  <p className="font-semibold">{(verifyRes.verified as boolean) ? '✓ Vérification OK' : '⚠ Vérification — voir détails'}</p>
-                                  <p>Raison : {verifyRes.reason as string}</p>
-                                  {verifyRes.transferred_amount !== undefined && (
-                                    <p>Montant transféré : {String(verifyRes.transferred_amount)} {verifyRes.asset as string} | Attendu : {String(verifyRes.expected_amount)}</p>
-                                  )}
-                                  <p>Confirmé on-chain : {(verifyRes.is_on_chain as boolean) ? 'oui' : 'non'}</p>
+                              {/* Verify result — OK panel only (fail panel is shown above action buttons) */}
+                              {verifyRes && (verifyRes.verified as boolean) && (
+                                <div className="p-3 rounded-xl text-xs border bg-green-500/10 border-green-500/30 text-green-300 space-y-1">
+                                  <p className="font-semibold flex items-center gap-1">
+                                    <CheckCircle2 size={13} className="shrink-0" /> Vérification BSC OK
+                                  </p>
+                                  <p>Montant on-chain : <strong>{String(verifyRes.transferred_amount)} {verifyRes.asset as string}</strong> — Attendu : {String(verifyRes.expected_amount)}</p>
+                                  <p>Destinataire : ✓ — Contrat {verifyRes.asset as string} : ✓ — Tx réussie : ✓</p>
                                 </div>
                               )}
 
