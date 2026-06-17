@@ -278,10 +278,11 @@ export default function CryptoReceiptsSection() {
   const handleStatus = async (row: CryptoReceipt, newStatus: string) => {
     setActionBusy(true); setActionRes(null);
     try {
+      const isReg = row.receipt_kind === 'internal_regularization';
       const body: Record<string, unknown> = { status: newStatus };
-      if (editTxHash.trim())     body.tx_hash        = editTxHash.trim();
-      if (editRecvAmt.trim())    body.received_amount = parseFloat(editRecvAmt);
-      if (overrideReason.trim()) body.override_reason = overrideReason.trim();
+      if (!isReg && editTxHash.trim()) body.tx_hash        = editTxHash.trim();
+      if (editRecvAmt.trim())          body.received_amount = parseFloat(editRecvAmt);
+      if (overrideReason.trim())       body.override_reason = overrideReason.trim();
       const ok = await patch(row.id, body);
       if (ok) {
         setActionRes({ ok: true, msg: `Statut → ${newStatus}` });
@@ -594,11 +595,13 @@ export default function CryptoReceiptsSection() {
                               {/* Edit fields (tx_hash + received_amount) */}
                               {!['confirmed', 'cancelled'].includes(row.status) && (
                                 <div className="flex flex-wrap gap-3 items-end">
-                                  <div className="flex-1 min-w-48">
-                                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Tx Hash</label>
-                                    <input type="text" value={editTxHash} onChange={(e) => setEditTxHash(e.target.value)}
-                                      placeholder="0x… (66 chars)" className={clsx(inputCls, 'font-mono text-xs')} />
-                                  </div>
+                                  {row.receipt_kind !== 'internal_regularization' && (
+                                    <div className="flex-1 min-w-48">
+                                      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Tx Hash</label>
+                                      <input type="text" value={editTxHash} onChange={(e) => setEditTxHash(e.target.value)}
+                                        placeholder="0x… (66 chars)" className={clsx(inputCls, 'font-mono text-xs')} />
+                                    </div>
+                                  )}
                                   <div className="w-40">
                                     <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Montant reçu</label>
                                     <input type="number" min="0" step="0.01" value={editRecvAmt} onChange={(e) => setEditRecvAmt(e.target.value)}
@@ -639,7 +642,7 @@ export default function CryptoReceiptsSection() {
 
                               {/* Status action buttons */}
                               <div className="flex flex-wrap gap-2">
-                                {row.status === 'pending' && (
+                                {row.status === 'pending' && row.receipt_kind !== 'internal_regularization' && (
                                   <button onClick={() => void handleStatus(row, 'received')} disabled={actionBusy || !editTxHash.trim()}
                                     className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed">
                                     ✓ Marquer reçu
@@ -651,7 +654,7 @@ export default function CryptoReceiptsSection() {
                                   return (
                                     <button
                                       onClick={() => void handleStatus(row, 'confirmed')}
-                                      disabled={actionBusy || !editTxHash.trim() || needsOverride}
+                                      disabled={actionBusy || (row.receipt_kind !== 'internal_regularization' && !editTxHash.trim()) || needsOverride}
                                       title={needsOverride ? 'Vérification échouée — saisir un motif de dérogation' : undefined}
                                       className={clsx(
                                         'px-3 py-1.5 rounded-lg text-white text-xs font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed',
