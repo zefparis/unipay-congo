@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import CryptoReceiptsSection from './CryptoReceiptsSection';
+import CryptoAssetsSection    from './CryptoAssetsSection';
 import {
   RefreshCw, Landmark, ArrowUpRight, CheckCircle2, XCircle,
   Clock, AlertCircle, Loader2, ChevronDown,
@@ -439,7 +440,10 @@ export default function TreasuryPage() {
         </div>
       </section>
 
-      {/* ── 4. Paiements factures crypto ────────────────────────────── */}
+      {/* ── 4. Actifs crypto treasury ─────────────────────────────── */}
+      <CryptoAssetsSection />
+
+      {/* ── 5. Paiements factures crypto ────────────────────────────── */}
       <CryptoReceiptsSection />
 
     </div>

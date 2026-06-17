@@ -106,6 +106,15 @@ const EMPTY_CREATE = {
 
 type CreateForm = typeof EMPTY_CREATE;
 
+/* ── Treasury wallet (for auto-fill selector) ───────────────────────── */
+interface TreasuryWallet {
+  id:      string;
+  label:   string;
+  asset:   string;
+  network: string;
+  address: string;
+}
+
 const PREDICTSTREET: Partial<CreateForm> = {
   invoice_reference: 'FAC-2026-001',
   payer_name:        'PredictStreet / ADI Foundation',
@@ -133,10 +142,12 @@ export default function CryptoReceiptsSection() {
   const [fRef,     setFRef]     = useState('');
 
   /* ── Create form ────────────────────────────────────────────────── */
-  const [showCreate, setShowCreate] = useState(false);
-  const [cForm,      setCForm]      = useState<CreateForm>(EMPTY_CREATE);
-  const [creating,   setCreating]   = useState(false);
-  const [createRes,  setCreateRes]  = useState<{ ok: boolean; msg: string } | null>(null);
+  const [showCreate,      setShowCreate]      = useState(false);
+  const [cForm,           setCForm]           = useState<CreateForm>(EMPTY_CREATE);
+  const [creating,        setCreating]        = useState(false);
+  const [createRes,       setCreateRes]       = useState<{ ok: boolean; msg: string } | null>(null);
+  const [treasuryWallets, setTreasuryWallets] = useState<TreasuryWallet[]>([]);
+  const [selectedWallet,  setSelectedWallet]  = useState('');
 
   /* ── Row edit ────────────────────────────────────────────────────── */
   const [expandedId,  setExpandedId]  = useState<string | null>(null);
@@ -172,6 +183,14 @@ export default function CryptoReceiptsSection() {
   }, [fAsset, fNetwork, fStatus, fPayer, fRef]);
 
   useEffect(() => { void loadReceipts(); }, [loadReceipts]);
+
+  useEffect(() => {
+    if (!showCreate) return;
+    fetch('/api/admin/treasury/crypto-wallets', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((j: { data?: TreasuryWallet[] }) => setTreasuryWallets(j.data ?? []))
+      .catch(() => {});
+  }, [showCreate]);
 
   /* ── Expand row ─────────────────────────────────────────────────── */
   const expand = (row: CryptoReceipt) => {
@@ -322,6 +341,30 @@ export default function CryptoReceiptsSection() {
           </div>
 
           <form onSubmit={(e) => { void handleCreate(e); }} className="space-y-4">
+            {/* Wallet selector */}
+            {treasuryWallets.length > 0 && (
+              <div>
+                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                  Wallet treasury (optionnel — auto-remplit adresse/asset/réseau)
+                </label>
+                <select
+                  value={selectedWallet}
+                  onChange={(e) => {
+                    const id = e.target.value;
+                    setSelectedWallet(id);
+                    if (!id) return;
+                    const w = treasuryWallets.find((x) => x.id === id);
+                    if (w) setCForm((f) => ({ ...f, receiving_address: w.address, asset: w.asset, network: w.network }));
+                  }}
+                  className={selCls}
+                >
+                  <option value="">— Sélectionner un wallet treasury —</option>
+                  {treasuryWallets.map((w) => (
+                    <option key={w.id} value={w.id}>{w.label} ({w.asset}/{w.network})</option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Référence facture *</label>
