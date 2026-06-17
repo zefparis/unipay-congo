@@ -13,3 +13,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const json = await res.json();
   return NextResponse.json(json, { status: res.status });
 }
+
+export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+  const res  = await fetch(`${API}/v1/admin/treasury/crypto-wallets/${params.id}`, {
+    method:  'DELETE',
+    headers: { 'x-admin-secret': KEY },
+  });
+  const json = await res.json();
+  return NextResponse.json(json, { status: res.status });
+}

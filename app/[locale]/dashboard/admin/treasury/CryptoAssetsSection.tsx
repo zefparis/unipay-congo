@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   RefreshCw, Copy, ExternalLink, CheckCircle2, AlertTriangle,
-  AlertCircle, Loader2, Plus, X, ChevronDown, ChevronUp,
+  AlertCircle, Loader2, Plus, X, ChevronDown, ChevronUp, Trash2,
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -122,6 +122,14 @@ function autoContract(asset: string, network: string): string {
   return '';
 }
 
+/* ── Detect if an address is a known BSC token contract ─────────────── */
+const BSC_KNOWN_CONTRACTS = new Set(
+  Object.values(BSC_CONTRACTS).map((a) => a.toLowerCase()),
+);
+function isTokenContract(address: string): boolean {
+  return BSC_KNOWN_CONTRACTS.has(address.toLowerCase());
+}
+
 /* ═══════════════════════════════════════════════════════════════════════
  * Main component
  * ═══════════════════════════════════════════════════════════════════════ */
@@ -141,6 +149,10 @@ export default function CryptoAssetsSection() {
   const [adding,       setAdding]       = useState(false);
   const [addRes,       setAddRes]       = useState<{ ok: boolean; msg: string } | null>(null);
   const [togglingId,   setTogglingId]   = useState<string | null>(null);
+  const [showInactive,  setShowInactive]  = useState(false);
+  const [confirmTarget, setConfirmTarget] = useState<TreasuryWallet | null>(null);
+  const [deleting,      setDeleting]      = useState(false);
+  const [deleteRes,     setDeleteRes]     = useState<{ ok: boolean; msg: string } | null>(null);
 
   /* ── Load assets (with balances) ─────────────────────────────────── */
   const loadAssets = useCallback(async () => {
@@ -199,19 +211,41 @@ export default function CryptoAssetsSection() {
     }
   };
 
-  /* ── Toggle active ────────────────────────────────────────────────── */
+  /* ── Toggle active (re-activate only) ──────────────────────────────── */
   const toggleActive = async (wallet: TreasuryWallet) => {
     setTogglingId(wallet.id);
     try {
       await fetch(`/api/admin/treasury/crypto-wallets/${wallet.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ is_active: !wallet.is_active }),
+        body: JSON.stringify({ is_active: true }),
       });
       void loadWallets();
       void loadAssets();
     } finally {
       setTogglingId(null);
+    }
+  };
+
+  /* ── Delete / deactivate ─────────────────────────────────────────── */
+  const handleRemoveWallet = async () => {
+    if (!confirmTarget) return;
+    setDeleting(true); setDeleteRes(null);
+    try {
+      const res  = await fetch(`/api/admin/treasury/crypto-wallets/${confirmTarget.id}`, { method: 'DELETE' });
+      const json = await res.json() as { deleted?: boolean; deactivated?: boolean; already_inactive?: boolean; error?: string };
+      if (!res.ok) {
+        setDeleteRes({ ok: false, msg: json.error ?? `Erreur ${res.status}` });
+        return;
+      }
+      if (json.deleted)          setDeleteRes({ ok: true, msg: 'Portefeuille supprimé définitivement.' });
+      else if (json.deactivated) setDeleteRes({ ok: true, msg: 'Portefeuille désactivé (lié à des reçus existants).' });
+      else                       setDeleteRes({ ok: true, msg: 'Déjà inactif.' });
+      void loadWallets();
+      void loadAssets();
+      setTimeout(() => { setConfirmTarget(null); setDeleteRes(null); }, 1800);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -422,8 +456,18 @@ export default function CryptoAssetsSection() {
             </form>
           )}
 
+          {/* Inactive toggle */}
+          <div className="flex items-center gap-2">
+            <label className="flex items-center gap-2 text-xs text-gray-400 cursor-pointer select-none">
+              <input type="checkbox" checked={showInactive}
+                onChange={(e) => setShowInactive(e.target.checked)}
+                className="rounded" />
+              Afficher les wallets inactifs
+            </label>
+          </div>
+
           {/* Wallet list */}
-          {wallets.length > 0 && (
+          {wallets.filter((w) => showInactive || w.is_active).length > 0 && (
             <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700/50">
               <table className="w-full text-xs">
                 <thead>
@@ -432,11 +476,15 @@ export default function CryptoAssetsSection() {
                     <th className="px-3 py-2 font-medium">Asset / Réseau</th>
                     <th className="px-3 py-2 font-medium hidden sm:table-cell">Adresse</th>
                     <th className="px-3 py-2 font-medium">Statut</th>
+                    <th className="px-3 py-2 font-medium">Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {wallets.map((w) => (
-                    <tr key={w.id} className="border-t border-gray-100 dark:border-gray-700/40">
+                  {wallets.filter((w) => showInactive || w.is_active).map((w) => (
+                    <tr key={w.id} className={clsx(
+                      'border-t border-gray-100 dark:border-gray-700/40',
+                      !w.is_active && 'opacity-50',
+                    )}>
                       <td className="px-3 py-2.5 font-medium text-gray-800 dark:text-white">{w.label}</td>
                       <td className="px-3 py-2.5">
                         <div className="flex gap-1">
@@ -449,20 +497,36 @@ export default function CryptoAssetsSection() {
                         <button onClick={() => copyToClipboard(w.address)} className="ml-1.5 text-gray-500 hover:text-white transition">
                           <Copy size={10} />
                         </button>
+                        {isTokenContract(w.address) && (
+                          <span className="ml-1.5 text-yellow-400" title="Attention : adresse de contrat token, pas un wallet">
+                            <AlertTriangle size={10} className="inline" />
+                          </span>
+                        )}
                       </td>
                       <td className="px-3 py-2.5">
-                        <button
-                          onClick={() => void toggleActive(w)}
-                          disabled={togglingId === w.id}
-                          className={clsx(
-                            'px-2 py-0.5 rounded-md text-xs font-semibold transition',
-                            w.is_active
-                              ? 'bg-green-900/30 text-green-400 hover:bg-red-900/30 hover:text-red-400'
-                              : 'bg-gray-700/30 text-gray-400 hover:bg-green-900/30 hover:text-green-400',
-                          )}
-                        >
-                          {togglingId === w.id ? '…' : w.is_active ? 'Actif' : 'Inactif'}
-                        </button>
+                        {w.is_active ? (
+                          <span className="px-2 py-0.5 rounded-md bg-green-900/30 text-green-400 font-semibold">Actif</span>
+                        ) : (
+                          <button
+                            onClick={() => void toggleActive(w)}
+                            disabled={togglingId === w.id}
+                            className="px-2 py-0.5 rounded-md bg-gray-700/30 text-gray-400 hover:bg-green-900/30 hover:text-green-400 font-semibold transition"
+                          >
+                            {togglingId === w.id ? '…' : 'Réactiver'}
+                          </button>
+                        )}
+                      </td>
+                      <td className="px-3 py-2.5">
+                        {w.is_active && (
+                          <button
+                            onClick={() => { setConfirmTarget(w); setDeleteRes(null); }}
+                            className="flex items-center gap-1 px-2 py-0.5 rounded-md text-red-400 hover:bg-red-900/30 transition font-semibold"
+                            title="Supprimer ou désactiver ce wallet"
+                          >
+                            <Trash2 size={11} />
+                            Retirer
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -470,6 +534,62 @@ export default function CryptoAssetsSection() {
               </table>
             </div>
           )}
+        </div>
+      )}
+
+      {/* ── Confirmation modal ─────────────────────────────────────── */}
+      {confirmTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-[#0e1428] border border-gray-700 rounded-2xl p-6 max-w-sm w-full mx-4 space-y-4 shadow-2xl">
+            <h3 className="text-sm font-bold text-gray-800 dark:text-white flex items-center gap-2">
+              <Trash2 size={14} className="text-red-400" />
+              Retirer ce portefeuille ?
+            </h3>
+
+            <p className="text-xs text-gray-600 dark:text-gray-400">
+              <span className="font-semibold text-white">{confirmTarget.label}</span>
+              {' '}({confirmTarget.asset} / {confirmTarget.network})
+            </p>
+
+            {/* Token contract warning */}
+            {isTokenContract(confirmTarget.address) && (
+              <div className="p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 text-xs flex gap-2">
+                <AlertTriangle size={13} className="shrink-0 mt-0.5" />
+                <span>
+                  <strong>Attention :</strong> cette adresse semble être un contrat token, pas une wallet de réception.
+                </span>
+              </div>
+            )}
+
+            <p className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800/50 rounded-xl p-3">
+              Cette action ne déplace aucun fonds on-chain. Elle retire seulement cette adresse du tableau UniPay.
+              Si des reçus lui sont liés, le wallet sera désactivé (pas supprimé).
+            </p>
+
+            {deleteRes && (
+              <p className={clsx('text-xs font-medium', deleteRes.ok ? 'text-green-400' : 'text-red-400')}>
+                {deleteRes.msg}
+              </p>
+            )}
+
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => { setConfirmTarget(null); setDeleteRes(null); }}
+                disabled={deleting}
+                className="px-3 py-1.5 rounded-xl border border-gray-600 text-xs text-gray-300 hover:bg-gray-800 transition"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => void handleRemoveWallet()}
+                disabled={deleting || !!deleteRes?.ok}
+                className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold transition disabled:opacity-50 flex items-center gap-1.5"
+              >
+                {deleting ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />}
+                Confirmer
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </section>

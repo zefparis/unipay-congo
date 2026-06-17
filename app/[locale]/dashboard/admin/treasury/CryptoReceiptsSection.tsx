@@ -108,11 +108,12 @@ type CreateForm = typeof EMPTY_CREATE;
 
 /* ── Treasury wallet (for auto-fill selector) ───────────────────────── */
 interface TreasuryWallet {
-  id:      string;
-  label:   string;
-  asset:   string;
-  network: string;
-  address: string;
+  id:        string;
+  label:     string;
+  asset:     string;
+  network:   string;
+  address:   string;
+  is_active: boolean;
 }
 
 const PREDICTSTREET: Partial<CreateForm> = {
@@ -359,7 +360,7 @@ export default function CryptoReceiptsSection() {
                   className={selCls}
                 >
                   <option value="">— Sélectionner un wallet treasury —</option>
-                  {treasuryWallets.map((w) => (
+                  {treasuryWallets.filter((w) => w.is_active).map((w) => (
                     <option key={w.id} value={w.id}>{w.label} ({w.asset}/{w.network})</option>
                   ))}
                 </select>
