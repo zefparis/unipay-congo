@@ -552,7 +552,7 @@ export default function CryptoReceiptsSection() {
                                   </button>
                                 )}
                                 {(row.status === 'pending' || row.status === 'received') && (() => {
-                                  const verifyBlocking = verifyRes && !(verifyRes.verified as boolean);
+                                  const verifyBlocking = !!verifyRes && !(verifyRes.verified as boolean);
                                   const needsOverride  = verifyBlocking && !overrideReason.trim();
                                   return (
                                     <button
