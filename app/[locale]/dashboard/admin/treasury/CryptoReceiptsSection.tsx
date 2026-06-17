@@ -23,6 +23,7 @@ export interface CryptoReceipt {
   receiving_address: string | null;
   tx_hash:           string | null;
   status:            string;
+  receipt_kind:      string | null;
   notes:             string | null;
   created_by:        string | null;
   received_at:       string | null;
@@ -102,6 +103,7 @@ const EMPTY_CREATE = {
   expected_amount:   '',
   receiving_address: '',
   notes:             '',
+  receipt_kind:      'invoice_payment',
 };
 
 type CreateForm = typeof EMPTY_CREATE;
@@ -210,23 +212,35 @@ export default function CryptoReceiptsSection() {
     setCreateRes(null);
     setCreating(true);
     try {
+      const isReg = cForm.receipt_kind === 'internal_regularization';
+
+      if (isReg && cForm.notes.trim().length < 20) {
+        setCreateRes({ ok: false, msg: 'Les notes doivent faire au moins 20 caractères pour une régularisation.' });
+        return;
+      }
+
       const body: Record<string, unknown> = {
         asset:             cForm.asset,
         network:           cForm.network,
         expected_amount:   parseFloat(cForm.expected_amount),
         receiving_address: cForm.receiving_address.trim(),
+        receipt_kind:      cForm.receipt_kind,
       };
       if (cForm.invoice_reference.trim()) body.invoice_reference = cForm.invoice_reference.trim();
       if (cForm.invoice_id.trim())        body.invoice_id        = cForm.invoice_id.trim();
       if (cForm.payer_name.trim())        body.payer_name        = cForm.payer_name.trim();
       if (cForm.notes.trim())             body.notes             = cForm.notes.trim();
+      if (isReg) {
+        body.status          = 'confirmed';
+        body.received_amount = parseFloat(cForm.expected_amount);
+      }
 
       const res  = await fetch('/api/admin/treasury/crypto-receipts', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
       });
       const data = await res.json() as { error?: string; message?: string };
       if (!res.ok) { setCreateRes({ ok: false, msg: data.message ?? data.error ?? `Erreur ${res.status}` }); return; }
-      setCreateRes({ ok: true, msg: 'Reçu en attente créé.' });
+      setCreateRes({ ok: true, msg: isReg ? 'Régularisation confirmée créée.' : 'Reçu en attente créé.' });
       setCForm(EMPTY_CREATE);
       setShowCreate(false);
       void loadReceipts();
@@ -342,6 +356,28 @@ export default function CryptoReceiptsSection() {
           </div>
 
           <form onSubmit={(e) => { void handleCreate(e); }} className="space-y-4">
+            {/* Receipt kind selector */}
+            <div>
+              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Type d&apos;entrée *</label>
+              <select value={cForm.receipt_kind} onChange={(e) => setCForm(f => ({ ...f, receipt_kind: e.target.value }))} className={selCls}>
+                <option value="invoice_payment">Paiement facture</option>
+                <option value="test_payment">Paiement test</option>
+                <option value="internal_regularization">Régularisation interne</option>
+              </select>
+            </div>
+
+            {/* Regularization warning */}
+            {cForm.receipt_kind === 'internal_regularization' && (
+              <div className="flex gap-2 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs">
+                <AlertCircle size={13} className="shrink-0 mt-0.5" />
+                <span>
+                  <strong>Régularisation comptable uniquement.</strong> Cette opération ne correspond pas à une nouvelle transaction blockchain.
+                  Elle sert uniquement à rapprocher le solde on-chain et le solde comptable UniPay.
+                  Les notes doivent décrire précisément le motif (minimum 20 caractères).
+                </span>
+              </div>
+            )}
+
             {/* Wallet selector */}
             {treasuryWallets.length > 0 && (
               <div>
@@ -393,7 +429,7 @@ export default function CryptoReceiptsSection() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Montant attendu *</label>
+                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{cForm.receipt_kind === 'internal_regularization' ? 'Montant à régulariser *' : 'Montant attendu *'}</label>
                 <input type="number" required min="0.01" step="0.01" value={cForm.expected_amount}
                   onChange={(e) => setCForm(f => ({ ...f, expected_amount: e.target.value }))}
                   placeholder="116000" className={inputCls} />
@@ -409,8 +445,13 @@ export default function CryptoReceiptsSection() {
             <div>
               <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Notes</label>
               <textarea rows={2} value={cForm.notes} onChange={(e) => setCForm(f => ({ ...f, notes: e.target.value }))}
-                placeholder="Ex : PredictStreet x Congo Gaming DRC Market Launch payment"
+                placeholder={cForm.receipt_kind === 'internal_regularization'
+                  ? 'Motif de régularisation (obligatoire, min. 20 caractères)…'
+                  : 'Ex : PredictStreet x Congo Gaming DRC Market Launch payment'}
                 className={clsx(inputCls, 'resize-none')} />
+              {cForm.receipt_kind === 'internal_regularization' && cForm.notes.trim().length > 0 && cForm.notes.trim().length < 20 && (
+                <p className="text-xs text-red-400 mt-0.5">{cForm.notes.trim().length}/20 caractères minimum</p>
+              )}
             </div>
 
             <Feedback res={createRes} />
@@ -418,7 +459,11 @@ export default function CryptoReceiptsSection() {
             <button type="submit" disabled={creating}
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold transition disabled:opacity-50">
               {creating && <Loader2 size={14} className="animate-spin" />}
-              {creating ? 'Création…' : 'Créer le reçu en attente'}
+              {creating
+                ? 'Création…'
+                : cForm.receipt_kind === 'internal_regularization'
+                  ? 'Créer la régularisation confirmée'
+                  : 'Créer le reçu en attente'}
             </button>
           </form>
         </div>
@@ -485,6 +530,11 @@ export default function CryptoReceiptsSection() {
                         <td className="px-3 py-3 whitespace-nowrap">
                           <p className="font-medium text-gray-800 dark:text-gray-200">{row.invoice_reference ?? '—'}</p>
                           <p className="text-xs text-gray-400 dark:text-gray-500">{row.payer_name ?? '—'}</p>
+                          {row.receipt_kind === 'internal_regularization' && (
+                            <span className="inline-block mt-0.5 px-1.5 py-0.5 rounded bg-indigo-900/40 border border-indigo-700/40 text-indigo-300 text-[10px] font-semibold">
+                              Régularisation
+                            </span>
+                          )}
                         </td>
                         <td className="px-3 py-3 whitespace-nowrap">
                           <span className={clsx('px-2 py-0.5 rounded-md text-xs font-bold',
@@ -628,7 +678,7 @@ export default function CryptoReceiptsSection() {
                                     <XCircle size={12} className="inline mr-1" />Annuler
                                   </button>
                                 )}
-                                {row.tx_hash && row.network === 'BSC' && (
+                                {row.tx_hash && row.network === 'BSC' && row.receipt_kind !== 'internal_regularization' && (
                                   <button onClick={() => void handleVerify(row.id)} disabled={actionBusy}
                                     className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-purple-900/40 hover:bg-purple-800/60 text-purple-300 text-xs font-semibold border border-purple-700/40 transition disabled:opacity-40">
                                     <ShieldCheck size={12} />Vérifier BSC
