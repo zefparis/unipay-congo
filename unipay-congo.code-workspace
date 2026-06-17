@@ -13,9 +13,6 @@
 			"path": "../unipay-app"
 		},
 		{
-			"path": "../congogaming-auth-test/congogaming-main"
-		},
-		{
 			"path": "../cglt-bridge"
 		}
 	],

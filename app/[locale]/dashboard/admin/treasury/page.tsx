@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import CryptoReceiptsSection from './CryptoReceiptsSection';
 import {
   RefreshCw, Landmark, ArrowUpRight, CheckCircle2, XCircle,
   Clock, AlertCircle, Loader2, ChevronDown,
@@ -367,7 +368,7 @@ export default function TreasuryPage() {
         </div>
       </section>
 
-      {/* ── 3. Historique ──────────────────────────────────────────── */}
+      {/* ── 3. Historique retraits USDT ────────────────────────────── */}
       <section>
         <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">
           Historique des retraits
@@ -437,6 +438,10 @@ export default function TreasuryPage() {
           )}
         </div>
       </section>
+
+      {/* ── 4. Paiements factures crypto ────────────────────────────── */}
+      <CryptoReceiptsSection />
+
     </div>
   );
 }
