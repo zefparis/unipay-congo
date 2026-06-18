@@ -14,6 +14,9 @@
 		},
 		{
 			"path": "../cglt-bridge"
+		},
+		{
+			"path": "../congogaming-auth-test/congogaming-main"
 		}
 	],
 	"settings": {}
