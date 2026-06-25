@@ -12,6 +12,7 @@ export async function POST(
   const upstream = await fetch(`${API_URL}/v1/admin/kyc/${params.merchant_id}/approve`, {
     method: 'POST',
     headers: { 'x-admin-secret': ADMIN_SECRET, 'Content-Type': 'application/json' },
+    body: JSON.stringify({}),
   });
   const data = await upstream.json();
   return NextResponse.json(data, { status: upstream.status });
