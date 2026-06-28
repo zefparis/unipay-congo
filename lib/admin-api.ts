@@ -91,8 +91,26 @@ export interface Pagination {
   pages: number;
 }
 
+export interface RevenuePeriod {
+  volume:       number;
+  frais_avada:  number;
+  frais_client: number;
+  marge_nette:  number;
+  nb_tx:        number;
+}
+
+export interface RevenueStats {
+  today: RevenuePeriod;
+  month: RevenuePeriod;
+  all:   RevenuePeriod;
+}
+
 export function getStats(): Promise<WalletStats> {
   return get<WalletStats>(`${BASE}/stats`);
+}
+
+export function getRevenue(): Promise<RevenueStats> {
+  return get<RevenueStats>(`${BASE}/revenue`);
 }
 
 export function getSwapRate(): Promise<SwapRate> {

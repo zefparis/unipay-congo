@@ -5,9 +5,9 @@ import { Link } from '@/i18n/navigation';
 import {
   Users, ShieldCheck, ArrowDownLeft, ArrowUpRight, ArrowLeftRight,
   CalendarDays, RefreshCw, TrendingUp, Wallet, AlertCircle,
-  Coins, Landmark, Repeat,
+  Coins, Landmark, Repeat, Banknote, CreditCard, Leaf, BarChart2,
 } from 'lucide-react';
-import { getStats, getAvadaBalance, getSwapRate, type WalletStats, type SwapRate } from '@/lib/admin-api';
+import { getStats, getAvadaBalance, getSwapRate, getRevenue, type WalletStats, type SwapRate, type RevenueStats } from '@/lib/admin-api';
 import clsx from 'clsx';
 
 function fmt(n: number) {
@@ -41,20 +41,25 @@ export default function AdminOverviewPage() {
   const [avadaBal, setAvadaBal] = useState<number | null>(null);
   const [avadaErr, setAvadaErr] = useState('');
   const [swap, setSwap] = useState<SwapRate | null>(null);
+  const [revData, setRevData] = useState<RevenueStats | null>(null);
+  const [revLoading, setRevLoading] = useState(true);
+  const [revPeriod, setRevPeriod] = useState<'today' | 'month' | 'all'>('today');
 
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
     setAvadaErr('');
     try {
-      const [s, ab, sr] = await Promise.allSettled([getStats(), getAvadaBalance(), getSwapRate()]);
+      const [s, ab, sr, rv] = await Promise.allSettled([getStats(), getAvadaBalance(), getSwapRate(), getRevenue()]);
       if (s.status === 'fulfilled') setStats(s.value);
       else setError((s.reason as Error).message);
       if (ab.status === 'fulfilled') setAvadaBal(ab.value.balance);
       else setAvadaErr((ab.reason as Error).message);
       setSwap(sr.status === 'fulfilled' ? sr.value : null);
+      setRevData(rv.status === 'fulfilled' ? rv.value : null);
     } finally {
       setLoading(false);
+      setRevLoading(false);
     }
   }, []);
 
@@ -236,6 +241,110 @@ export default function AdminOverviewPage() {
                 <ChartBar value={d.p2p} max={maxChart} label="" color="bg-purple-400 dark:bg-purple-500" />
               </div>
             ))}
+          </div>
+        )}
+      </div>
+
+      {/* Marge & Revenus */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <Banknote size={16} className="text-amber-500" />
+            Marge &amp; Revenus
+          </h2>
+          <div className="flex gap-0.5 bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5">
+            {(['today', 'month', 'all'] as const).map((p) => (
+              <button
+                key={p}
+                onClick={() => setRevPeriod(p)}
+                className={clsx(
+                  'px-3 py-1 rounded-md text-xs font-medium transition-all',
+                  revPeriod === p
+                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200',
+                )}
+              >
+                {p === 'today' ? "Aujourd'hui" : p === 'month' ? 'Ce mois' : 'Total'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {revLoading ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 animate-pulse h-28" />
+            ))}
+          </div>
+        ) : revData ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              {
+                label: 'Volume agrégé',
+                note: 'Collect + Payout success',
+                value: revData[revPeriod].volume,
+                sub: `${revData[revPeriod].nb_tx} tx`,
+                icon: BarChart2,
+                color: 'text-amber-500',
+                bg: 'bg-amber-500/10',
+                border: 'border-amber-500/20',
+              },
+              {
+                label: 'Frais clients (4%)',
+                note: 'Revenus bruts estimés',
+                value: revData[revPeriod].frais_client,
+                sub: '4% du volume',
+                icon: Banknote,
+                color: 'text-emerald-500',
+                bg: 'bg-emerald-500/10',
+                border: 'border-emerald-500/20',
+              },
+              {
+                label: 'Frais Avada (3%)',
+                note: 'Coût de traitement',
+                value: revData[revPeriod].frais_avada,
+                sub: 'SUM(fee) success',
+                icon: CreditCard,
+                color: 'text-orange-500',
+                bg: 'bg-orange-500/10',
+                border: 'border-orange-500/20',
+              },
+              {
+                label: 'Marge nette (1%)',
+                note: 'Profit net estimé',
+                value: revData[revPeriod].marge_nette,
+                sub: '1% du volume',
+                icon: Leaf,
+                color: 'text-green-600',
+                bg: 'bg-green-500/10',
+                border: 'border-green-500/20',
+              },
+            ].map(({ label, note, value, sub, icon: Icon, color, bg, border }) => (
+              <div
+                key={label}
+                className={clsx(
+                  'bg-white dark:bg-gray-900/60 border rounded-2xl p-5 space-y-3 shadow-sm',
+                  border,
+                )}
+              >
+                <div className={clsx('inline-flex p-2 rounded-xl', bg)}>
+                  <Icon size={18} className={color} />
+                </div>
+                <div>
+                  <div className="text-xl font-heading font-bold text-gray-900 dark:text-white">
+                    {fmt(value)}
+                    <span className="text-xs font-normal text-gray-400 ml-1">CDF</span>
+                  </div>
+                  <div className="text-xs font-medium text-gray-700 dark:text-gray-300 mt-0.5">{label}</div>
+                  <div className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">{note}</div>
+                  <div className="text-[10px] text-gray-300 dark:text-gray-600">{sub}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-sm text-gray-500 dark:text-gray-400 text-center py-6">
+            Données de revenus indisponibles
           </div>
         )}
       </div>
