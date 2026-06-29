@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const SETTLEMENT_ADDRESS = '0x7851E44d4A8B0939CF10EDE3922a762722437eA5';
+const SETTLEMENT_ADDRESS = '0x2b8a431b540C41D2Af83301287E5B18dd1F221CB';
 const USDC_CONTRACT      = '0x9cb8142aEBBcdc60AF7c97Af897A67A8f3CA71C2';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
