@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import {
-  Gamepad2, RefreshCw, AlertTriangle, CheckCircle2, XCircle,
-  ExternalLink, Globe, Shield, Key, Link2, Cpu,
+  Smartphone, RefreshCw, AlertTriangle, CheckCircle2, XCircle,
+  Shield, Key, Link2, Cpu, Activity, TrendingUp, Zap, BarChart3,
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -19,8 +19,6 @@ interface StatusResponse {
   integration_ready: boolean;
   warnings:          string[];
   config: {
-    iframe_url:               string | null;
-    allowed_origin:           string | null;
     provider_id:              string | null;
     jwt_issuer_configured:    boolean;
     jwt_audience_configured:  boolean;
@@ -33,7 +31,43 @@ interface StatusResponse {
     token:  EndpointInfo;
     limits: EndpointInfo;
   };
-  gaming_page_path: string;
+}
+
+interface PsTransaction {
+  id:         string;
+  reference:  string | null;
+  amount:     number;
+  net_amount: number;
+  currency:   string;
+  status:     string;
+  created_at: string;
+}
+
+interface PsStats {
+  total:         number;
+  success_count: number;
+  total_cdf:     number;
+  success_rate:  number;
+}
+
+interface TxResponse {
+  transactions: PsTransaction[];
+  stats:        PsStats;
+  last_webhook: PsTransaction | null;
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function relativeTime(iso: string): string {
+  const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+  if (diff < 60)    return `il y a ${diff}s`;
+  if (diff < 3600)  return `il y a ${Math.floor(diff / 60)}min`;
+  if (diff < 86400) return `il y a ${Math.floor(diff / 3600)}h`;
+  return `il y a ${Math.floor(diff / 86400)}j`;
+}
+
+function fmtCdf(n: number): string {
+  return new Intl.NumberFormat('fr-CD').format(Math.round(n)) + ' CDF';
 }
 
 // ── Sub-components ───────────────────────────────────────────────────────────
@@ -54,26 +88,30 @@ function StatusBadge({ ok, label }: { ok: boolean; label?: string }) {
   );
 }
 
+function TxStatusBadge({ status }: { status: string }) {
+  const map: Record<string, string> = {
+    success:    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+    failed:     'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+    cancelled:  'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+    pending:    'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+    processing: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  };
+  const label: Record<string, string> = {
+    success: 'Réussi', failed: 'Échoué', cancelled: 'Annulé',
+    pending: 'En attente', processing: 'En cours',
+  };
+  return (
+    <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', map[status] ?? 'bg-gray-100 text-gray-600')}>
+      {label[status] ?? status}
+    </span>
+  );
+}
+
 function BoolRow({ label, value, falseLabel }: { label: string; value: boolean; falseLabel?: string }) {
   return (
     <div className="flex items-center justify-between py-2.5 border-b border-gray-100 dark:border-gray-800 last:border-0">
       <span className="text-sm text-gray-600 dark:text-gray-400">{label}</span>
       <StatusBadge ok={value} label={value ? 'OK' : (falseLabel ?? 'Manquant')} />
-    </div>
-  );
-}
-
-function ValueRow({ label, value, mono = false }: { label: string; value: string | null; mono?: boolean }) {
-  return (
-    <div className="flex items-start justify-between gap-4 py-2.5 border-b border-gray-100 dark:border-gray-800 last:border-0">
-      <span className="text-sm text-gray-600 dark:text-gray-400 flex-shrink-0">{label}</span>
-      {value ? (
-        <span className={clsx('text-sm text-gray-900 dark:text-white text-right break-all', mono && 'font-mono')}>
-          {value}
-        </span>
-      ) : (
-        <span className="text-sm text-red-500 dark:text-red-400 italic">non configuré</span>
-      )}
     </div>
   );
 }
@@ -94,10 +132,28 @@ function EndpointCard({ label, ep }: { label: string; ep: EndpointInfo }) {
   );
 }
 
+function StatCard({ icon: Icon, label, value, sub, color }: {
+  icon: React.ElementType; label: string; value: string; sub?: string; color: string;
+}) {
+  return (
+    <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm">
+      <div className="flex items-center gap-3 mb-3">
+        <div className={clsx('p-2 rounded-xl', color)}>
+          <Icon size={16} className="text-white" />
+        </div>
+        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{label}</span>
+      </div>
+      <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+      {sub && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{sub}</p>}
+    </div>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function AdminPredictStreetPage() {
-  const [data,    setData]    = useState<StatusResponse | null>(null);
+  const [status,  setStatus]  = useState<StatusResponse | null>(null);
+  const [txData,  setTxData]  = useState<TxResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [err,     setErr]     = useState('');
 
@@ -105,14 +161,18 @@ export default function AdminPredictStreetPage() {
     setLoading(true);
     setErr('');
     try {
-      const res = await fetch('/api/predictstreet/status', { cache: 'no-store' });
-      if (!res.ok) {
-        setErr(res.status === 401 ? 'Accès refusé — session admin requise.' : `Erreur ${res.status}`);
+      const [sRes, tRes] = await Promise.all([
+        fetch('/api/predictstreet/status', { cache: 'no-store' }),
+        fetch('/api/admin/predictstreet/transactions', { cache: 'no-store' }),
+      ]);
+      if (!sRes.ok) {
+        setErr(sRes.status === 401 ? 'Accès refusé — session admin requise.' : `Erreur ${sRes.status}`);
         return;
       }
-      setData(await res.json() as StatusResponse);
+      setStatus(await sRes.json() as StatusResponse);
+      if (tRes.ok) setTxData(await tRes.json() as TxResponse);
     } catch {
-      setErr('Impossible de contacter /api/predictstreet/status');
+      setErr('Impossible de contacter les APIs');
     } finally {
       setLoading(false);
     }
@@ -121,17 +181,17 @@ export default function AdminPredictStreetPage() {
   useEffect(() => { void load(); }, [load]);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-5xl mx-auto space-y-8">
 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <Gamepad2 className="text-purple-500" size={22} />
-            PredictStreet — Statut d&apos;intégration
+            <Smartphone className="text-purple-500" size={22} />
+            PredictStreet — Mobile Money
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-            Diagnostic de la configuration du bridge Gaming
+            Monitoring en temps réel du rail de dépôt Mobile Money
           </p>
         </div>
         <button
@@ -153,7 +213,7 @@ export default function AdminPredictStreetPage() {
       )}
 
       {/* Skeleton */}
-      {loading && !data && (
+      {loading && !status && (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-24 rounded-2xl bg-gray-100 dark:bg-gray-800 animate-pulse" />
@@ -161,62 +221,167 @@ export default function AdminPredictStreetPage() {
         </div>
       )}
 
-      {data && (
+      {status && (
         <>
           {/* Integration-ready banner */}
           <div
             className={clsx(
               'relative overflow-hidden rounded-2xl p-5 border shadow-sm flex items-center gap-4',
-              data.integration_ready
+              status.integration_ready
                 ? 'bg-gradient-to-r from-emerald-500/10 to-green-500/5 border-emerald-500/30 dark:border-emerald-500/20'
                 : 'bg-gradient-to-r from-amber-500/10 to-orange-500/5 border-amber-500/30 dark:border-amber-500/20',
             )}
           >
-            <div
-              className={clsx(
-                'p-3 rounded-xl',
-                data.integration_ready ? 'bg-emerald-500/15' : 'bg-amber-500/15',
-              )}
-            >
-              {data.integration_ready
+            <div className={clsx('p-3 rounded-xl', status.integration_ready ? 'bg-emerald-500/15' : 'bg-amber-500/15')}>
+              {status.integration_ready
                 ? <CheckCircle2 size={22} className="text-emerald-500" />
                 : <AlertTriangle size={22} className="text-amber-500" />}
             </div>
             <div>
-              <p
-                className={clsx(
-                  'text-sm font-semibold uppercase tracking-wider mb-0.5',
-                  data.integration_ready ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400',
-                )}
-              >
-                {data.integration_ready ? 'Intégration prête pour la production' : 'Configuration incomplète'}
+              <p className={clsx(
+                'text-sm font-semibold uppercase tracking-wider mb-0.5',
+                status.integration_ready ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400',
+              )}>
+                {status.integration_ready ? 'Intégration prête pour la production' : 'Configuration incomplète'}
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {data.integration_ready
+                {status.integration_ready
                   ? 'Toutes les variables d\'environnement sont correctement configurées.'
-                  : `${data.warnings.length} avertissement${data.warnings.length > 1 ? 's' : ''} détecté${data.warnings.length > 1 ? 's' : ''} — voir ci-dessous.`}
+                  : `${status.warnings.length} avertissement${status.warnings.length > 1 ? 's' : ''} détecté${status.warnings.length > 1 ? 's' : ''} — voir ci-dessous.`}
               </p>
             </div>
           </div>
 
           {/* Warnings */}
-          {data.warnings.length > 0 && (
+          {status.warnings.length > 0 && (
             <div className="bg-white dark:bg-gray-900/60 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-5 shadow-sm space-y-3">
               <h2 className="text-sm font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-2">
                 <AlertTriangle size={15} />
-                Avertissements ({data.warnings.length})
+                Avertissements ({status.warnings.length})
               </h2>
               <ul className="space-y-2">
-                {data.warnings.map((w, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300 bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2"
-                  >
+                {status.warnings.map((w, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300 bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2">
                     <AlertTriangle size={13} className="text-amber-500 flex-shrink-0 mt-0.5" />
                     {w}
                   </li>
                 ))}
               </ul>
+            </div>
+          )}
+
+          {/* Stats */}
+          {txData && (
+            <div>
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                <BarChart3 size={15} className="text-purple-500" />
+                Statistiques
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <StatCard
+                  icon={Activity}
+                  label="Total dépôts PS"
+                  value={String(txData.stats.total)}
+                  color="bg-purple-500"
+                />
+                <StatCard
+                  icon={CheckCircle2}
+                  label="Dépôts réussis"
+                  value={String(txData.stats.success_count)}
+                  color="bg-emerald-500"
+                />
+                <StatCard
+                  icon={TrendingUp}
+                  label="Montant collecté"
+                  value={fmtCdf(txData.stats.total_cdf)}
+                  sub="transactions réussies"
+                  color="bg-blue-500"
+                />
+                <StatCard
+                  icon={Zap}
+                  label="Taux de succès"
+                  value={`${txData.stats.success_rate}%`}
+                  sub={`${txData.stats.success_count} / ${txData.stats.total}`}
+                  color={txData.stats.success_rate >= 80 ? 'bg-emerald-500' : 'bg-amber-500'}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Last webhook */}
+          {txData?.last_webhook && (
+            <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm">
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <Zap size={15} className="text-purple-500" />
+                Dernier webhook envoyé
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">Référence</p>
+                  <p className="font-mono text-xs text-gray-800 dark:text-gray-200 break-all">{txData.last_webhook.reference}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">Montant</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">{fmtCdf(txData.last_webhook.net_amount)}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">Statut</p>
+                  <TxStatusBadge status={txData.last_webhook.status} />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">Date</p>
+                  <p className="text-gray-600 dark:text-gray-400">{relativeTime(txData.last_webhook.created_at)}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Recent deposits table */}
+          {txData && (
+            <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-2">
+                <Smartphone size={15} className="text-purple-500" />
+                <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
+                  Derniers dépôts Mobile Money
+                </h2>
+                <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">10 derniers</span>
+              </div>
+              {txData.transactions.length === 0 ? (
+                <div className="px-5 py-8 text-center text-sm text-gray-400 dark:text-gray-500">
+                  Aucun dépôt PredictStreet trouvé
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-gray-100 dark:border-gray-800">
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">Référence</th>
+                        <th className="px-5 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">Montant CDF</th>
+                        <th className="px-5 py-3 text-center text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">Statut</th>
+                        <th className="px-5 py-3 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                      {txData.transactions.map((tx) => (
+                        <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                          <td className="px-5 py-3 font-mono text-xs text-gray-600 dark:text-gray-400">
+                            {tx.reference ? `${tx.reference.slice(0, 20)}…` : '—'}
+                          </td>
+                          <td className="px-5 py-3 text-right font-semibold text-gray-900 dark:text-white">
+                            {fmtCdf(tx.net_amount)}
+                          </td>
+                          <td className="px-5 py-3 text-center">
+                            <TxStatusBadge status={tx.status} />
+                          </td>
+                          <td className="px-5 py-3 text-right text-xs text-gray-500 dark:text-gray-400">
+                            {relativeTime(tx.created_at)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
 
@@ -227,9 +392,9 @@ export default function AdminPredictStreetPage() {
               Endpoints
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <EndpointCard label="JWKS (public)"     ep={data.endpoints.jwks} />
-              <EndpointCard label="Token SSO"         ep={data.endpoints.token} />
-              <EndpointCard label="Limites utilisateur" ep={data.endpoints.limits} />
+              <EndpointCard label="JWKS (public)"       ep={status.endpoints.jwks} />
+              <EndpointCard label="Token SSO"           ep={status.endpoints.token} />
+              <EndpointCard label="Limites utilisateur" ep={status.endpoints.limits} />
             </div>
           </div>
 
@@ -239,29 +404,16 @@ export default function AdminPredictStreetPage() {
               <Cpu size={15} className="text-purple-500" />
               Configuration
             </h2>
-
-            <div>
-              <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-1">Iframe / PostMessage</p>
-              <ValueRow label="Iframe URL"      value={data.config.iframe_url} />
-              <ValueRow label="Allowed origin"  value={data.config.allowed_origin} mono />
-            </div>
-
-            <div className="mt-4">
-              <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-1">Identité partenaire</p>
-              <ValueRow label="Provider ID" value={data.config.provider_id} mono />
-            </div>
-
             <div className="mt-4">
               <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-1">JWT / Clé RSA</p>
-              <BoolRow label="Clé privée présente"       value={data.config.private_key_present}     falseLabel="Absente" />
-              <BoolRow label="Clé privée RSA valide"     value={data.config.private_key_valid_rsa}   falseLabel="Invalide" />
-              <BoolRow label="JWT Issuer configuré"      value={data.config.jwt_issuer_configured}   />
-              <BoolRow label="JWT Audience configuré"    value={data.config.jwt_audience_configured} />
+              <BoolRow label="Clé privée présente"    value={status.config.private_key_present}     falseLabel="Absente" />
+              <BoolRow label="Clé privée RSA valide"  value={status.config.private_key_valid_rsa}   falseLabel="Invalide" />
+              <BoolRow label="JWT Issuer configuré"   value={status.config.jwt_issuer_configured}   />
+              <BoolRow label="JWT Audience configuré" value={status.config.jwt_audience_configured} />
             </div>
-
             <div className="mt-4">
               <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-1">Sécurité serveur-à-serveur</p>
-              <BoolRow label="Server secret configuré"  value={data.config.server_secret_configured} falseLabel="Faible / absent" />
+              <BoolRow label="Server secret configuré" value={status.config.server_secret_configured} falseLabel="Faible / absent" />
             </div>
           </div>
 
@@ -272,28 +424,6 @@ export default function AdminPredictStreetPage() {
               Cette page n&apos;expose jamais la clé privée RSA, le server secret, les tokens JWT bruts ni les traces d&apos;erreur.
               Les valeurs sensibles sont masquées et uniquement accessibles aux administrateurs authentifiés.
             </p>
-          </div>
-
-          {/* Link to gaming page */}
-          <div className="flex items-center justify-between bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800/50 rounded-2xl p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-purple-500/15">
-                <Globe size={18} className="text-purple-500" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">Page Gaming utilisateurs</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 font-mono mt-0.5">{data.gaming_page_path}</p>
-              </div>
-            </div>
-            <a
-              href="/fr/wallet/gaming"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-500 text-white text-xs font-semibold hover:bg-purple-600 transition-colors"
-            >
-              <ExternalLink size={13} />
-              Ouvrir
-            </a>
           </div>
         </>
       )}
