@@ -450,7 +450,7 @@ export default function AdminPredictStreetPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <EndpointCard label="Initiation dépôt"     ep={{ path: 'POST /v1/payment/initiate',              status: 'ok', auth: 'X-API-Key' }} />
-              <EndpointCard label="Callback Avada"        ep={{ path: 'POST /v1/wallet/unipesa/callback',       status: 'ok', auth: 'Signature Avada' }} />
+              <EndpointCard label="Callback Agregation"        ep={{ path: 'POST /v1/wallet/unipesa/callback',       status: 'ok', auth: 'Signature Avada' }} />
               <EndpointCard label="Statut transaction"    ep={{ path: 'GET /v1/payment/:id/status',             status: 'ok', auth: 'X-API-Key' }} />
               <EndpointCard label="Refund PredictStreet"  ep={{ path: 'POST /v1/adi/credit-failed-refund',      status: 'ok', auth: 'HMAC' }} />
               <EndpointCard label="Limites utilisateur"   ep={{ path: 'GET /api/predictstreet/users/:id/limits', status: 'ok', auth: 'Bearer SERVER_SECRET' }} />
