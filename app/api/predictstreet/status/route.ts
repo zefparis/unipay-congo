@@ -85,22 +85,8 @@ export async function GET() {
   if (!process.env.NEXT_PUBLIC_PREDICTSTREET_ALLOWED_ORIGIN)
     warnings.push('NEXT_PUBLIC_PREDICTSTREET_ALLOWED_ORIGIN is not set — postMessage bridge will reject all iframe messages');
 
-  // ── Build response — no secrets exposed ──────────────────────────────
+  // ── Build response — endpoints only ──────────────────────────────────
   return NextResponse.json({
-    integration_ready: warnings.length === 0,
-    warnings,
-    config: {
-      iframe_url:               process.env.NEXT_PUBLIC_PREDICTSTREET_IFRAME_URL      ?? null,
-      allowed_origin:           process.env.NEXT_PUBLIC_PREDICTSTREET_ALLOWED_ORIGIN  ?? null,
-      provider_id:              pidStatus.present && !pidStatus.weak
-                                  ? (process.env.PREDICTSTREET_PROVIDER_ID ?? null)
-                                  : null,
-      jwt_issuer_configured:    issStatus.present && !issStatus.weak,
-      jwt_audience_configured:  audStatus.present && !audStatus.weak,
-      private_key_present:      pkStatus.present && !pkStatus.weak,
-      private_key_valid_rsa:    jwksOk,
-      server_secret_configured: limitsReady,
-    },
     endpoints: {
       jwks: {
         path:   '/api/predictstreet/jwks',
@@ -118,6 +104,5 @@ export async function GET() {
         auth:   'Bearer PREDICTSTREET_SERVER_SECRET',
       },
     },
-    gaming_page_path: '/wallet/gaming',
   });
 }

@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import {
-  Smartphone, RefreshCw, AlertTriangle, CheckCircle2, XCircle,
-  Shield, Key, Link2, Cpu, Activity, TrendingUp, Zap, BarChart3,
+  Smartphone, RefreshCw, CheckCircle2, XCircle,
+  Shield, Link2, Activity, TrendingUp, Zap, BarChart3,
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -16,16 +16,6 @@ interface EndpointInfo {
 }
 
 interface StatusResponse {
-  integration_ready: boolean;
-  warnings:          string[];
-  config: {
-    provider_id:              string | null;
-    jwt_issuer_configured:    boolean;
-    jwt_audience_configured:  boolean;
-    private_key_present:      boolean;
-    private_key_valid_rsa:    boolean;
-    server_secret_configured: boolean;
-  };
   endpoints: {
     jwks:   EndpointInfo;
     token:  EndpointInfo;
@@ -87,7 +77,6 @@ function StatusBadge({ ok, label }: { ok: boolean; label?: string }) {
     </span>
   );
 }
-
 function TxStatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
     success:    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
@@ -107,14 +96,6 @@ function TxStatusBadge({ status }: { status: string }) {
   );
 }
 
-function BoolRow({ label, value, falseLabel }: { label: string; value: boolean; falseLabel?: string }) {
-  return (
-    <div className="flex items-center justify-between py-2.5 border-b border-gray-100 dark:border-gray-800 last:border-0">
-      <span className="text-sm text-gray-600 dark:text-gray-400">{label}</span>
-      <StatusBadge ok={value} label={value ? 'OK' : (falseLabel ?? 'Manquant')} />
-    </div>
-  );
-}
 
 function EndpointCard({ label, ep }: { label: string; ep: EndpointInfo }) {
   return (
@@ -223,53 +204,6 @@ export default function AdminPredictStreetPage() {
 
       {status && (
         <>
-          {/* Integration-ready banner */}
-          <div
-            className={clsx(
-              'relative overflow-hidden rounded-2xl p-5 border shadow-sm flex items-center gap-4',
-              status.integration_ready
-                ? 'bg-gradient-to-r from-emerald-500/10 to-green-500/5 border-emerald-500/30 dark:border-emerald-500/20'
-                : 'bg-gradient-to-r from-amber-500/10 to-orange-500/5 border-amber-500/30 dark:border-amber-500/20',
-            )}
-          >
-            <div className={clsx('p-3 rounded-xl', status.integration_ready ? 'bg-emerald-500/15' : 'bg-amber-500/15')}>
-              {status.integration_ready
-                ? <CheckCircle2 size={22} className="text-emerald-500" />
-                : <AlertTriangle size={22} className="text-amber-500" />}
-            </div>
-            <div>
-              <p className={clsx(
-                'text-sm font-semibold uppercase tracking-wider mb-0.5',
-                status.integration_ready ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400',
-              )}>
-                {status.integration_ready ? 'Intégration prête pour la production' : 'Configuration incomplète'}
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {status.integration_ready
-                  ? 'Toutes les variables d\'environnement sont correctement configurées.'
-                  : `${status.warnings.length} avertissement${status.warnings.length > 1 ? 's' : ''} détecté${status.warnings.length > 1 ? 's' : ''} — voir ci-dessous.`}
-              </p>
-            </div>
-          </div>
-
-          {/* Warnings */}
-          {status.warnings.length > 0 && (
-            <div className="bg-white dark:bg-gray-900/60 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-5 shadow-sm space-y-3">
-              <h2 className="text-sm font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-2">
-                <AlertTriangle size={15} />
-                Avertissements ({status.warnings.length})
-              </h2>
-              <ul className="space-y-2">
-                {status.warnings.map((w, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300 bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2">
-                    <AlertTriangle size={13} className="text-amber-500 flex-shrink-0 mt-0.5" />
-                    {w}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
           {/* Stats */}
           {txData && (
             <div>
@@ -398,33 +332,6 @@ export default function AdminPredictStreetPage() {
             </div>
           </div>
 
-          {/* Config */}
-          <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm">
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-              <Cpu size={15} className="text-purple-500" />
-              Configuration
-            </h2>
-            <div className="mt-4">
-              <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-1">JWT / Clé RSA</p>
-              <BoolRow label="Clé privée présente"    value={status.config.private_key_present}     falseLabel="Absente" />
-              <BoolRow label="Clé privée RSA valide"  value={status.config.private_key_valid_rsa}   falseLabel="Invalide" />
-              <BoolRow label="JWT Issuer configuré"   value={status.config.jwt_issuer_configured}   />
-              <BoolRow label="JWT Audience configuré" value={status.config.jwt_audience_configured} />
-            </div>
-            <div className="mt-4">
-              <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-1">Sécurité serveur-à-serveur</p>
-              <BoolRow label="Server secret configuré" value={status.config.server_secret_configured} falseLabel="Faible / absent" />
-            </div>
-          </div>
-
-          {/* Security notice */}
-          <div className="bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 flex items-start gap-3">
-            <Key size={15} className="text-gray-400 flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-gray-500 dark:text-gray-500">
-              Cette page n&apos;expose jamais la clé privée RSA, le server secret, les tokens JWT bruts ni les traces d&apos;erreur.
-              Les valeurs sensibles sont masquées et uniquement accessibles aux administrateurs authentifiés.
-            </p>
-          </div>
         </>
       )}
     </div>
