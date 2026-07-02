@@ -15,14 +15,6 @@ interface EndpointInfo {
   auth:   string;
 }
 
-interface StatusResponse {
-  endpoints: {
-    jwks:   EndpointInfo;
-    token:  EndpointInfo;
-    limits: EndpointInfo;
-  };
-}
-
 interface PsTransaction {
   id:         string;
   reference:  string | null;
@@ -133,7 +125,6 @@ function StatCard({ icon: Icon, label, value, sub, color }: {
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function AdminPredictStreetPage() {
-  const [status,  setStatus]  = useState<StatusResponse | null>(null);
   const [txData,  setTxData]  = useState<TxResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [err,     setErr]     = useState('');
@@ -142,16 +133,9 @@ export default function AdminPredictStreetPage() {
     setLoading(true);
     setErr('');
     try {
-      const [sRes, tRes] = await Promise.all([
-        fetch('/api/predictstreet/status', { cache: 'no-store' }),
-        fetch('/api/admin/predictstreet/transactions', { cache: 'no-store' }),
-      ]);
-      if (!sRes.ok) {
-        setErr(sRes.status === 401 ? 'Accès refusé — session admin requise.' : `Erreur ${sRes.status}`);
-        return;
-      }
-      setStatus(await sRes.json() as StatusResponse);
+      const tRes = await fetch('/api/admin/predictstreet/transactions', { cache: 'no-store' });
       if (tRes.ok) setTxData(await tRes.json() as TxResponse);
+      else setErr(`Erreur ${tRes.status}`);
     } catch {
       setErr('Impossible de contacter les APIs');
     } finally {
@@ -194,7 +178,7 @@ export default function AdminPredictStreetPage() {
       )}
 
       {/* Skeleton */}
-      {loading && !status && (
+      {loading && !txData && (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-24 rounded-2xl bg-gray-100 dark:bg-gray-800 animate-pulse" />
@@ -202,7 +186,7 @@ export default function AdminPredictStreetPage() {
         </div>
       )}
 
-      {status && (
+      {!loading && (
         <>
           {/* Stats */}
           {txData && (
@@ -325,10 +309,12 @@ export default function AdminPredictStreetPage() {
               <Link2 size={15} className="text-purple-500" />
               Endpoints
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <EndpointCard label="JWKS (public)"       ep={status.endpoints.jwks} />
-              <EndpointCard label="Token SSO"           ep={status.endpoints.token} />
-              <EndpointCard label="Limites utilisateur" ep={status.endpoints.limits} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <EndpointCard label="Initiation dépôt"     ep={{ path: 'POST /v1/payment/initiate',              status: 'ok', auth: 'X-API-Key' }} />
+              <EndpointCard label="Callback Avada"        ep={{ path: 'POST /v1/wallet/unipesa/callback',       status: 'ok', auth: 'Signature Avada' }} />
+              <EndpointCard label="Statut transaction"    ep={{ path: 'GET /v1/payment/:id/status',             status: 'ok', auth: 'X-API-Key' }} />
+              <EndpointCard label="Refund PredictStreet"  ep={{ path: 'POST /v1/adi/credit-failed-refund',      status: 'ok', auth: 'HMAC' }} />
+              <EndpointCard label="Limites utilisateur"   ep={{ path: 'GET /api/predictstreet/users/:id/limits', status: 'ok', auth: 'Bearer SERVER_SECRET' }} />
             </div>
           </div>
 
