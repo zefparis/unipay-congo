@@ -5,7 +5,7 @@ import { verifySessionToken } from './lib/admin-session';
 
 const intlMiddleware = createMiddleware(routing);
 
-export default function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Protect all /{locale}/dashboard routes (B2B merchant)
@@ -23,7 +23,7 @@ export default function middleware(request: NextRequest) {
   // The login page itself is excluded so the user can authenticate
   if (/^\/(fr|en)\/dashboard\/admin(\/(?!login).*)?$/.test(pathname)) {
     const adminSession = request.cookies.get('admin_session');
-    if (!verifySessionToken(adminSession?.value)) {
+    if (!(await verifySessionToken(adminSession?.value))) {
       const locale = pathname.startsWith('/en/') ? 'en' : 'fr';
       const url = request.nextUrl.clone();
       url.pathname = `/${locale}/dashboard/admin/login`;
