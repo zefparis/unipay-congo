@@ -74,7 +74,7 @@ export default function WalletUsersPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <Users className="text-[#1D9E75]" size={22} />
+          <Users className="text-signal" size={22} />
           Wallet Users
         </h1>
         <button
@@ -96,13 +96,13 @@ export default function WalletUsersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Recherche par téléphone…"
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40 focus:border-[#1D9E75] transition-colors"
+            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
           />
         </div>
         <select
           value={filterKyc}
           onChange={(e) => { setFilterKyc(e.target.value); setPage(1); }}
-          className="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40"
+          className="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
         >
           <option value="">Tous KYC</option>
           <option value="0">Non vérifié</option>
@@ -113,7 +113,7 @@ export default function WalletUsersPage() {
         <select
           value={filterActive}
           onChange={(e) => { setFilterActive(e.target.value); setPage(1); }}
-          className="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40"
+          className="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
         >
           <option value="">Tous statuts</option>
           <option value="true">Actif</option>
@@ -121,7 +121,7 @@ export default function WalletUsersPage() {
         </select>
         <button
           type="submit"
-          className="px-4 py-2.5 rounded-xl bg-[#1D9E75] hover:bg-[#178a65] text-white text-sm font-semibold transition-all"
+          className="px-4 py-2.5 rounded-xl bg-signal hover:bg-signal/85 text-white text-sm font-semibold transition-all"
         >
           Filtrer
         </button>
@@ -137,7 +137,7 @@ export default function WalletUsersPage() {
       <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
         {loading && users.length === 0 ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 size={24} className="animate-spin text-[#1D9E75]" />
+            <Loader2 size={24} className="animate-spin text-signal" />
           </div>
         ) : users.length === 0 ? (
           <div className="text-center py-12 text-sm text-gray-400 dark:text-gray-600">Aucun utilisateur trouvé.</div>

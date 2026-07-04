@@ -105,7 +105,7 @@ export default function WalletTransactionsPage() {
             onClick={() => changeFilter(key)}
             className={`px-4 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap transition ${
               filter === key
-                ? 'bg-[#00A651] text-white'
+                ? 'bg-signal text-white'
                 : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
             }`}
           >
@@ -118,7 +118,7 @@ export default function WalletTransactionsPage() {
       <div className="flex-1 px-4 pb-4">
         {loading && (
           <div className="flex justify-center py-12">
-            <svg className="animate-spin h-6 w-6 text-[#00A651]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg className="animate-spin h-6 w-6 text-signal" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
@@ -143,7 +143,7 @@ export default function WalletTransactionsPage() {
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
                   isCredit ? 'bg-green-50' : isP2P ? 'bg-blue-50' : 'bg-orange-50'
                 }`}>
-                  {isCredit && <ArrowDownCircle className="text-[#00A651]" size={20} />}
+                  {isCredit && <ArrowDownCircle className="text-signal" size={20} />}
                   {tx.direction === 'payout' && <ArrowUpCircle className="text-orange-500" size={20} />}
                   {isP2P && <ArrowLeftRight className="text-blue-500" size={20} />}
                 </div>
@@ -162,7 +162,7 @@ export default function WalletTransactionsPage() {
 
                 {/* Amount */}
                 <div className="text-right shrink-0">
-                  <p className={`text-sm font-bold ${isCredit ? 'text-[#00A651]' : isP2P ? 'text-blue-600' : 'text-orange-500'}`}>
+                  <p className={`text-sm font-bold ${isCredit ? 'text-signal-dark' : isP2P ? 'text-blue-600' : 'text-orange-500'}`}>
                     {isCredit ? '+' : '−'}{fmt(isCredit ? tx.net_amount : tx.amount)}
                   </p>
                   <p className="text-xs text-gray-400">{tx.currency}</p>

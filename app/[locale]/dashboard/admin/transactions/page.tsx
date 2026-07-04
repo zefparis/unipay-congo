@@ -126,7 +126,7 @@ export default function AdminTransactionsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <ArrowLeftRight className="text-[#1D9E75]" size={22} />
+          <ArrowLeftRight className="text-signal" size={22} />
           Transactions Wallet
         </h1>
         <div className="flex items-center gap-2">
@@ -154,7 +154,7 @@ export default function AdminTransactionsPage() {
         <select
           value={filterDir}
           onChange={(e) => { setFilterDir(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40"
+          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
         >
           <option value="">Tous types</option>
           <option value="collect">Collect</option>
@@ -168,7 +168,7 @@ export default function AdminTransactionsPage() {
         <select
           value={filterStatus}
           onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40"
+          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
         >
           <option value="">Tous statuts</option>
           <option value="pending">En attente</option>
@@ -180,7 +180,7 @@ export default function AdminTransactionsPage() {
         <select
           value={filterOp}
           onChange={(e) => { setFilterOp(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40"
+          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
         >
           <option value="">Tous opérateurs</option>
           <option value="vodacash">Vodacash</option>
@@ -192,13 +192,13 @@ export default function AdminTransactionsPage() {
           type="date"
           value={dateFrom}
           onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40"
+          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
         />
         <input
           type="date"
           value={dateTo}
           onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40"
+          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
         />
       </form>
 
@@ -212,7 +212,7 @@ export default function AdminTransactionsPage() {
       <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
         {loading && rows.length === 0 ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 size={24} className="animate-spin text-[#1D9E75]" />
+            <Loader2 size={24} className="animate-spin text-signal" />
           </div>
         ) : rows.length === 0 ? (
           <div className="text-center py-12 text-sm text-gray-400">Aucune transaction.</div>
@@ -260,7 +260,7 @@ export default function AdminTransactionsPage() {
                             href={`${BLOCKSCOUT_URL}/tx/${tx.blockchain_tx_hash}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 font-mono text-[#1D9E75] hover:underline"
+                            className="inline-flex items-center gap-1 font-mono text-signal-dark hover:underline"
                             title={tx.blockchain_tx_hash}
                           >
                             {shortHash(tx.blockchain_tx_hash)}

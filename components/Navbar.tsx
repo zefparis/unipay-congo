@@ -53,7 +53,7 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/90 dark:bg-[#0a0f1e]/90 backdrop-blur-md shadow-sm border-b border-gray-200/80 dark:border-gray-800/80'
+          ? 'bg-white/90 dark:bg-ink/90 backdrop-blur-md shadow-sm border-b border-gray-200/80 dark:border-gray-800/80'
           : 'bg-transparent'
       }`}
     >
@@ -69,7 +69,7 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors duration-200"
+                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-signal dark:hover:text-signal transition-colors duration-200"
                 >
                   {link.label}
                 </Link>
@@ -77,7 +77,7 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
                 <a
                   key={link.href}
                   href={link.href}
-                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors duration-200"
+                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-signal dark:hover:text-signal transition-colors duration-200"
                 >
                   {link.label}
                 </a>
@@ -90,7 +90,7 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
             {/* Language Switcher */}
             <button
               onClick={switchLocale}
-              className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wider border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-[#1D9E75] hover:text-[#1D9E75] dark:hover:border-[#1D9E75] dark:hover:text-[#1D9E75] transition-all duration-200"
+              className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wider border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-signal hover:text-signal dark:hover:border-signal dark:hover:text-signal transition-all duration-200"
             >
               {locale === 'fr' ? 'EN' : 'FR'}
             </button>
@@ -120,13 +120,13 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
               <div className="hidden sm:flex items-center gap-2">
                 <Link
                   href="/login"
-                  className="inline-flex items-center px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-semibold hover:border-[#1D9E75] hover:text-[#1D9E75] dark:hover:border-[#1D9E75] dark:hover:text-[#1D9E75] transition-all duration-200"
+                  className="inline-flex items-center px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-semibold hover:border-signal hover:text-signal dark:hover:border-signal dark:hover:text-signal transition-all duration-200"
                 >
                   {t('login')}
                 </Link>
                 <Link
                   href="/register"
-                  className="inline-flex items-center px-4 py-2 rounded-lg bg-[#1D9E75] text-white text-sm font-semibold hover:bg-[#178a65] transition-all duration-200 shadow-sm shadow-[#1D9E75]/20"
+                  className="inline-flex items-center px-4 py-2 rounded-lg bg-signal text-white text-sm font-semibold hover:bg-signal/85 transition-all duration-200 shadow-sm shadow-signal/20"
                 >
                   {t('cta')}
                 </Link>
@@ -147,14 +147,14 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
 
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-white dark:bg-[#0a0f1e] border-t border-gray-200 dark:border-gray-800 px-4 py-5 flex flex-col gap-4 shadow-lg">
+        <div className="md:hidden bg-white dark:bg-ink border-t border-gray-200 dark:border-gray-800 px-4 py-5 flex flex-col gap-4 shadow-lg">
           {navLinks.map((link) =>
             link.isRoute ? (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-[#1D9E75] py-1 transition-colors"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-signal py-1 transition-colors"
               >
                 {link.label}
               </Link>
@@ -163,7 +163,7 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-[#1D9E75] py-1 transition-colors"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-signal py-1 transition-colors"
               >
                 {link.label}
               </a>
@@ -172,7 +172,7 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
           <div className="flex items-center gap-3 pt-3 border-t border-gray-100 dark:border-gray-800">
             <button
               onClick={switchLocale}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wider border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-[#1D9E75] hover:text-[#1D9E75]"
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wider border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-signal hover:text-signal"
             >
               {locale === 'fr' ? 'EN' : 'FR'}
             </button>
@@ -188,14 +188,14 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
                 <Link
                   href="/login"
                   onClick={() => setMenuOpen(false)}
-                  className="flex-1 text-center px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 text-sm font-semibold hover:border-[#1D9E75] hover:text-[#1D9E75] transition-colors"
+                  className="flex-1 text-center px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 text-sm font-semibold hover:border-signal hover:text-signal transition-colors"
                 >
                   {t('login')}
                 </Link>
                 <Link
                   href="/register"
                   onClick={() => setMenuOpen(false)}
-                  className="flex-1 text-center px-4 py-2 rounded-lg bg-[#1D9E75] text-white text-sm font-semibold hover:bg-[#178a65] transition-colors"
+                  className="flex-1 text-center px-4 py-2 rounded-lg bg-signal text-white text-sm font-semibold hover:bg-signal/85 transition-colors"
                 >
                   {t('cta')}
                 </Link>

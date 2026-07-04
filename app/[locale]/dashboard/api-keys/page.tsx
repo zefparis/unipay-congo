@@ -45,8 +45,8 @@ export default function ApiKeysPage() {
       {/* Header */}
       <div>
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded-xl bg-[#1D9E75]/10 dark:bg-[#1D9E75]/15">
-            <Key className="text-[#1D9E75]" size={20} />
+          <div className="p-2 rounded-xl bg-signal/10 dark:bg-signal/15">
+            <Key className="text-signal" size={20} />
           </div>
           <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
         </div>
@@ -85,7 +85,7 @@ export default function ApiKeysPage() {
               </button>
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1 px-2.5 py-2 min-h-[36px] rounded-lg bg-[#1D9E75] hover:bg-[#178a65] text-white text-xs font-semibold transition-all"
+                className="flex items-center gap-1 px-2.5 py-2 min-h-[36px] rounded-lg bg-signal hover:bg-signal/85 text-white text-xs font-semibold transition-all"
               >
                 {copied ? <Check size={13} /> : <Copy size={13} />}
                 {copied ? t('copied') : t('copy')}
@@ -97,7 +97,7 @@ export default function ApiKeysPage() {
               type="checkbox"
               checked={confirmed}
               onChange={(e) => setConfirmed(e.target.checked)}
-              className="w-4 h-4 rounded border-gray-300 text-[#1D9E75] accent-[#1D9E75]"
+              className="w-4 h-4 rounded border-gray-300 text-signal accent-signal"
             />
             <span className="text-xs text-green-700 dark:text-green-400">
               J&apos;ai copié ma clé API et je comprends qu&apos;elle ne sera plus affichée.
@@ -126,7 +126,7 @@ export default function ApiKeysPage() {
       <button
         onClick={handleGenerate}
         disabled={loading || (!!newKey && !confirmed)}
-        className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all duration-200 shadow-sm shadow-[#1D9E75]/25"
+        className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all duration-200 shadow-sm shadow-signal/25"
       >
         {loading ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
         {loading ? t('loading') : t('generate')}

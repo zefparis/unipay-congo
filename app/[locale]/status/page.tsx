@@ -44,8 +44,8 @@ const OPERATORS: Operator[] = [
   {
     id: 'afrimoney',
     name: 'Afrimoney',
-    color: '#1D9E75',
-    bgColor: 'rgba(29,158,117,0.10)',
+    color: '#0057A8',
+    bgColor: 'rgba(0,87,168,0.10)',
     status: 'operational',
     uptime: '99.7%',
     latency: '1.6s',
@@ -135,7 +135,7 @@ function OperatorCard({ op, tLabel }: { op: Operator; tLabel: (k: OperatorStatus
   const StatusIcon = cfg.icon;
 
   return (
-    <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1420] overflow-hidden hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-lg transition-all duration-300">
+    <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-ink/60 overflow-hidden hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-lg transition-all duration-300">
       {/* Color top bar */}
       <div className="h-1 w-full" style={{ backgroundColor: op.color }} />
 
@@ -234,17 +234,17 @@ export default function StatusPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-white dark:bg-[#0a0f1e] pt-16 overflow-x-hidden">
+      <main className="min-h-screen bg-white dark:bg-ink pt-16 overflow-x-hidden">
 
         {/* ── Hero ──────────────────────────────────────────────── */}
         <section className="relative overflow-hidden py-16 lg:py-20 border-b border-gray-200 dark:border-gray-800">
-          <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/30 to-white dark:from-[#0a0f1e] dark:via-[#0d1a2e] dark:to-[#0a0f1e]" />
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#1D9E75]/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/30 to-white dark:from-ink dark:via-ink/80 dark:to-ink" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-signal/5 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1D9E75]/10 border border-[#1D9E75]/25 text-[#1D9E75] text-xs font-semibold mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-signal/10 border border-signal/25 text-signal text-xs font-semibold mb-4">
                   <Activity size={13} />
                   {t('badge')}
                 </div>
@@ -272,17 +272,17 @@ export default function StatusPage() {
         </section>
 
         {/* ── Refresh bar ───────────────────────────────────────── */}
-        <div className="sticky top-16 z-20 bg-white/90 dark:bg-[#0a0f1e]/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+        <div className="sticky top-16 z-20 bg-white/90 dark:bg-ink/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-3">
             <span className="text-xs text-gray-500 dark:text-gray-400 min-w-0">
               <span className="hidden sm:inline">{t('last_updated')}: </span>
               <span className="font-mono font-medium text-gray-700 dark:text-gray-300">{formatTime(lastUpdated)}</span>
-              <span className="ml-2 text-gray-400">· <span className="font-mono font-medium text-[#1D9E75]">{countdown}s</span></span>
+              <span className="ml-2 text-gray-400">· <span className="font-mono font-medium text-signal">{countdown}s</span></span>
             </span>
             <button
               onClick={refresh}
               disabled={isRefreshing}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-[#1D9E75] hover:bg-[#1D9E75]/10 transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-signal hover:bg-signal/10 transition-colors disabled:opacity-50"
             >
               <RefreshCw size={13} className={isRefreshing ? 'animate-spin' : ''} />
               {t('refresh')}
@@ -292,7 +292,7 @@ export default function StatusPage() {
           {/* Countdown progress bar */}
           <div className="h-0.5 bg-gray-100 dark:bg-gray-800">
             <div
-              className="h-full bg-[#1D9E75] transition-all duration-1000 ease-linear"
+              className="h-full bg-signal transition-all duration-1000 ease-linear"
               style={{ width: `${(countdown / AUTO_REFRESH_SECONDS) * 100}%` }}
             />
           </div>
@@ -310,7 +310,7 @@ export default function StatusPage() {
         {/* ── Status table (summary) ────────────────────────────── */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
           <div className="rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
-            <div className="px-5 py-4 bg-gray-50 dark:bg-[#0d1420] border-b border-gray-200 dark:border-gray-800">
+            <div className="px-5 py-4 bg-gray-50 dark:bg-ink/60 border-b border-gray-200 dark:border-gray-800">
               <h2 className="text-sm font-semibold text-gray-900 dark:text-white">{t('incident_title')}</h2>
             </div>
             <div className="px-5 py-8 flex flex-col items-center gap-2 text-center">

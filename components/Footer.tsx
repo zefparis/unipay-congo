@@ -5,16 +5,16 @@ export default function Footer() {
   const t = useTranslations('footer');
 
   return (
-    <footer id="contact" className="py-12 bg-white dark:bg-[#0a0f1e] border-t border-gray-200 dark:border-gray-800">
+    <footer id="contact" className="py-12 bg-white dark:bg-ink border-t border-gray-200 dark:border-bone/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Logo */}
           <div className="flex items-center gap-2.5 flex-shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-[#1D9E75] flex items-center justify-center shadow-md shadow-[#1D9E75]/30">
+            <div className="w-8 h-8 rounded-lg bg-signal flex items-center justify-center shadow-md shadow-signal/30">
               <span className="text-white font-heading font-bold text-sm leading-none">U</span>
             </div>
             <span className="font-heading font-bold text-lg text-gray-900 dark:text-white">
-              UniPay<span className="text-[#1D9E75]">Congo</span>
+              UniPay<span className="text-signal">Congo</span>
             </span>
           </div>
 
@@ -24,7 +24,7 @@ export default function Footer() {
               <a
                 key={href}
                 href={href}
-                className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors capitalize"
+                className="text-sm text-gray-500 dark:text-gray-400 hover:text-signal dark:hover:text-signal transition-colors capitalize"
               >
                 {href.replace('#', '')}
               </a>
@@ -46,25 +46,25 @@ export default function Footer() {
         <div className="mt-6 pt-5 border-t border-gray-100 dark:border-gray-800 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
           <Link
             href="/legal"
-            className="text-xs text-gray-400 dark:text-gray-500 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors"
+            className="text-xs text-gray-400 dark:text-gray-500 hover:text-signal dark:hover:text-signal transition-colors"
           >
             {t('legal_link')}
           </Link>
           <Link
             href="/privacy"
-            className="text-xs text-gray-400 dark:text-gray-500 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors"
+            className="text-xs text-gray-400 dark:text-gray-500 hover:text-signal dark:hover:text-signal transition-colors"
           >
             {t('privacy_link')}
           </Link>
           <Link
             href="/terms"
-            className="text-xs text-gray-400 dark:text-gray-500 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors"
+            className="text-xs text-gray-400 dark:text-gray-500 hover:text-signal dark:hover:text-signal transition-colors"
           >
             {t('terms_link')}
           </Link>
           <Link
             href="/status"
-            className="text-xs text-gray-400 dark:text-gray-500 hover:text-[#1D9E75] dark:hover:text-[#1D9E75] transition-colors"
+            className="text-xs text-gray-400 dark:text-gray-500 hover:text-signal dark:hover:text-signal transition-colors"
           >
             {t('status_link')}
           </Link>

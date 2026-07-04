@@ -8,7 +8,7 @@ interface DashboardTopBarProps {
 
 export default function DashboardTopBar({ onMenuClick }: DashboardTopBarProps) {
   return (
-    <header className="md:hidden fixed top-0 left-0 right-0 h-16 z-50 bg-white dark:bg-[#0a0f1e] border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-4">
+    <header className="md:hidden fixed top-0 left-0 right-0 h-16 z-50 bg-white dark:bg-ink border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-4">
       {/* Hamburger */}
       <button
         onClick={onMenuClick}
@@ -20,17 +20,17 @@ export default function DashboardTopBar({ onMenuClick }: DashboardTopBarProps) {
 
       {/* Brand — centered */}
       <div className="flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
-        <div className="w-7 h-7 rounded-lg bg-[#1D9E75] flex items-center justify-center shadow-sm shadow-[#1D9E75]/30">
+        <div className="w-7 h-7 rounded-lg bg-signal flex items-center justify-center shadow-sm shadow-signal/30">
           <span className="text-white font-heading font-bold text-xs leading-none">U</span>
         </div>
         <span className="font-heading font-bold text-sm text-gray-900 dark:text-white">
-          UniPay<span className="text-[#1D9E75]">Congo</span>
+          UniPay<span className="text-signal">Congo</span>
         </span>
       </div>
 
       {/* Avatar */}
-      <div className="w-9 h-9 rounded-full bg-[#1D9E75]/10 border-2 border-[#1D9E75]/25 flex items-center justify-center flex-shrink-0">
-        <User size={17} className="text-[#1D9E75]" />
+      <div className="w-9 h-9 rounded-full bg-signal/10 border-2 border-signal/25 flex items-center justify-center flex-shrink-0">
+        <User size={17} className="text-signal" />
       </div>
     </header>
   );

@@ -119,11 +119,11 @@ export default function AdminPage() {
   /* ── Login screen ─────────────────────────────────────────── */
   if (!authed) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#0a0f1e] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-white dark:bg-ink flex items-center justify-center px-4">
         <div className="w-full max-w-sm space-y-6">
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#1D9E75]/10 mb-4">
-              <ShieldCheck size={28} className="text-[#1D9E75]" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-signal/10 mb-4">
+              <ShieldCheck size={28} className="text-signal" />
             </div>
             <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('subtitle')}</p>
@@ -136,13 +136,13 @@ export default function AdminPage() {
               onChange={(e) => setPwInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && void handleLogin()}
               placeholder={t('password_placeholder')}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40 focus:border-[#1D9E75]"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal"
             />
             {pwError && <p className="text-sm text-red-500">{pwError}</p>}
             <button
               onClick={() => void handleLogin()}
               disabled={pwLoading || !pwInput}
-              className="w-full py-3 rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all flex items-center justify-center gap-2"
             >
               {pwLoading && <Loader2 size={15} className="animate-spin" />}
               {t('enter')}
@@ -162,12 +162,12 @@ export default function AdminPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#0a0f1e]">
+    <div className="min-h-screen bg-gray-50 dark:bg-ink">
       {/* ── Top bar ─────────────────────────────────────────── */}
-      <header className="bg-white dark:bg-[#0d1420] border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10">
+      <header className="bg-white dark:bg-[ink/60] border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <ShieldCheck size={20} className="text-[#1D9E75]" />
+            <ShieldCheck size={20} className="text-signal" />
             <h1 className="text-base font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
             <span className="hidden sm:inline text-xs text-gray-500 dark:text-gray-400 font-mono">{t('total', { count: total })}</span>
           </div>
@@ -175,7 +175,7 @@ export default function AdminPage() {
             <button
               onClick={() => load(filter)}
               disabled={dataLoading}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-[#1D9E75] hover:bg-[#1D9E75]/10 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-signal hover:bg-signal/10 transition-colors"
             >
               <RefreshCw size={13} className={dataLoading ? 'animate-spin' : ''} />
               {t('refresh')}
@@ -201,8 +201,8 @@ export default function AdminPage() {
               onClick={() => setFilter(key)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 filter === key
-                  ? 'bg-[#1D9E75] text-white shadow-sm'
-                  : 'bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-[#1D9E75] hover:text-[#1D9E75]'
+                  ? 'bg-signal text-white shadow-sm'
+                  : 'bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-signal hover:text-signal'
               }`}
             >
               {label}
@@ -213,7 +213,7 @@ export default function AdminPage() {
         {/* ── Merchant list ────────────────────────────────────── */}
         {dataLoading ? (
           <div className="flex justify-center py-16">
-            <Loader2 size={28} className="animate-spin text-[#1D9E75]" />
+            <Loader2 size={28} className="animate-spin text-signal" />
           </div>
         ) : merchants.length === 0 ? (
           <div className="text-center py-16 text-gray-400 dark:text-gray-500 text-sm">{t('no_merchants')}</div>
@@ -226,7 +226,7 @@ export default function AdminPage() {
               const rejectOpen = showReject[m.id];
 
               return (
-                <div key={m.id} className="bg-white dark:bg-[#0d1420] rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+                <div key={m.id} className="bg-white dark:bg-[ink/60] rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                   <div className="p-5">
                     <div className="flex flex-col sm:flex-row sm:items-start gap-4">
 

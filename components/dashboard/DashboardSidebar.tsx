@@ -65,7 +65,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
             className={clsx(
               'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
               isActive(href, exact)
-                ? 'bg-[#1D9E75]/10 text-[#1D9E75] dark:bg-[#1D9E75]/15 dark:text-[#22b587]'
+                ? 'bg-signal/10 text-signal dark:bg-signal/15 dark:text-signal'
                 : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
             )}
           >
@@ -117,7 +117,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
   return (
     <>
       {/* Desktop sidebar — full height, global Navbar is hidden on dashboard routes */}
-      <aside className="hidden md:flex flex-col fixed top-0 left-0 h-full w-64 bg-white dark:bg-[#0a0f1e] border-r border-gray-200 dark:border-gray-800 z-40">
+      <aside className="hidden md:flex flex-col fixed top-0 left-0 h-full w-64 bg-white dark:bg-ink border-r border-gray-200 dark:border-gray-800 z-40">
         <Inner />
       </aside>
 
@@ -128,7 +128,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={onClose}
           />
-          <aside className="relative w-72 h-full bg-white dark:bg-[#0a0f1e] border-r border-gray-200 dark:border-gray-800 flex flex-col shadow-2xl">
+          <aside className="relative w-72 h-full bg-white dark:bg-ink border-r border-gray-200 dark:border-gray-800 flex flex-col shadow-2xl">
             <button
               onClick={onClose}
               className="absolute top-4 right-4 p-1.5 rounded-lg text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"

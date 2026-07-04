@@ -71,7 +71,7 @@ export default function AdminOverviewPage() {
     { label: 'Volume déposé (CDF)', value: fmt(stats.total_deposited_cdf), icon: ArrowDownLeft, color: 'text-green-500', bg: 'bg-green-500/10' },
     { label: 'Volume retiré (CDF)', value: fmt(stats.total_withdrawn_cdf), icon: ArrowUpRight, color: 'text-orange-500', bg: 'bg-orange-500/10' },
     { label: 'Volume P2P (CDF)', value: fmt(stats.total_p2p_cdf), icon: ArrowLeftRight, color: 'text-purple-500', bg: 'bg-purple-500/10' },
-    { label: "Transactions aujourd'hui", value: fmt(stats.transactions_today), icon: CalendarDays, color: 'text-[#1D9E75]', bg: 'bg-[#1D9E75]/10' },
+    { label: "Transactions aujourd'hui", value: fmt(stats.transactions_today), icon: CalendarDays, color: 'text-signal-dark', bg: 'bg-signal/10' },
   ] : [];
 
   const cgltKpis = [
@@ -110,7 +110,7 @@ export default function AdminOverviewPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <TrendingUp className="text-[#1D9E75]" size={22} />
+            <TrendingUp className="text-signal" size={22} />
             Vue d&apos;ensemble — Admin Wallet
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Métriques globales du service wallet UniPay Congo</p>
@@ -134,14 +134,14 @@ export default function AdminOverviewPage() {
       {/* Avada Pay caisse card */}
       <div className={clsx(
         'relative overflow-hidden rounded-2xl p-5 border shadow-sm flex items-center justify-between gap-4',
-        'bg-gradient-to-r from-[#1D9E75]/10 to-emerald-500/5 border-[#1D9E75]/30 dark:border-[#1D9E75]/20',
+        'bg-gradient-to-r from-signal/10 to-emerald-500/5 border-signal/30 dark:border-signal/20',
       )}>
         <div className="flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-[#1D9E75]/15">
-            <Wallet size={22} className="text-[#1D9E75]" />
+          <div className="p-3 rounded-xl bg-signal/15">
+            <Wallet size={22} className="text-signal" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-[#1D9E75] uppercase tracking-wider mb-0.5">Caisse wallet disponible</p>
+            <p className="text-xs font-semibold text-signal-dark uppercase tracking-wider mb-0.5">Caisse wallet disponible</p>
             {loading ? (
               <div className="h-7 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             ) : avadaErr ? (
@@ -162,7 +162,7 @@ export default function AdminOverviewPage() {
         </div>
         <a
           href="/fr/dashboard/admin/adjustments"
-          className="flex-shrink-0 px-4 py-2 rounded-xl bg-[#1D9E75] text-white text-xs font-semibold hover:bg-[#17876A] transition-colors"
+          className="flex-shrink-0 px-4 py-2 rounded-xl bg-signal text-white text-xs font-semibold hover:bg-signal/85 transition-colors"
         >
           Créditer un wallet
         </a>
@@ -360,7 +360,7 @@ export default function AdminOverviewPage() {
           <Link
             key={href}
             href={href}
-            className="flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-[#1D9E75]/50 hover:text-[#1D9E75] transition-all shadow-sm"
+            className="flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-signal/50 hover:text-signal transition-all shadow-sm"
           >
             <Icon size={16} />
             {label}

@@ -107,7 +107,7 @@ export default function SandboxPage() {
   if (loadingMode) {
     return (
       <div className="flex items-center justify-center h-48">
-        <Loader2 size={24} className="animate-spin text-[#1D9E75]" />
+        <Loader2 size={24} className="animate-spin text-signal" />
       </div>
     );
   }
@@ -138,9 +138,9 @@ export default function SandboxPage() {
             <div className="flex items-center gap-2">
               {isSandbox
                 ? <ToggleLeft size={22} className="text-amber-500" />
-                : <ToggleRight size={22} className="text-[#1D9E75]" />
+                : <ToggleRight size={22} className="text-signal" />
               }
-              <span className={`text-base font-bold ${isSandbox ? 'text-amber-600 dark:text-amber-400' : 'text-[#1D9E75]'}`}>
+              <span className={`text-base font-bold ${isSandbox ? 'text-amber-600 dark:text-amber-400' : 'text-signal'}`}>
                 {isSandbox ? t('mode_sandbox') : t('mode_live')}
               </span>
             </div>
@@ -151,7 +151,7 @@ export default function SandboxPage() {
             disabled={switching || (!kycApproved && isSandbox)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
               isSandbox
-                ? 'bg-[#1D9E75] hover:bg-[#178a65] text-white shadow-sm shadow-[#1D9E75]/20'
+                ? 'bg-signal hover:bg-signal/85 text-white shadow-sm shadow-signal/20'
                 : 'bg-amber-500 hover:bg-amber-600 text-white shadow-sm shadow-amber-500/20'
             }`}
           >
@@ -166,7 +166,7 @@ export default function SandboxPage() {
             <AlertTriangle size={15} className="text-amber-500 mt-0.5 flex-shrink-0" />
             <div>
               <p className="text-amber-800 dark:text-amber-300">{t('live_requires_kyc')}</p>
-              <Link href="/dashboard/kyc" className="inline-flex items-center gap-1 text-[#1D9E75] font-semibold text-xs mt-1 hover:underline">
+              <Link href="/dashboard/kyc" className="inline-flex items-center gap-1 text-signal-dark font-semibold text-xs mt-1 hover:underline">
                 {t('kyc_link')} →
               </Link>
             </div>
@@ -264,7 +264,7 @@ export default function SandboxPage() {
       {/* ── Result ───────────────────────────────────────────── */}
       {testResult && (
         <div className="rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
-          <div className="px-5 py-3 bg-gray-50 dark:bg-[#0d1420] flex items-center gap-2">
+          <div className="px-5 py-3 bg-gray-50 dark:bg-[ink/60] flex items-center gap-2">
             <CheckCircle2 size={14} className="text-emerald-500" />
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{t('result_title')}</h3>
             {testResult.sandbox && (
@@ -281,7 +281,7 @@ export default function SandboxPage() {
       <div className="rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
         <button
           onClick={() => setShowCode(!showCode)}
-          className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-[#0d1420] text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors"
+          className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-[ink/60] text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors"
         >
           <div className="flex items-center gap-2">
             <FlaskConical size={15} className="text-amber-500" />

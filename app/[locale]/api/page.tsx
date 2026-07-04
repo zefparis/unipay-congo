@@ -26,7 +26,7 @@ function CopyButton({ text, label, labelDone }: { text: string; label: string; l
   const copy = () => { navigator.clipboard.writeText(text); setDone(true); setTimeout(() => setDone(false), 2000); };
   return (
     <button onClick={copy} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-white/10 transition-colors">
-      {done ? <Check size={12} className="text-[#1D9E75]" /> : <Copy size={12} />}
+      {done ? <Check size={12} className="text-signal" /> : <Copy size={12} />}
       {done ? labelDone : label}
     </button>
   );
@@ -44,7 +44,7 @@ function CodeBlock({ ex, copyLabel, copiedLabel }: { ex: CodeEx; copyLabel: stri
         <div className="flex gap-0.5">
           {TABS.map(({ id, label }) => (
             <button key={id} onClick={() => setLang(id)}
-              className={`px-3 py-1 rounded-md text-xs font-mono font-semibold transition-colors ${lang === id ? 'bg-[#1D9E75]/20 text-[#1D9E75]' : 'text-gray-500 hover:text-gray-300'}`}>
+              className={`px-3 py-1 rounded-md text-xs font-mono font-semibold transition-colors ${lang === id ? 'bg-signal/20 text-signal' : 'text-gray-500 hover:text-gray-300'}`}>
               {label}
             </button>
           ))}
@@ -60,7 +60,7 @@ function CodeBlock({ ex, copyLabel, copiedLabel }: { ex: CodeEx; copyLabel: stri
 function MethodBadge({ m }: { m: string }) {
   const cls = m === 'GET'
     ? 'bg-blue-500/15 text-blue-400 border-blue-500/30'
-    : 'bg-[#1D9E75]/15 text-[#1D9E75] border-[#1D9E75]/30';
+    : 'bg-signal/15 text-signal border-signal/30';
   return <span className={`inline-flex px-2.5 py-0.5 rounded-md text-xs font-mono font-bold border ${cls}`}>{m}</span>;
 }
 
@@ -70,7 +70,7 @@ function ParamTable({ params, labels }: { params: Param[]; labels: { field: stri
     <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 text-sm">
       <table className="w-full min-w-[480px]">
         <thead>
-          <tr className="bg-gray-50 dark:bg-[#0d1420] border-b border-gray-200 dark:border-gray-800">
+          <tr className="bg-gray-50 dark:bg-ink/60 border-b border-gray-200 dark:border-gray-800">
             {[labels.field, labels.type, labels.req, labels.desc].map(h => (
               <th key={h} className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">{h}</th>
             ))}
@@ -79,7 +79,7 @@ function ParamTable({ params, labels }: { params: Param[]; labels: { field: stri
         <tbody>
           {params.map((p, i) => (
             <tr key={i} className="border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
-              <td className="px-4 py-2.5 font-mono text-xs text-[#1D9E75] whitespace-nowrap">{p.field}</td>
+              <td className="px-4 py-2.5 font-mono text-xs text-signal whitespace-nowrap">{p.field}</td>
               <td className="px-4 py-2.5 font-mono text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{p.type}</td>
               <td className="px-4 py-2.5 whitespace-nowrap">
                 <span className={`text-xs font-semibold ${p.req ? 'text-red-500' : 'text-gray-400'}`}>
@@ -444,14 +444,14 @@ export default function ApiDocPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-white dark:bg-[#0a0f1e] pt-16">
+      <div className="min-h-screen bg-white dark:bg-ink pt-16">
 
         {/* ── Hero ──────────────────────────────────────────────── */}
         <section className="relative overflow-hidden py-14 lg:py-20 border-b border-gray-200 dark:border-gray-800">
-          <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/30 to-white dark:from-[#0a0f1e] dark:via-[#0d1a2e] dark:to-[#0a0f1e]" />
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#1D9E75]/6 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/30 to-white dark:from-ink dark:via-ink/80 dark:to-ink" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-signal/6 rounded-full blur-3xl pointer-events-none" />
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1D9E75]/10 border border-[#1D9E75]/25 text-[#1D9E75] text-xs font-semibold mb-5">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-signal/10 border border-signal/25 text-signal text-xs font-semibold mb-5">
               <Code2 size={13} /> {t('badge')}
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-gray-900 dark:text-white leading-[1.1] tracking-tight mb-4">
@@ -462,11 +462,11 @@ export default function ApiDocPage() {
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-mono">
-                <span className="w-2 h-2 rounded-full bg-[#1D9E75] animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-signal animate-pulse" />
                 {BASE}
               </div>
               <a href={BASE} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-[#1D9E75] transition-colors">
+                className="inline-flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-signal transition-colors">
                 <ExternalLink size={12} /> API Status
               </a>
             </div>
@@ -474,10 +474,10 @@ export default function ApiDocPage() {
         </section>
 
         {/* ── Mobile section nav ────────────────────────────────── */}
-        <div className="lg:hidden sticky top-16 z-30 bg-white dark:bg-[#0a0f1e] border-b border-gray-200 dark:border-gray-800 px-4 py-2">
+        <div className="lg:hidden sticky top-16 z-30 bg-white dark:bg-ink border-b border-gray-200 dark:border-gray-800 px-4 py-2">
           <select
             onChange={e => scrollTo(e.target.value)}
-            className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0d1420] text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/50"
+            className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-ink/60 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/50"
           >
             <option value="">{t('mobile_nav')}</option>
             {NAV.map(({ id, label }) => <option key={id} value={id}>{label}</option>)}
@@ -497,10 +497,10 @@ export default function ApiDocPage() {
                     <button key={id} onClick={() => scrollTo(id)}
                       className={`w-full text-left flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all duration-150 ${
                         active === id
-                          ? 'bg-[#1D9E75]/10 text-[#1D9E75] dark:bg-[#1D9E75]/15 font-medium'
+                          ? 'bg-signal/10 text-signal dark:bg-signal/15 font-medium'
                           : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
                       }`}>
-                      {active === id && <span className="w-1 h-1 rounded-full bg-[#1D9E75] flex-shrink-0" />}
+                      {active === id && <span className="w-1 h-1 rounded-full bg-signal flex-shrink-0" />}
                       {label}
                     </button>
                   ))}
@@ -519,8 +519,8 @@ export default function ApiDocPage() {
                     <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                       {isFr ? 'Toutes les requêtes doivent pointer vers le serveur de production suivant. L\'API utilise HTTPS exclusivement.' : 'All requests must target the following production server. The API uses HTTPS exclusively.'}
                     </p>
-                    <div className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 dark:bg-[#0d1420] border border-gray-200 dark:border-gray-800">
-                      <ShieldCheck size={16} className="text-[#1D9E75] flex-shrink-0" />
+                    <div className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 dark:bg-ink/60 border border-gray-200 dark:border-gray-800">
+                      <ShieldCheck size={16} className="text-signal flex-shrink-0" />
                       <code className="text-sm font-mono text-gray-800 dark:text-gray-200 flex-1 break-all">{BASE}</code>
                       <CopyButton text={BASE} label={cp} labelDone={cpd} />
                     </div>
@@ -546,14 +546,14 @@ ${BASE}/v1/merchant/balance`}</pre>
                       {isFr ? "L'API supporte deux méthodes d'authentification :" : 'The API supports two authentication methods:'}
                     </p>
                     <div className="space-y-3">
-                      <div className="p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-[#0d1420]">
+                      <div className="p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-ink/60">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-700/40">X-API-Key</span>
                           <span className="text-xs text-gray-500">{isFr ? 'Pour les paiements' : 'For payments'}</span>
                         </div>
                         <code className="text-xs font-mono text-gray-600 dark:text-gray-400">X-API-Key: up_xxxxxxxxxxxxx</code>
                       </div>
-                      <div className="p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-[#0d1420]">
+                      <div className="p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-ink/60">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-700/40">Bearer</span>
                           <span className="text-xs text-gray-500">{isFr ? 'Pour le tableau de bord marchand' : 'For merchant dashboard'}</span>
@@ -687,7 +687,7 @@ ${BASE}/v1/merchant/balance`}</pre>
                 <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 text-sm">
                   <table className="w-full">
                     <thead>
-                      <tr className="bg-gray-50 dark:bg-[#0d1420] border-b border-gray-200 dark:border-gray-800">
+                      <tr className="bg-gray-50 dark:bg-ink/60 border-b border-gray-200 dark:border-gray-800">
                         {['Code', isFr ? 'Opérateur' : 'Operator', isFr ? 'Pays' : 'Country', 'Statut / Status'].map(h => (
                           <th key={h} className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">{h}</th>
                         ))}
@@ -696,7 +696,7 @@ ${BASE}/v1/merchant/balance`}</pre>
                     <tbody>
                       {OPERATORS.map((op, i) => (
                         <tr key={i} className="border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
-                          <td className="px-5 py-3.5"><code className="text-xs font-mono font-bold text-[#1D9E75]">{op.code}</code></td>
+                          <td className="px-5 py-3.5"><code className="text-xs font-mono font-bold text-signal">{op.code}</code></td>
                           <td className="px-5 py-3.5 text-sm font-medium text-gray-800 dark:text-gray-200">{op.name}</td>
                           <td className="px-5 py-3.5 text-sm text-gray-500 dark:text-gray-400">RDC</td>
                           <td className="px-5 py-3.5 text-sm">{isFr ? op.status : op.statusEn}</td>
@@ -713,7 +713,7 @@ ${BASE}/v1/merchant/balance`}</pre>
                 <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800 text-sm">
                   <table className="w-full">
                     <thead>
-                      <tr className="bg-gray-50 dark:bg-[#0d1420] border-b border-gray-200 dark:border-gray-800">
+                      <tr className="bg-gray-50 dark:bg-ink/60 border-b border-gray-200 dark:border-gray-800">
                         <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 w-24">Code HTTP</th>
                         <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Description</th>
                       </tr>
@@ -744,8 +744,8 @@ ${BASE}/v1/merchant/balance`}</pre>
                     { label: isFr ? 'Devise' : 'Currency', value: 'CDF', sub: isFr ? 'Franc Congolais' : 'Congolese Franc' },
                     { label: 'Settlement', value: 'J+1', sub: isFr ? 'jours ouvrés' : 'business days' },
                   ].map(({ label, value, sub }) => (
-                    <div key={label} className="p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-[#0d1420] text-center">
-                      <div className="text-3xl font-heading font-bold text-[#1D9E75] mb-1">{value}</div>
+                    <div key={label} className="p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-ink/60 text-center">
+                      <div className="text-3xl font-heading font-bold text-signal mb-1">{value}</div>
                       <div className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-0.5">{label}</div>
                       <div className="text-xs text-gray-500 dark:text-gray-400">{sub}</div>
                     </div>

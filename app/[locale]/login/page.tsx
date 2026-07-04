@@ -39,7 +39,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0a0f1e] px-4 pt-16">
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-ink px-4 pt-16">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-8">
@@ -66,7 +66,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t('email_placeholder')}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-signal focus:border-transparent transition-all"
               />
             </div>
 
@@ -83,7 +83,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder={t('password_placeholder')}
-                  className="w-full px-4 py-2.5 pr-11 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent transition-all"
+                  className="w-full px-4 py-2.5 pr-11 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-signal focus:border-transparent transition-all"
                 />
                 <button
                   type="button"
@@ -106,7 +106,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200 shadow-sm shadow-[#1D9E75]/25"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200 shadow-sm shadow-signal/25"
             >
               {loading && <Loader2 size={16} className="animate-spin" />}
               {loading ? t('loading') : t('submit')}
@@ -116,7 +116,7 @@ export default function LoginPage() {
           {/* Register link */}
           <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
             {t('no_account')}{' '}
-            <Link href="/register" className="text-[#1D9E75] hover:text-[#178a65] font-medium">
+            <Link href="/register" className="text-signal hover:text-signal/85 font-medium">
               {t('register_link')}
             </Link>
           </p>

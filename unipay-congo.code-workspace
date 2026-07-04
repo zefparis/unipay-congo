@@ -17,6 +17,9 @@
 		},
 		{
 			"path": "../congogaming-auth-test/congogaming-main"
+		},
+		{
+			"path": "../hcs-u7-proxy"
 		}
 	],
 	"settings": {}

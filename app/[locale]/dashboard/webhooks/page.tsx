@@ -32,7 +32,7 @@ function CopyButton({ value, label, copied: copiedLabel }: { value: string; labe
   return (
     <button
       onClick={handleCopy}
-      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#1D9E75] hover:bg-[#178a65] text-white text-xs font-semibold transition-all"
+      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-signal hover:bg-signal/85 text-white text-xs font-semibold transition-all"
     >
       {done ? <Check size={13} /> : <Copy size={13} />}
       {done ? copiedLabel : label}
@@ -163,7 +163,7 @@ export default function WebhooksPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-48">
-        <Loader2 size={24} className="animate-spin text-[#1D9E75]" />
+        <Loader2 size={24} className="animate-spin text-signal" />
       </div>
     );
   }
@@ -174,8 +174,8 @@ export default function WebhooksPage() {
       {/* ── Header ────────────────────────────────────────────── */}
       <div>
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded-xl bg-[#1D9E75]/10 dark:bg-[#1D9E75]/15">
-            <Webhook className="text-[#1D9E75]" size={20} />
+          <div className="p-2 rounded-xl bg-signal/10 dark:bg-signal/15">
+            <Webhook className="text-signal" size={20} />
           </div>
           <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
         </div>
@@ -205,7 +205,7 @@ export default function WebhooksPage() {
             value={urlInput}
             onChange={(e) => setUrlInput(e.target.value)}
             placeholder={t('url_placeholder')}
-            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40 focus:border-[#1D9E75] transition-colors font-mono"
+            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors font-mono"
           />
           <p className="text-xs text-gray-400 dark:text-gray-500 mt-1.5">{t('url_hint')}</p>
         </div>
@@ -226,7 +226,7 @@ export default function WebhooksPage() {
           <button
             onClick={handleSave}
             disabled={saving || !urlInput}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm shadow-[#1D9E75]/20"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm shadow-signal/20"
           >
             {saving ? <Loader2 size={15} className="animate-spin" /> : <Webhook size={15} />}
             {saving ? t('saving') : config?.configured ? t('secret_rotate') : t('save')}
@@ -236,7 +236,7 @@ export default function WebhooksPage() {
             <button
               onClick={handleTest}
               disabled={testing}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-[#1D9E75] hover:text-[#1D9E75] disabled:opacity-50 transition-all"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-signal hover:text-signal disabled:opacity-50 transition-all"
             >
               {testing ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
               {testing ? t('test_sending') : t('test_btn')}
@@ -260,7 +260,7 @@ export default function WebhooksPage() {
             <CopyButton value={newSecret} label={t('copy')} copied={t('copied')} />
           </div>
           <div className="flex items-center gap-2 pt-1">
-            <Shield size={13} className="text-[#1D9E75] flex-shrink-0" />
+            <Shield size={13} className="text-signal flex-shrink-0" />
             <p className="text-xs text-gray-500 dark:text-gray-400">{t('secret_hint')}</p>
           </div>
         </div>
@@ -273,7 +273,7 @@ export default function WebhooksPage() {
             ? 'bg-white dark:bg-gray-900/40 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300'
             : 'bg-gray-50 dark:bg-gray-800/40 border-gray-200 dark:border-gray-700 text-gray-400'
         }`}>
-          <Shield size={16} className={config.has_secret ? 'text-[#1D9E75]' : 'text-gray-400'} />
+          <Shield size={16} className={config.has_secret ? 'text-signal' : 'text-gray-400'} />
           <span className="text-xs font-medium">{config.has_secret ? t('secret_configured') : t('secret_none')}</span>
         </div>
       )}
@@ -306,7 +306,7 @@ export default function WebhooksPage() {
         <div className="space-y-2">
           {[t('event_payment'), t('event_test')].map((ev) => (
             <div key={ev} className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#1D9E75] flex-shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-signal flex-shrink-0" />
               <code className="text-xs text-gray-700 dark:text-gray-300">{ev}</code>
             </div>
           ))}
@@ -317,10 +317,10 @@ export default function WebhooksPage() {
       <div className="rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
         <button
           onClick={() => setShowCode(!showCode)}
-          className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-[#0d1420] text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors"
+          className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-[ink/60] text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Shield size={16} className="text-[#1D9E75]" />
+            <Shield size={16} className="text-signal" />
             {t('code_title')}
           </div>
           {showCode ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}

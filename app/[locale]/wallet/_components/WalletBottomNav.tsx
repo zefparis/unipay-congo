@@ -32,11 +32,11 @@ export default function WalletBottomNav() {
           >
             <Icon
               size={22}
-              className={isActive ? 'text-[#00A651]' : 'text-gray-400'}
+              className={isActive ? 'text-signal' : 'text-gray-400'}
             />
             <span
               className={`text-[11px] ${
-                isActive ? 'text-[#00A651] font-semibold' : 'text-gray-400'
+                isActive ? 'text-signal-dark font-semibold' : 'text-gray-400'
               }`}
             >
               {label}

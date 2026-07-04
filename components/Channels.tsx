@@ -6,7 +6,7 @@ export default function Channels() {
   const t = useTranslations('channels');
 
   return (
-    <section id="api" className="py-24 bg-gray-50 dark:bg-[#0d1420]">
+    <section id="api" className="py-24 bg-gray-50 dark:bg-ink/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center mb-16">
@@ -23,7 +23,7 @@ export default function Channels() {
           {channels.map((channel) => (
             <div
               key={channel.id}
-              className="relative flex flex-col items-center p-4 sm:p-7 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0a0f1e] overflow-hidden group hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-xl transition-all duration-300"
+              className="relative flex flex-col items-center p-4 sm:p-7 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-ink overflow-hidden group hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-xl transition-all duration-300"
             >
               {/* Top color stripe */}
               <div

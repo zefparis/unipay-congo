@@ -50,7 +50,7 @@ export default function WalletLoginPage() {
       <div className="w-full max-w-sm bg-white dark:bg-gray-900 rounded-2xl shadow-md p-8 flex flex-col gap-6">
 
         <div className="flex flex-col gap-1 text-center">
-          <h1 className="text-2xl font-bold text-[#00A651]">UniPay Wallet</h1>
+          <h1 className="text-2xl font-bold text-signal">UniPay Wallet</h1>
           <p className="text-sm text-gray-500">Connectez-vous avec votre téléphone et PIN</p>
         </div>
 
@@ -65,7 +65,7 @@ export default function WalletLoginPage() {
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+243 XXX XXX XXX"
               required
-              className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#00A651]"
+              className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-signal"
             />
           </div>
 
@@ -82,7 +82,7 @@ export default function WalletLoginPage() {
               required
               inputMode="numeric"
               pattern="[0-9]{6}"
-              className="border border-gray-300 rounded-lg px-3 py-3 text-lg tracking-[0.5em] text-center bg-white focus:outline-none focus:ring-2 focus:ring-[#00A651]"
+              className="border border-gray-300 rounded-lg px-3 py-3 text-lg tracking-[0.5em] text-center bg-white focus:outline-none focus:ring-2 focus:ring-signal"
             />
             <p className="text-xs text-gray-400 text-center">{pin.length}/6 chiffres</p>
           </div>
@@ -96,7 +96,7 @@ export default function WalletLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#00A651] hover:bg-[#008f45] text-white font-semibold py-3 rounded-xl transition disabled:opacity-60 flex items-center justify-center gap-2"
+            className="w-full bg-signal hover:bg-signal/85 text-white font-semibold py-3 rounded-xl transition disabled:opacity-60 flex items-center justify-center gap-2"
           >
             {loading && (
               <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -110,7 +110,7 @@ export default function WalletLoginPage() {
 
         <p className="text-center text-sm text-gray-500">
           Pas encore de compte ?{' '}
-          <Link href={`/${locale}/wallet/register`} className="text-[#00A651] font-medium hover:underline">
+          <Link href={`/${locale}/wallet/register`} className="text-signal-dark font-medium hover:underline">
             Créer un compte
           </Link>
         </p>

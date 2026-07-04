@@ -59,7 +59,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Balance card */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1D9E75] to-[#0f6b4f] p-6 text-white shadow-lg shadow-[#1D9E75]/20">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-signal to-[#0f6b4f] p-6 text-white shadow-lg shadow-signal/20">
         <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full" />
         <div className="absolute -bottom-8 -right-2 w-24 h-24 bg-white/5 rounded-full" />
         <div className="relative">
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
           </h2>
           <Link
             href="/dashboard/transactions"
-            className="text-sm text-[#1D9E75] hover:text-[#178a65] font-medium"
+            className="text-sm text-signal-dark hover:text-signal font-medium"
           >
             {t('dashboard.overview.view_all')} →
           </Link>

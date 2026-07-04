@@ -150,7 +150,7 @@ export default function WalletDepositPage() {
           <ArrowLeft size={20} className="text-gray-600" />
         </Link>
         <h1 className="text-lg font-bold flex items-center gap-2 text-gray-900">
-          <ArrowDownCircle className="text-[#00A651]" size={20} />
+          <ArrowDownCircle className="text-signal" size={20} />
           Dépôt Mobile Money
         </h1>
       </div>
@@ -158,7 +158,7 @@ export default function WalletDepositPage() {
       {/* Currency tab */}
       <div className="flex gap-2 px-4 pt-4">
         <button type="button" onClick={() => switchTab('cdf')}
-          className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition ${tab === 'cdf' ? 'border-[#00A651] bg-green-50 text-[#00A651]' : 'border-gray-200 bg-white text-gray-500'}`}>
+          className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition ${tab === 'cdf' ? 'border-signal bg-green-50 text-signal-dark' : 'border-gray-200 bg-white text-gray-500'}`}>
           CDF
         </button>
         <button type="button" onClick={() => switchTab('usd')}
@@ -194,7 +194,7 @@ export default function WalletDepositPage() {
           <label className="text-sm font-semibold text-gray-600">Numéro Mobile Money</label>
           <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
             placeholder="+243 XXX XXX XXX" required
-            className="border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#00A651]" />
+            className="border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-signal" />
         </div>
 
         {/* Amount */}
@@ -204,11 +204,11 @@ export default function WalletDepositPage() {
           </label>
           <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
             placeholder={isCdf ? '5 000' : '10.00'} min={minAmt} step={isCdf ? '1' : '0.01'} required
-            className="border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#00A651]" />
+            className="border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-signal" />
           {num >= minAmt && (
             <div className="bg-gray-50 rounded-lg px-3 py-2 flex justify-between text-xs text-gray-500">
               <span>Frais (3 %) : <strong>{isCdf ? fee.toLocaleString('fr-FR') : fee.toFixed(2)} {isCdf ? 'CDF' : 'USD'}</strong></span>
-              <span>Reçu : <strong className="text-[#00A651]">{isCdf ? netAmt.toLocaleString('fr-FR') : netAmt.toFixed(2)} {isCdf ? 'CDF' : 'USD'}</strong></span>
+              <span>Reçu : <strong className="text-signal-dark">{isCdf ? netAmt.toLocaleString('fr-FR') : netAmt.toFixed(2)} {isCdf ? 'CDF' : 'USD'}</strong></span>
             </div>
           )}
           <p className="text-xs text-gray-400">Minimum {minAmt} {isCdf ? 'CDF' : 'USD'}</p>
@@ -223,7 +223,7 @@ export default function WalletDepositPage() {
         )}
 
         <button type="submit" disabled={submitting || !!success}
-          className="w-full bg-[#00A651] hover:bg-[#008f45] text-white font-semibold py-4 rounded-xl transition disabled:opacity-60 flex items-center justify-center gap-2 text-base mt-2">
+          className="w-full bg-signal hover:bg-signal/85 text-white font-semibold py-4 rounded-xl transition disabled:opacity-60 flex items-center justify-center gap-2 text-base mt-2">
           {loading && <Spinner />}
           {loading ? 'Envoi…' : polling ? 'Vérification…' : 'Déposer'}
         </button>

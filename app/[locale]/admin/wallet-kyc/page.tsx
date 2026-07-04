@@ -117,7 +117,7 @@ function SubCard({ sub, onApprove, onReject }: {
           <a key={label} href={`https://[YOUR_SUPABASE_URL]/storage/v1/object/kyc-docs/${url}`}
             target="_blank" rel="noopener noreferrer"
             className="flex flex-col items-center gap-1 group">
-            <div className="w-16 h-16 rounded-xl bg-gray-200 dark:bg-slate-700 overflow-hidden flex items-center justify-center text-gray-400 dark:text-slate-500 group-hover:ring-2 ring-[#1D9E75] transition">
+            <div className="w-16 h-16 rounded-xl bg-gray-200 dark:bg-slate-700 overflow-hidden flex items-center justify-center text-gray-400 dark:text-slate-500 group-hover:ring-2 ring-signal transition">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
             </div>
             <span className="text-xs text-gray-500 dark:text-slate-500">{label}</span>
@@ -147,7 +147,7 @@ function SubCard({ sub, onApprove, onReject }: {
             <XCircle size={15} /> Rejeter
           </button>
           <button onClick={approve} disabled={approving}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#1D9E75] text-white text-sm font-semibold hover:bg-[#178a65] disabled:opacity-60 transition">
+            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-signal text-white text-sm font-semibold hover:bg-signal/85 disabled:opacity-60 transition">
             {approving ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle2 size={15} />} Approuver
           </button>
         </div>
@@ -193,8 +193,8 @@ export default function WalletKycAdminPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-[#1D9E75]/10">
-            <ShieldCheck size={20} className="text-[#1D9E75]" />
+          <div className="p-2 rounded-xl bg-signal/10">
+            <ShieldCheck size={20} className="text-signal" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-gray-900 dark:text-white">KYC Wallet</h1>
@@ -224,7 +224,7 @@ export default function WalletKycAdminPage() {
       {/* List */}
       {loading ? (
         <div className="flex justify-center py-16">
-          <Loader2 size={24} className="animate-spin text-[#1D9E75]" />
+          <Loader2 size={24} className="animate-spin text-signal" />
         </div>
       ) : subs.length === 0 ? (
         <div className="flex flex-col items-center gap-3 py-16 text-gray-400 dark:text-slate-500">

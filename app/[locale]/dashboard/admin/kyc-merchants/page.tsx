@@ -108,7 +108,7 @@ export default function KycMerchantsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <ShieldCheck className="text-[#1D9E75]" size={22} />
+            <ShieldCheck className="text-signal" size={22} />
             KYC Merchants
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
@@ -174,7 +174,7 @@ export default function KycMerchantsPage() {
                         placeholder="Motif de refus (optionnel)"
                         value={rejectNotes[m.id] ?? ''}
                         onChange={(e) => setRejectNotes((prev) => ({ ...prev, [m.id]: e.target.value }))}
-                        className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/50"
+                        className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/50"
                       />
                     </div>
                     <button
@@ -188,7 +188,7 @@ export default function KycMerchantsPage() {
                     <button
                       onClick={() => void handleApprove(m)}
                       disabled={acting !== null}
-                      className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1D9E75] text-white hover:bg-[#17876A] text-sm font-semibold transition-all disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-signal text-white hover:bg-signal/85 text-sm font-semibold transition-all disabled:opacity-50"
                     >
                       {acting === m.id + ':approve' ? <RefreshCw size={13} className="animate-spin" /> : <CheckCircle2 size={13} />}
                       Approuver &amp; Live

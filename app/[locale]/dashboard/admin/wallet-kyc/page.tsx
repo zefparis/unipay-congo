@@ -172,8 +172,8 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
             <div className="rounded-2xl border border-gray-100 p-4 dark:border-gray-800">
               <h3 className="mb-3 text-sm font-semibold text-gray-900 dark:text-white">PayGuard</h3>
               <div className="flex flex-wrap items-center gap-4">
-                <div className="rounded-2xl bg-[#1D9E75]/10 px-6 py-4 text-center">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-[#1D9E75]">Score</p>
+                <div className="rounded-2xl bg-signal/10 px-6 py-4 text-center">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-signal-dark">Score</p>
                   <p className="text-4xl font-heading font-bold text-gray-900 dark:text-white">{fmtConfidence(submission.payguard_confidence)}</p>
                 </div>
                 <div>
@@ -204,7 +204,7 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
               <button
                 onClick={approve}
                 disabled={busy !== null || submission.status === 'approved'}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#1D9E75] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#178a65] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-signal px-4 py-3 text-sm font-semibold text-white transition hover:bg-signal/85 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {busy === 'approve' ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle2 size={15} />}
                 Approuver
@@ -327,7 +327,7 @@ export default function WalletKycPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-heading font-bold text-gray-900 dark:text-white">
-            <ShieldCheck className="text-[#1D9E75]" size={22} />
+            <ShieldCheck className="text-signal" size={22} />
             KYC Wallet
           </h1>
           <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">Validation des soumissions wallet et résultats PayGuard.</p>
@@ -346,7 +346,7 @@ export default function WalletKycPage() {
         <select
           value={status}
           onChange={(e) => { setStatus(e.target.value as KycStatus | ''); setPage(1); }}
-          className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-[#1D9E75]/40 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+          className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-signal/40 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
         >
           <option value="">Tous les statuts</option>
           <option value="pending">pending</option>
@@ -364,7 +364,7 @@ export default function WalletKycPage() {
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/60">
         {loading && rows.length === 0 ? (
           <div className="flex justify-center py-16">
-            <Loader2 size={24} className="animate-spin text-[#1D9E75]" />
+            <Loader2 size={24} className="animate-spin text-signal" />
           </div>
         ) : rows.length === 0 ? (
           <div className="py-12 text-center text-sm text-gray-400 dark:text-gray-600">Aucune soumission KYC.</div>

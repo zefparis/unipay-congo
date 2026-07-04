@@ -114,7 +114,7 @@ export default function AdjustmentsPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <SlidersHorizontal className="text-[#1D9E75]" size={22} />
+          <SlidersHorizontal className="text-signal" size={22} />
           Ajustements manuels
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Recherchez un utilisateur wallet et ajustez son solde manuellement.</p>
@@ -123,7 +123,7 @@ export default function AdjustmentsPage() {
       {/* Search form */}
       <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm space-y-4">
         <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-          <Search size={15} className="text-[#1D9E75]" />
+          <Search size={15} className="text-signal" />
           Recherche par téléphone
         </h2>
         <form onSubmit={handleSearch} className="flex gap-3">
@@ -132,12 +132,12 @@ export default function AdjustmentsPage() {
             value={phoneSearch}
             onChange={(e) => setPhoneSearch(e.target.value)}
             placeholder="ex : +243812345678"
-            className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40 focus:border-[#1D9E75] transition-colors"
+            className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
           />
           <button
             type="submit"
             disabled={searching || !phoneSearch.trim()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all"
           >
             {searching ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
             Rechercher
@@ -159,7 +159,7 @@ export default function AdjustmentsPage() {
                 className={clsx(
                   'w-full text-left px-4 py-2.5 rounded-xl border text-sm transition-all',
                   selectedUser?.id === u.id
-                    ? 'border-[#1D9E75] bg-[#1D9E75]/5 text-gray-900 dark:text-white'
+                    ? 'border-signal bg-signal/5 text-gray-900 dark:text-white'
                     : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300',
                 )}
               >
@@ -213,7 +213,7 @@ export default function AdjustmentsPage() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="Montant (CDF)"
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40 focus:border-[#1D9E75] transition-colors"
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
                 />
               </div>
               {amount && Number.isFinite(parseFloat(amount)) && (
@@ -233,14 +233,14 @@ export default function AdjustmentsPage() {
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 placeholder="Motif de l'ajustement (ex : remboursement, bonus, correction…)"
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40 focus:border-[#1D9E75] transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
               />
             </div>
 
             <button
               onClick={handleAdjust}
               disabled={applying || !amount || !reason || !Number.isFinite(parseFloat(amount)) || parseFloat(amount) === 0}
-              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm"
+              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm"
             >
               {applying ? <Loader2 size={15} className="animate-spin" /> : <SlidersHorizontal size={15} />}
               {applying ? 'Application en cours…' : 'Appliquer l\'ajustement'}

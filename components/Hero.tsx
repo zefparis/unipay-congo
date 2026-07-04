@@ -1,21 +1,26 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { ArrowRight, BookOpen, ShieldCheck } from 'lucide-react';
+import ConvergenceLattice from './ConvergenceLattice';
+import ConvergenceDiagram from './ConvergenceDiagram';
 
 export default function Hero() {
   const t = useTranslations('hero');
 
   return (
     <section
-      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-gradient-to-br from-gray-900 via-[#0a1f14] to-gray-900"
+      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-ink"
     >
-      {/* Subtle grid texture */}
+      {/* Convergence Lattice — atmospheric background */}
+      <div className="absolute inset-0 text-bone pointer-events-none">
+        <ConvergenceLattice variant="hero" opacity={0.07} className="w-full h-full" />
+      </div>
+
+      {/* Subtle radial glow from center */}
       <div
-        className="absolute inset-0 opacity-[0.06]"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage:
-            'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(28,158,122,0.08) 0%, transparent 60%)',
         }}
       />
 
@@ -23,19 +28,19 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Text */}
           <div>
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/40 text-white/90 text-sm font-medium mb-8">
-              <ShieldCheck size={15} />
+            {/* Badge with ConvergenceDiagram */}
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-bone/10 border border-bone/30 text-bone/90 text-sm font-medium mb-8">
+              <ConvergenceDiagram size={20} className="text-signal" />
               <span>{t('badge')}</span>
             </div>
 
             {/* Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-white leading-[1.1] tracking-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-bone leading-[1.1] tracking-tight mb-6">
               {t('title')}
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-white/80 leading-relaxed mb-10 max-w-lg">
+            <p className="text-lg sm:text-xl text-bone/70 leading-relaxed mb-10 max-w-lg">
               {t('subtitle')}
             </p>
 
@@ -43,14 +48,14 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/register"
-                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-orange-500/25 backdrop-blur-md border border-orange-400/50 text-white font-semibold text-base hover:bg-orange-500/40 transition-all duration-200"
+                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-rust text-bone font-semibold text-base hover:bg-rust/85 transition-all duration-200 shadow-lg shadow-rust/20"
               >
                 {t('cta_primary')}
                 <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <a
                 href="#api"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border-2 border-white/40 text-white font-semibold text-base hover:border-white hover:bg-white/10 transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border-2 border-bone/30 text-bone font-semibold text-base hover:border-bone/60 hover:bg-bone/5 transition-all duration-200"
               >
                 <BookOpen size={18} />
                 {t('cta_secondary')}
@@ -58,50 +63,55 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right: API mockup card */}
+          {/* Right: API mockup card + ConvergenceDiagram */}
           <div className="hidden lg:block">
             <div className="relative">
-              <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0d1420] shadow-2xl shadow-gray-200/60 dark:shadow-black/40 overflow-hidden">
+              {/* Convergence diagram behind card */}
+              <div className="absolute -top-8 -right-8 text-signal/30 pointer-events-none">
+                <ConvergenceDiagram size={140} />
+              </div>
+
+              <div className="relative rounded-2xl border border-bone/15 bg-ink/80 backdrop-blur-sm shadow-2xl shadow-black/40 overflow-hidden">
                 {/* Card header bar */}
-                <div className="flex items-center gap-2 px-5 py-3.5 border-b border-gray-100 dark:border-gray-800 bg-gray-50/80 dark:bg-[#0a1222]">
-                  <div className="w-3 h-3 rounded-full bg-red-400" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-400" />
-                  <div className="w-3 h-3 rounded-full bg-green-400" />
-                  <span className="ml-3 text-xs text-gray-400 font-mono">POST /v1/payments/initiate</span>
+                <div className="flex items-center gap-2 px-5 py-3.5 border-b border-bone/10 bg-bone/5">
+                  <div className="w-3 h-3 rounded-full bg-danger/70" />
+                  <div className="w-3 h-3 rounded-full bg-rust/70" />
+                  <div className="w-3 h-3 rounded-full bg-signal/70" />
+                  <span className="ml-3 text-xs text-bone/40 font-mono">POST /v1/payments/initiate</span>
                 </div>
                 {/* Code content */}
                 <div className="p-5 font-mono text-sm leading-relaxed">
-                  <pre className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
-                    <span className="text-purple-600 dark:text-purple-400">{'{'}</span>
+                  <pre className="text-bone/80 whitespace-pre-wrap">
+                    <span className="text-rust">{'{'}</span>
                     {'\n'}
-                    {'  '}<span className="text-blue-600 dark:text-blue-400">&quot;amount&quot;</span>
-                    <span className="text-gray-600 dark:text-gray-400">: </span>
-                    <span className="text-emerald-600 dark:text-emerald-400">5000</span>,{'\n'}
-                    {'  '}<span className="text-blue-600 dark:text-blue-400">&quot;currency&quot;</span>
-                    <span className="text-gray-600 dark:text-gray-400">: </span>
-                    <span className="text-amber-600 dark:text-amber-400">&quot;CDF&quot;</span>,{'\n'}
-                    {'  '}<span className="text-blue-600 dark:text-blue-400">&quot;channel&quot;</span>
-                    <span className="text-gray-600 dark:text-gray-400">: </span>
-                    <span className="text-amber-600 dark:text-amber-400">&quot;vodacash&quot;</span>,{'\n'}
-                    {'  '}<span className="text-blue-600 dark:text-blue-400">&quot;phone&quot;</span>
-                    <span className="text-gray-600 dark:text-gray-400">: </span>
-                    <span className="text-amber-600 dark:text-amber-400">&quot;+243810000000&quot;</span>{'\n'}
-                    <span className="text-purple-600 dark:text-purple-400">{'}'}</span>
+                    {'  '}<span className="text-signal">&quot;amount&quot;</span>
+                    <span className="text-bone/50">: </span>
+                    <span className="text-bone">5000</span>,{'\n'}
+                    {'  '}<span className="text-signal">&quot;currency&quot;</span>
+                    <span className="text-bone/50">: </span>
+                    <span className="text-rust">&quot;CDF&quot;</span>,{'\n'}
+                    {'  '}<span className="text-signal">&quot;channel&quot;</span>
+                    <span className="text-bone/50">: </span>
+                    <span className="text-rust">&quot;vodacash&quot;</span>,{'\n'}
+                    {'  '}<span className="text-signal">&quot;phone&quot;</span>
+                    <span className="text-bone/50">: </span>
+                    <span className="text-rust">&quot;+243810000000&quot;</span>{'\n'}
+                    <span className="text-rust">{'}'}</span>
                   </pre>
-                  <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+                  <div className="mt-4 pt-4 border-t border-bone/10">
                     <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-signal/15 text-signal text-xs font-semibold">
                         200 OK
                       </span>
-                      <span className="text-xs text-gray-400 font-mono">transaction_id: UP-83921</span>
+                      <span className="text-xs text-bone/40 font-mono">transaction_id: UP-83921</span>
                     </div>
                   </div>
                 </div>
               </div>
-              {/* Floating badge */}
-              <div className="absolute -bottom-4 -left-4 bg-white dark:bg-[#0d1420] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 shadow-lg flex items-center gap-2.5">
-                <div className="w-2 h-2 rounded-full bg-[#1D9E75] animate-pulse" />
-                <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">4 réseaux connectés</span>
+              {/* Floating badge — convergence diagram replaces text badge */}
+              <div className="absolute -bottom-4 -left-4 bg-ink border border-bone/15 rounded-xl px-4 py-2.5 shadow-lg flex items-center gap-2.5">
+                <ConvergenceDiagram size={16} className="text-signal" />
+                <span className="text-xs font-semibold text-bone/80">4 réseaux connectés</span>
               </div>
             </div>
           </div>

@@ -49,7 +49,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40 focus:border-[#1D9E75] transition-colors"
+        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
       />
       {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
     </div>
@@ -107,7 +107,7 @@ export default function KycPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-48">
-        <Loader2 size={24} className="animate-spin text-[#1D9E75]" />
+        <Loader2 size={24} className="animate-spin text-signal" />
       </div>
     );
   }
@@ -122,8 +122,8 @@ export default function KycPage() {
       {/* ── Header ────────────────────────────────────────────── */}
       <div>
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded-xl bg-[#1D9E75]/10 dark:bg-[#1D9E75]/15">
-            <ShieldCheck className="text-[#1D9E75]" size={20} />
+          <div className="p-2 rounded-xl bg-signal/10 dark:bg-signal/15">
+            <ShieldCheck className="text-signal" size={20} />
           </div>
           <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
         </div>
@@ -213,7 +213,7 @@ export default function KycPage() {
           <button
             onClick={handleSubmit}
             disabled={submitting || !companyName.trim()}
-            className="flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm shadow-[#1D9E75]/20"
+            className="flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm shadow-signal/20"
           >
             {submitting ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
             {submitting ? t('submitting') : (data?.kyc_submitted_at ? t('resubmit') : t('submit'))}

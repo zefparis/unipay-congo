@@ -13,7 +13,7 @@ import Footer from '@/components/Footer';
 const OPERATORS = [
   { code: 'orange',    name: 'Orange Money',    color: '#FF7900', status: true  },
   { code: 'airtel',    name: 'Airtel Money',    color: '#E40000', status: true  },
-  { code: 'afrimoney', name: 'Afrimoney',       color: '#00A859', status: true  },
+  { code: 'afrimoney', name: 'Afrimoney',       color: '#0057A8', status: true  },
   { code: 'vodacash',  name: 'Vodacash/M-Pesa', color: '#E31837', status: false },
 ];
 
@@ -26,12 +26,12 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between gap-4 py-5 text-left group"
       >
-        <span className="text-sm sm:text-base font-medium text-gray-900 dark:text-white group-hover:text-[#1D9E75] transition-colors">
+        <span className="text-sm sm:text-base font-medium text-gray-900 dark:text-white group-hover:text-signal transition-colors">
           {q}
         </span>
         <ChevronDown
           size={18}
-          className={`flex-shrink-0 text-gray-400 transition-transform duration-200 ${open ? 'rotate-180 text-[#1D9E75]' : ''}`}
+          className={`flex-shrink-0 text-gray-400 transition-transform duration-200 ${open ? 'rotate-180 text-signal' : ''}`}
         />
       </button>
       {open && (
@@ -66,22 +66,22 @@ export default function PricingPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-white dark:bg-[#0a0f1e] pt-16 overflow-x-hidden">
+      <main className="min-h-screen bg-white dark:bg-ink pt-16 overflow-x-hidden">
 
         {/* ── Hero ──────────────────────────────────────────────── */}
         <section className="relative overflow-hidden py-20 lg:py-28">
-          <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/40 to-white dark:from-[#0a0f1e] dark:via-[#0d1a2e] dark:to-[#0a0f1e]" />
-          <div className="absolute top-0 right-[-5%] w-[500px] h-[500px] bg-[#1D9E75]/6 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/40 to-white dark:from-ink dark:via-ink/80 dark:to-ink" />
+          <div className="absolute top-0 right-[-5%] w-[500px] h-[500px] bg-signal/6 rounded-full blur-3xl pointer-events-none" />
           <div
             className="absolute inset-0 opacity-[0.025] dark:opacity-[0.035]"
             style={{
-              backgroundImage: 'linear-gradient(#1D9E75 1px,transparent 1px),linear-gradient(90deg,#1D9E75 1px,transparent 1px)',
+              backgroundImage: 'linear-gradient(#1C9E7A 1px,transparent 1px),linear-gradient(90deg,#1C9E7A 1px,transparent 1px)',
               backgroundSize: '60px 60px',
             }}
           />
 
           <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1D9E75]/10 border border-[#1D9E75]/25 text-[#1D9E75] text-sm font-medium mb-7">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-signal/10 border border-signal/25 text-signal text-sm font-medium mb-7">
               <Code2 size={14} />
               {t('badge')}
             </div>
@@ -98,15 +98,15 @@ export default function PricingPage() {
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
           <div className="max-w-lg mx-auto">
             {/* Card */}
-            <div className="relative rounded-3xl border-2 border-[#1D9E75]/40 bg-white dark:bg-[#0d1420] shadow-2xl shadow-[#1D9E75]/10 overflow-hidden">
+            <div className="relative rounded-3xl border-2 border-signal/40 bg-white dark:bg-ink/60 shadow-2xl shadow-signal/10 overflow-hidden">
               {/* Top accent bar */}
-              <div className="h-1.5 bg-gradient-to-r from-[#1D9E75] via-[#22b587] to-[#178a65]" />
+              <div className="h-1.5 bg-gradient-to-r from-signal via-signal to-signal/70" />
 
               {/* Plan header */}
               <div className="px-5 sm:px-8 pt-7 sm:pt-8 pb-6 border-b border-gray-100 dark:border-gray-800">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-bold text-[#1D9E75] uppercase tracking-widest">{t('plan_name')}</span>
-                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#1D9E75]/10 text-[#1D9E75] border border-[#1D9E75]/20">
+                  <span className="text-sm font-bold text-signal uppercase tracking-widest">{t('plan_name')}</span>
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-signal/10 text-signal border border-signal/20">
                     RDC
                   </span>
                 </div>
@@ -118,7 +118,7 @@ export default function PricingPage() {
                   </span>
                 </div>
                 <p className="text-base text-gray-500 dark:text-gray-400 font-medium mb-1">{t('rate_label')}</p>
-                <p className="text-xs text-[#1D9E75] font-semibold">{t('rate_note')}</p>
+                <p className="text-xs text-signal font-semibold">{t('rate_note')}</p>
               </div>
 
               {/* Features list */}
@@ -127,7 +127,7 @@ export default function PricingPage() {
                 <ul className="space-y-3">
                   {features.map((f) => (
                     <li key={f} className="flex items-center gap-3">
-                      <CheckCircle2 size={17} className="text-[#1D9E75] flex-shrink-0" />
+                      <CheckCircle2 size={17} className="text-signal flex-shrink-0" />
                       <span className="text-sm text-gray-700 dark:text-gray-300">{f}</span>
                     </li>
                   ))}
@@ -138,7 +138,7 @@ export default function PricingPage() {
               <div className="px-5 sm:px-8 pb-7 sm:pb-8">
                 <Link
                   href="/register"
-                  className="group w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#1D9E75] text-white font-semibold text-base hover:bg-[#178a65] transition-all duration-200 shadow-lg shadow-[#1D9E75]/25 hover:shadow-[#1D9E75]/40 hover:-translate-y-0.5"
+                  className="group w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-signal text-white font-semibold text-base hover:bg-signal/85 transition-all duration-200 shadow-lg shadow-signal/25 hover:shadow-signal/40 hover:-translate-y-0.5"
                 >
                   {t('cta')}
                   <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
@@ -156,8 +156,8 @@ export default function PricingPage() {
           <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl mx-auto">
             {highlights.map(({ icon: Icon, label }) => (
               <div key={label} className="flex flex-col items-center text-center gap-2">
-                <div className="w-11 h-11 rounded-xl bg-[#1D9E75]/10 flex items-center justify-center">
-                  <Icon size={20} className="text-[#1D9E75]" />
+                <div className="w-11 h-11 rounded-xl bg-signal/10 flex items-center justify-center">
+                  <Icon size={20} className="text-signal" />
                 </div>
                 <span className="text-xs font-medium text-gray-600 dark:text-gray-400 leading-snug">{label}</span>
               </div>
@@ -166,7 +166,7 @@ export default function PricingPage() {
         </section>
 
         {/* ── Operators ─────────────────────────────────────────── */}
-        <section className="bg-gray-50 dark:bg-[#0d1420] border-y border-gray-200 dark:border-gray-800 py-20">
+        <section className="bg-gray-50 dark:bg-ink/60 border-y border-gray-200 dark:border-gray-800 py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-2xl sm:text-3xl font-heading font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
@@ -181,7 +181,7 @@ export default function PricingPage() {
               {OPERATORS.map((op) => (
                 <div
                   key={op.code}
-                  className="relative flex flex-col items-center p-4 sm:p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0a0f1e] overflow-hidden"
+                  className="relative flex flex-col items-center p-4 sm:p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-ink overflow-hidden"
                 >
                   <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style={{ backgroundColor: op.color }} />
                   <div
@@ -210,7 +210,7 @@ export default function PricingPage() {
             <h2 className="text-2xl sm:text-3xl font-heading font-bold text-gray-900 dark:text-white mb-10 text-center tracking-tight">
               {t('faq_title')}
             </h2>
-            <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1420] px-6 sm:px-8 divide-y divide-gray-200 dark:divide-gray-800">
+            <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-ink/60 px-6 sm:px-8 divide-y divide-gray-200 dark:divide-gray-800">
               {faqs.map(({ q, a }) => (
                 <FaqItem key={q} q={q} a={a} />
               ))}
@@ -219,9 +219,9 @@ export default function PricingPage() {
         </section>
 
         {/* ── CTA banner ────────────────────────────────────────── */}
-        <section className="py-20 bg-gradient-to-br from-[#1D9E75]/8 via-transparent to-[#1D9E75]/8 dark:from-[#1D9E75]/10 dark:via-[#0a0f1e] dark:to-[#1D9E75]/10 border-y border-[#1D9E75]/15 dark:border-[#1D9E75]/20">
+        <section className="py-20 bg-gradient-to-br from-signal/8 via-transparent to-signal/8 dark:from-signal/10 dark:via-ink dark:to-signal/10 border-y border-signal/15 dark:border-signal/20">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="w-14 h-14 rounded-2xl bg-[#1D9E75] flex items-center justify-center shadow-lg shadow-[#1D9E75]/30 mx-auto mb-6">
+            <div className="w-14 h-14 rounded-2xl bg-signal flex items-center justify-center shadow-lg shadow-signal/30 mx-auto mb-6">
               <Zap size={24} className="text-white" />
             </div>
             <h2 className="text-2xl sm:text-3xl font-heading font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
@@ -233,14 +233,14 @@ export default function PricingPage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/register"
-                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[#1D9E75] text-white font-semibold text-base hover:bg-[#178a65] transition-all duration-200 shadow-lg shadow-[#1D9E75]/25 hover:shadow-[#1D9E75]/40 hover:-translate-y-0.5"
+                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-signal text-white font-semibold text-base hover:bg-signal/85 transition-all duration-200 shadow-lg shadow-signal/25 hover:shadow-signal/40 hover:-translate-y-0.5"
               >
                 {t('cta')}
                 <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
                 href="/api"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-semibold text-base hover:border-[#1D9E75] hover:text-[#1D9E75] dark:hover:border-[#1D9E75] dark:hover:text-[#1D9E75] transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-semibold text-base hover:border-signal hover:text-signal dark:hover:border-signal dark:hover:text-signal transition-all duration-200"
               >
                 <Code2 size={17} />
                 Documentation API

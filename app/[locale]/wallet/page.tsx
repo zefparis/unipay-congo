@@ -72,7 +72,7 @@ export default function WalletHomePage() {
     <div className="flex flex-col">
 
       {/* ── Balance card ────────────────────────────────────── */}
-      <div className="bg-[#00A651] px-6 pt-12 pb-8 flex flex-col gap-1 text-white">
+      <div className="bg-signal px-6 pt-12 pb-8 flex flex-col gap-1 text-white">
         <p className="text-sm opacity-75 tracking-wide">Solde disponible</p>
         {loadingBal ? (
           <div className="h-11 mt-1"><Spinner /></div>
@@ -98,7 +98,7 @@ export default function WalletHomePage() {
         <Link href={`${base}/deposit`}
           className="flex flex-col items-center gap-2.5 rounded-2xl border border-gray-100 bg-white shadow-sm p-5 active:scale-95 transition-transform">
           <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center">
-            <ArrowDownCircle className="text-[#00A651]" size={26} />
+            <ArrowDownCircle className="text-signal" size={26} />
           </div>
           <span className="text-sm font-semibold text-gray-700">Déposer</span>
         </Link>
@@ -132,7 +132,7 @@ export default function WalletHomePage() {
       <div className="px-4 pb-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Dernières opérations</h2>
-          <Link href={`${base}/transactions`} className="text-xs text-[#00A651] font-semibold">Voir tout</Link>
+          <Link href={`${base}/transactions`} className="text-xs text-signal-dark font-semibold">Voir tout</Link>
         </div>
 
         {txList.length === 0 && !loadingBal && (
@@ -148,7 +148,7 @@ export default function WalletHomePage() {
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
                   isCredit ? 'bg-green-50' : isP2P ? 'bg-blue-50' : 'bg-orange-50'
                 }`}>
-                  {isCredit && <ArrowDownCircle className="text-[#00A651]" size={20} />}
+                  {isCredit && <ArrowDownCircle className="text-signal" size={20} />}
                   {tx.direction === 'payout' && <ArrowUpCircle className="text-orange-500" size={20} />}
                   {isP2P && <ArrowLeftRight className="text-blue-500" size={20} />}
                 </div>
@@ -157,7 +157,7 @@ export default function WalletHomePage() {
                   <p className="text-xs text-gray-400">{relativeDate(tx.created_at)}</p>
                 </div>
                 <p className={`text-sm font-bold shrink-0 ${
-                  isCredit ? 'text-[#00A651]' : isP2P ? 'text-blue-600' : 'text-orange-500'
+                  isCredit ? 'text-signal-dark' : isP2P ? 'text-blue-600' : 'text-orange-500'
                 }`}>
                   {isCredit ? '+' : '−'}{fmt(isCredit ? tx.net_amount : tx.amount)} CDF
                 </p>

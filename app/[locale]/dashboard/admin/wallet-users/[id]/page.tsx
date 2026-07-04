@@ -152,14 +152,14 @@ export default function WalletUserDetailPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-24">
-      <Loader2 size={28} className="animate-spin text-[#1D9E75]" />
+      <Loader2 size={28} className="animate-spin text-signal" />
     </div>
   );
 
   if (error) return (
     <div className="max-w-xl mx-auto mt-12 text-center">
       <p className="text-red-500 mb-4">{error}</p>
-      <Link href="/dashboard/admin/wallet-users" className="text-sm text-[#1D9E75] hover:underline">← Retour à la liste</Link>
+      <Link href="/dashboard/admin/wallet-users" className="text-sm text-signal-dark hover:underline">← Retour à la liste</Link>
     </div>
   );
 
@@ -170,7 +170,7 @@ export default function WalletUserDetailPage() {
       {toast && <Toast msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
 
       {/* Back */}
-      <Link href="/dashboard/admin/wallet-users" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-[#1D9E75] transition-colors">
+      <Link href="/dashboard/admin/wallet-users" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-signal transition-colors">
         <ArrowLeft size={15} /> Retour à la liste
       </Link>
 
@@ -178,8 +178,8 @@ export default function WalletUserDetailPage() {
       <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#1D9E75]/10 flex items-center justify-center">
-              <User size={22} className="text-[#1D9E75]" />
+            <div className="w-12 h-12 rounded-2xl bg-signal/10 flex items-center justify-center">
+              <User size={22} className="text-signal" />
             </div>
             <div>
               <h1 className="text-xl font-heading font-bold text-gray-900 dark:text-white">
@@ -247,7 +247,7 @@ export default function WalletUserDetailPage() {
       {/* Balance adjustment */}
       <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm space-y-4">
         <div className="flex items-center gap-2">
-          <Wallet size={16} className="text-[#1D9E75]" />
+          <Wallet size={16} className="text-signal" />
           <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Ajustement de solde</h2>
         </div>
         <div className="flex flex-wrap gap-3 items-end">
@@ -261,7 +261,7 @@ export default function WalletUserDetailPage() {
                 value={adjustAmount}
                 onChange={(e) => setAdjustAmount(e.target.value)}
                 placeholder="ex : +5000 ou -1000"
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40 focus:border-[#1D9E75] transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
               />
             </div>
           </div>
@@ -272,7 +272,7 @@ export default function WalletUserDetailPage() {
               value={adjustReason}
               onChange={(e) => setAdjustReason(e.target.value)}
               placeholder="Motif de l'ajustement…"
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40 focus:border-[#1D9E75] transition-colors"
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
             />
           </div>
           <div className="flex gap-2">
@@ -293,7 +293,7 @@ export default function WalletUserDetailPage() {
             <button
               onClick={handleAdjust}
               disabled={adjusting || !adjustAmount || !adjustReason}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1D9E75] hover:bg-[#178a65] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all"
             >
               {adjusting ? <Loader2 size={14} className="animate-spin" /> : null}
               Appliquer
