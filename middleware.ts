@@ -1,6 +1,7 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextResponse, type NextRequest } from 'next/server';
 import { routing } from './i18n/routing';
+import { verifySessionToken } from './lib/admin-session';
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -22,8 +23,7 @@ export default function middleware(request: NextRequest) {
   // The login page itself is excluded so the user can authenticate
   if (/^\/(fr|en)\/dashboard\/admin(\/(?!login).*)?$/.test(pathname)) {
     const adminSession = request.cookies.get('admin_session');
-    const adminSecret = process.env.ADMIN_SECRET ?? '';
-    if (!adminSecret || adminSession?.value !== adminSecret) {
+    if (!verifySessionToken(adminSession?.value)) {
       const locale = pathname.startsWith('/en/') ? 'en' : 'fr';
       const url = request.nextUrl.clone();
       url.pathname = `/${locale}/dashboard/admin/login`;

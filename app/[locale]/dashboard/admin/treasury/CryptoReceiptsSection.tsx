@@ -130,13 +130,13 @@ interface TreasuryWallet {
   is_active: boolean;
 }
 
-const PREDICTSTREET: Partial<CreateForm> = {
+const EXAMPLE_RECEIPT: Partial<CreateForm> = {
   invoice_reference: 'FAC-2026-001',
-  payer_name:        'PredictStreet / ADI Foundation',
+  payer_name:        'ADI Foundation',
   asset:             'USDC',
   network:           'BSC',
   expected_amount:   '116000',
-  notes:             'PredictStreet x Congo Gaming DRC Market Launch payment',
+  notes:             'Congo Gaming DRC Market Launch payment',
 };
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -416,10 +416,10 @@ export default function CryptoReceiptsSection() {
             <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Créer un reçu en attente</h3>
             <button
               type="button"
-              onClick={() => setCForm({ ...EMPTY_CREATE, ...PREDICTSTREET } as CreateForm)}
+              onClick={() => setCForm({ ...EMPTY_CREATE, ...EXAMPLE_RECEIPT } as CreateForm)}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 font-semibold border border-yellow-500/30 transition"
             >
-              <Zap size={11} /> Préfill PredictStreet 116k
+              <Zap size={11} /> Préfill exemple 116k
             </button>
           </div>
 
@@ -479,7 +479,7 @@ export default function CryptoReceiptsSection() {
               <div>
                 <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Payeur *</label>
                 <input type="text" required value={cForm.payer_name} onChange={(e) => setCForm(f => ({ ...f, payer_name: e.target.value }))}
-                  placeholder="PredictStreet / ADI Foundation" className={inputCls} />
+                  placeholder="ADI Foundation" className={inputCls} />
               </div>
             </div>
 
@@ -515,7 +515,7 @@ export default function CryptoReceiptsSection() {
               <textarea rows={2} value={cForm.notes} onChange={(e) => setCForm(f => ({ ...f, notes: e.target.value }))}
                 placeholder={cForm.receipt_kind === 'internal_regularization'
                   ? 'Motif de régularisation (obligatoire, min. 20 caractères)…'
-                  : 'Ex : PredictStreet x Congo Gaming DRC Market Launch payment'}
+                  : 'Ex : Congo Gaming DRC Market Launch payment'}
                 className={clsx(inputCls, 'resize-none')} />
               {cForm.receipt_kind === 'internal_regularization' && cForm.notes.trim().length > 0 && cForm.notes.trim().length < 20 && (
                 <p className="text-xs text-red-400 mt-0.5">{cForm.notes.trim().length}/20 caractères minimum</p>

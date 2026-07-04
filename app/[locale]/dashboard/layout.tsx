@@ -1,14 +1,14 @@
 import { cookies } from 'next/headers';
 import DashboardShell from '@/components/dashboard/DashboardShell';
+import { verifySessionToken } from '@/lib/admin-session';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const adminSecret = process.env.ADMIN_SECRET ?? '';
   const adminSession = cookies().get('admin_session')?.value ?? '';
-  const isAdmin = adminSecret !== '' && adminSession === adminSecret;
+  const isAdmin = verifySessionToken(adminSession);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#070c18]">

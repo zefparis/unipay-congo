@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const API = process.env.NEXT_PUBLIC_API_URL ?? '';
+const API = process.env.NEXT_PUBLIC_API_URL ?? 'https://unipay-api.onrender.com';
 const KEY = process.env.ADMIN_SECRET        ?? '';
 
 export async function GET() {
+  if (!KEY) return NextResponse.json({ error: 'Admin not configured' }, { status: 503 });
   const res = await fetch(`${API}/v1/admin/treasury/crypto-wallets`, {
     headers: { 'x-admin-secret': KEY },
     cache:   'no-store',
@@ -13,6 +14,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  if (!KEY) return NextResponse.json({ error: 'Admin not configured' }, { status: 503 });
   const body = await req.json();
   const res  = await fetch(`${API}/v1/admin/treasury/crypto-wallets`, {
     method:  'POST',

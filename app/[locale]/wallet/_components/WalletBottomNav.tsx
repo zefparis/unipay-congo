@@ -2,13 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname, useParams } from 'next/navigation';
-import { Home, ArrowLeftRight, List, User, Gamepad2 } from 'lucide-react';
+import { Home, ArrowLeftRight, List, User } from 'lucide-react';
 
 const NAV_ITEMS = [
   { key: 'home',         segment: '',              Icon: Home,           label: 'Accueil' },
   { key: 'send',         segment: '/send',         Icon: ArrowLeftRight, label: 'Envoyer' },
   { key: 'transactions', segment: '/transactions', Icon: List,           label: 'Historique' },
-  { key: 'gaming',       segment: '/gaming',       Icon: Gamepad2,       label: 'Gaming' },
   { key: 'profile',      segment: '/profile',      Icon: User,           label: 'Profil' },
 ] as const;
 
