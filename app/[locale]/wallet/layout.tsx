@@ -12,7 +12,7 @@ export default function WalletLayout({ children }: { children: React.ReactNode }
   const isLoggedIn = !!cookieStore.get('wallet_token')?.value;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-bone">
       <div className={`w-full max-w-md mx-auto min-h-screen flex flex-col${isLoggedIn ? ' pb-16' : ''}`}>
         {children}
       </div>

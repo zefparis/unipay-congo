@@ -11,9 +11,12 @@ const config: Config = {
     extend: {
       colors: {
         ink: '#0A0F1C',
+        'ink-muted': '#4A5263',
         rust: '#B85C2E',
+        'rust-deep': '#8A4220',
         signal: '#1C9E7A',
         'signal-dark': '#178E6A',
+        'signal-deep': '#076143',
         bone: '#EDE6D6',
         danger: '#C94A3A',
       },

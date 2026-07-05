@@ -76,7 +76,7 @@ export default function SendForm({ currency, balance }: { currency: 'CDF' | 'USD
 
       <form onSubmit={handleFormSubmit} className="flex flex-col gap-5 px-4 py-5">
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-heading font-semibold text-ink/70">Téléphone du destinataire</label>
+          <label className="text-sm font-heading font-semibold text-ink-muted">Téléphone du destinataire</label>
           <input
             type="tel"
             value={recipientPhone}
@@ -85,11 +85,11 @@ export default function SendForm({ currency, balance }: { currency: 'CDF' | 'USD
             required
             className={`border border-ink/15 rounded-xl px-4 py-3 text-sm bg-bone text-ink focus:outline-none focus:ring-2 ${accentRing}`}
           />
-          <p className="text-xs text-ink/40">Le destinataire doit avoir un compte UniPay Wallet</p>
+          <p className="text-xs text-ink-muted">Le destinataire doit avoir un compte UniPay Wallet</p>
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-heading font-semibold text-ink/70">Montant ({currency})</label>
+          <label className="text-sm font-heading font-semibold text-ink-muted">Montant ({currency})</label>
           <input
             type="number"
             value={amount}
@@ -103,8 +103,8 @@ export default function SendForm({ currency, balance }: { currency: 'CDF' | 'USD
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-heading font-semibold text-ink/70">
-            Note <span className="font-normal text-ink/40">(optionnel)</span>
+          <label className="text-sm font-heading font-semibold text-ink-muted">
+            Note <span className="font-normal text-ink-muted">(optionnel)</span>
           </label>
           <input
             type="text"
@@ -119,7 +119,7 @@ export default function SendForm({ currency, balance }: { currency: 'CDF' | 'USD
         {error && <p className="text-sm text-danger bg-danger/10 rounded-xl px-4 py-3">{error}</p>}
         {success && (
           <div className="bg-signal/10 border border-signal/30 rounded-xl px-4 py-3">
-            <p className="text-sm text-signal font-medium">✓ {success}</p>
+            <p className="text-sm text-signal-deep font-medium">✓ {success}</p>
           </div>
         )}
 

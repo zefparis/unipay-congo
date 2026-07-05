@@ -67,8 +67,8 @@ const FORM_TITLES: Record<string, string> = {
   'deposit-unipesa':   'Déposer USD (Unipesa)',
   'withdraw-mm':       'Retirer CDF (Mobile Money)',
   'withdraw-unipesa':  'Retirer USD (Unipesa)',
-  'crypto-withdraw':   'Retrait Crypto (BSC)',
-  'bridge-export':     'Exporter CGLT vers BSC',
+  'crypto-withdraw':   'Envoyer USDT vers réseau externe',
+  'bridge-export':     'Envoyer CGLT vers réseau externe',
   'send':              'Envoyer',
   'swap':              'Convertir',
 };
@@ -130,7 +130,7 @@ export default function WalletHomePage() {
       <div className="fixed inset-0 z-50 bg-bone flex flex-col">
         <div className="flex items-center gap-3 px-4 pt-6 pb-4 border-b border-ink/10">
           <button onClick={closeForm} className="p-2 rounded-full hover:bg-ink/5 transition">
-            <ArrowLeft size={20} className="text-ink/60" />
+            <ArrowLeft size={20} className="text-ink-muted" />
           </button>
           <h1 className="text-lg font-heading font-bold text-ink">{title}</h1>
         </div>
@@ -184,12 +184,12 @@ export default function WalletHomePage() {
       {/* Recent transactions */}
       <div className="px-4 pb-6 pt-4">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xs font-heading font-semibold text-ink/40 uppercase tracking-widest">Dernières opérations</h2>
-          <Link href={`${base}/transactions`} className="text-xs text-signal font-semibold">Voir tout</Link>
+          <h2 className="text-xs font-heading font-semibold text-ink-muted uppercase tracking-widest">Dernières opérations</h2>
+          <Link href={`${base}/transactions`} className="text-xs text-signal-deep font-semibold">Voir tout</Link>
         </div>
 
         {txList.length === 0 && !loadingBal && (
-          <p className="text-sm text-ink/40 text-center py-8">Aucune transaction pour le moment.</p>
+          <p className="text-sm text-ink-muted text-center py-8">Aucune transaction pour le moment.</p>
         )}
 
         <div className="flex flex-col divide-y divide-ink/5">
@@ -207,10 +207,10 @@ export default function WalletHomePage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-ink capitalize">{tx.operator}</p>
-                  <p className="text-xs text-ink/40">{relativeDate(tx.created_at)}</p>
+                  <p className="text-xs text-ink-muted">{relativeDate(tx.created_at)}</p>
                 </div>
                 <p className={`text-sm font-bold shrink-0 ${
-                  isCredit ? 'text-signal' : isP2P ? 'text-signal' : 'text-rust'
+                  isCredit ? 'text-signal-deep' : isP2P ? 'text-signal-deep' : 'text-rust-deep'
                 }`}>
                   {isCredit ? '+' : '−'}{fmt(isCredit ? tx.net_amount : tx.amount)} CDF
                 </p>
@@ -238,13 +238,15 @@ export default function WalletHomePage() {
 
       <ActionMenu open={activeMenu === 'USDT'} onClose={() => setActiveMenu(null)} title="Actions USDT">
         <ActionMenuItem icon={Send}            label="Envoyer" subtext="Vers un autre wallet UniPay" onClick={() => openForm({ kind: 'send', currency: 'USDT' })} />
-        <ActionMenuItem icon={ExternalLink}    label="Retrait Crypto (BSC)" subtext="Réseau Binance Smart Chain" isBlockchain onClick={() => openForm({ kind: 'crypto-withdraw' })} />
+        <ActionMenuItem icon={ExternalLink}    label="Envoyer vers réseau externe" subtext="USDT via réseau BNB" isBlockchain onClick={() => openForm({ kind: 'crypto-withdraw' })} />
+        <ActionMenuItem icon={Repeat2}         label="Convertir vers USD" subtext="Parité 1:1, frais 0.5%" onClick={() => openForm({ kind: 'swap', from: 'USDT', to: 'USD' })} />
         <ActionMenuItem icon={Repeat2}         label="Convertir vers CGLT" subtext="1 USDT = 500 CGLT, frais 0.5%" onClick={() => openForm({ kind: 'swap', from: 'USDT', to: 'CGLT' })} />
       </ActionMenu>
 
       <ActionMenu open={activeMenu === 'CGLT'} onClose={() => setActiveMenu(null)} title="Actions CGLT">
+        <ActionMenuItem icon={Repeat2}         label="Convertir vers CDF" subtext="Parité 1:1, sans frais" onClick={() => openForm({ kind: 'swap', from: 'CGLT', to: 'CDF' })} />
         <ActionMenuItem icon={Repeat2}         label="Convertir vers USDT" subtext="1 USDT = 500 CGLT, frais 0.5%" onClick={() => openForm({ kind: 'swap', from: 'CGLT', to: 'USDT' })} />
-        <ActionMenuItem icon={Link2}           label="Exporter vers BSC" subtext="Bridge CGLT → wCGLT (blockchain)" isBlockchain onClick={() => openForm({ kind: 'bridge-export' })} />
+        <ActionMenuItem icon={Link2}           label="Envoyer vers réseau externe" subtext="CGLT via passerelle vers réseau BNB" isBlockchain onClick={() => openForm({ kind: 'bridge-export' })} />
       </ActionMenu>
 
       {/* Full-screen form overlay */}

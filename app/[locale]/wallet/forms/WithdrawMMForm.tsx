@@ -65,17 +65,17 @@ export default function WithdrawMMForm({ balance }: { balance: number | null }) 
     <form onSubmit={handleSubmit} className="flex flex-col gap-5 px-4 py-5">
       {balance !== null && (
         <div className="bg-rust/8 border border-rust/20 rounded-xl px-4 py-3 flex items-center justify-between">
-          <span className="text-sm text-rust">Solde CDF disponible</span>
-          <span className="text-sm font-bold text-rust">{fmtNum(balance)} CDF</span>
+          <span className="text-sm text-rust-deep">Solde CDF disponible</span>
+          <span className="text-sm font-bold text-rust-deep">{fmtNum(balance)} CDF</span>
         </div>
       )}
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-heading font-semibold text-ink/70">Opérateur de destination</label>
+        <label className="text-sm font-heading font-semibold text-ink-muted">Opérateur de destination</label>
         <div className="grid grid-cols-3 gap-2">
           {CDF_OPERATORS.map((op) => (
             <button key={op.value} type="button" onClick={() => setOperator(op.value)}
-              className={`py-3 rounded-xl border-2 text-sm font-semibold transition ${operator === op.value ? op.activeClass : 'border-ink/15 bg-bone text-ink/50'}`}>
+              className={`py-3 rounded-xl border-2 text-sm font-semibold transition ${operator === op.value ? op.activeClass : 'border-ink/15 bg-bone text-ink-muted'}`}>
               {op.label}
             </button>
           ))}
@@ -83,19 +83,19 @@ export default function WithdrawMMForm({ balance }: { balance: number | null }) 
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-heading font-semibold text-ink/70">Numéro de réception</label>
+        <label className="text-sm font-heading font-semibold text-ink-muted">Numéro de réception</label>
         <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
           placeholder="+243 XXX XXX XXX"
           className="border border-ink/15 rounded-xl px-4 py-3 text-sm bg-bone text-ink focus:outline-none focus:ring-2 focus:ring-rust" />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-heading font-semibold text-ink/70">Montant à retirer (CDF)</label>
+        <label className="text-sm font-heading font-semibold text-ink-muted">Montant à retirer (CDF)</label>
         <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
           placeholder="5 000" min={minAmt} required
           className={`border rounded-xl px-4 py-3 text-sm bg-bone text-ink focus:outline-none focus:ring-2 ${overBudget ? 'border-danger focus:ring-danger/30' : 'border-ink/15 focus:ring-rust'}`} />
         {num >= minAmt && (
-          <div className="bg-ink/5 rounded-lg px-3 py-2 flex justify-between text-xs text-ink/60">
+          <div className="bg-ink/5 rounded-lg px-3 py-2 flex justify-between text-xs text-ink-muted">
             <span>Frais (3 %) : <strong>{fmtNum(fee)} CDF</strong></span>
             <span className={overBudget ? 'text-danger font-bold' : ''}>
               Total débité : <strong>{fmtNum(totalCost)} CDF</strong>
@@ -107,7 +107,7 @@ export default function WithdrawMMForm({ balance }: { balance: number | null }) 
       {error && <p className="text-sm text-danger bg-danger/10 rounded-xl px-4 py-3">{error}</p>}
       {success && (
         <div className="bg-signal/10 border border-signal/30 rounded-xl px-4 py-3">
-          <p className="text-sm text-signal font-medium">✓ {success}</p>
+          <p className="text-sm text-signal-deep font-medium">✓ {success}</p>
         </div>
       )}
 

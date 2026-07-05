@@ -70,8 +70,8 @@ export default function WalletRegisterPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-ink/70">
-              Nom complet <span className="text-ink/40">(optionnel)</span>
+            <label className="text-sm font-medium text-ink-muted">
+              Nom complet <span className="text-ink-muted">(optionnel)</span>
             </label>
             <input
               type="text"
@@ -83,7 +83,7 @@ export default function WalletRegisterPage() {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-ink/70">
+            <label className="text-sm font-medium text-ink-muted">
               Numéro de téléphone
             </label>
             <input
@@ -97,7 +97,7 @@ export default function WalletRegisterPage() {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-ink/70">
+            <label className="text-sm font-medium text-ink-muted">
               Code PIN (6 chiffres)
             </label>
             <input
@@ -115,7 +115,7 @@ export default function WalletRegisterPage() {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-ink/70">
+            <label className="text-sm font-medium text-ink-muted">
               Confirmer le PIN
             </label>
             <input

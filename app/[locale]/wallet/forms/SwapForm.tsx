@@ -83,13 +83,13 @@ export default function SwapForm({ fromCurrency, toCurrency, balance }: SwapForm
   return (
     <form onSubmit={handleSwap} className="flex flex-col gap-5 px-4 py-5">
       <div className="bg-ink/5 rounded-xl px-4 py-3 flex items-center justify-between">
-        <span className="text-sm text-ink/60">{fromCurrency} → {toCurrency}</span>
-        <span className="text-xs text-ink/40">{note}</span>
+        <span className="text-sm text-ink-muted">{fromCurrency} → {toCurrency}</span>
+        <span className="text-xs text-ink-muted">{note}</span>
       </div>
 
       {balance !== null && (
         <div className="bg-ink/5 rounded-xl px-4 py-2 flex items-center justify-between text-xs">
-          <span className="text-ink/50">Solde {fromCurrency} disponible</span>
+          <span className="text-ink-muted">Solde {fromCurrency} disponible</span>
           <span className="font-bold text-ink">
             {fromCurrency === 'CDF' || fromCurrency === 'CGLT'
               ? Math.floor(balance).toLocaleString('fr-FR')
@@ -100,14 +100,14 @@ export default function SwapForm({ fromCurrency, toCurrency, balance }: SwapForm
       )}
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-heading font-semibold text-ink/70">Montant en {fromCurrency}</label>
+        <label className="text-sm font-heading font-semibold text-ink-muted">Montant en {fromCurrency}</label>
         <div className="flex gap-2">
           <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
             placeholder="0" min={0} step="any" required
             className={`flex-1 border rounded-xl px-4 py-3 text-sm bg-bone text-ink focus:outline-none focus:ring-2 ${overBudget ? 'border-danger focus:ring-danger/30' : 'border-ink/15 focus:ring-signal'}`} />
           {balance !== null && (
             <button type="button" onClick={() => setAmount(String(balance))}
-              className="px-3 py-3 rounded-xl border border-ink/15 bg-bone text-xs font-bold text-signal hover:bg-signal/8 transition">
+              className="px-3 py-3 rounded-xl border border-ink/15 bg-bone text-xs font-bold text-signal-deep hover:bg-signal/8 transition">
               MAX
             </button>
           )}
@@ -117,7 +117,7 @@ export default function SwapForm({ fromCurrency, toCurrency, balance }: SwapForm
         )}
       </div>
 
-      <div className="flex items-center gap-2 text-ink/40 text-sm -my-2">
+      <div className="flex items-center gap-2 text-ink-muted text-sm -my-2">
         <div className="flex-1 border-t border-dashed border-ink/15" />
         <span>→ {toCurrency}</span>
         <div className="flex-1 border-t border-dashed border-ink/15" />
@@ -126,7 +126,7 @@ export default function SwapForm({ fromCurrency, toCurrency, balance }: SwapForm
       {error && <p className="text-sm text-danger bg-danger/10 rounded-xl px-4 py-3">{error}</p>}
       {success && (
         <div className="bg-signal/10 border border-signal/30 rounded-xl px-4 py-3">
-          <p className="text-sm text-signal font-medium">{success}</p>
+          <p className="text-sm text-signal-deep font-medium">{success}</p>
         </div>
       )}
 

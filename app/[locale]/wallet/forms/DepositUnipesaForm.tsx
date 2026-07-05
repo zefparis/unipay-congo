@@ -100,16 +100,16 @@ export default function DepositUnipesaForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5 px-4 py-5">
       <div className="bg-ink/5 rounded-xl px-4 py-2 flex items-center justify-between text-xs">
-        <span className="text-ink/50">Solde USD actuel</span>
-        <span className="font-bold text-signal">{usdBalance.toFixed(2)} USD</span>
+        <span className="text-ink-muted">Solde USD actuel</span>
+        <span className="font-bold text-signal-deep">{usdBalance.toFixed(2)} USD</span>
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-heading font-semibold text-ink/70">Opérateur</label>
+        <label className="text-sm font-heading font-semibold text-ink-muted">Opérateur</label>
         <div className="grid grid-cols-3 gap-2">
           {USD_OPERATORS.map((op) => (
             <button key={op.value} type="button" onClick={() => setOperator(op.value)}
-              className={`py-3 rounded-xl border-2 text-sm font-semibold transition ${operator === op.value ? op.activeClass : 'border-ink/15 bg-bone text-ink/50'}`}>
+              className={`py-3 rounded-xl border-2 text-sm font-semibold transition ${operator === op.value ? op.activeClass : 'border-ink/15 bg-bone text-ink-muted'}`}>
               {op.label}
             </button>
           ))}
@@ -117,31 +117,31 @@ export default function DepositUnipesaForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-heading font-semibold text-ink/70">Numéro Mobile Money</label>
+        <label className="text-sm font-heading font-semibold text-ink-muted">Numéro Mobile Money</label>
         <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
           placeholder="+243 XXX XXX XXX" required
           className="border border-ink/15 rounded-xl px-4 py-3 text-sm bg-bone text-ink focus:outline-none focus:ring-2 focus:ring-signal" />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-heading font-semibold text-ink/70">Montant à déposer (USD)</label>
+        <label className="text-sm font-heading font-semibold text-ink-muted">Montant à déposer (USD)</label>
         <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
           placeholder="10.00" min={minAmt} step="0.01" required
           className="border border-ink/15 rounded-xl px-4 py-3 text-sm bg-bone text-ink focus:outline-none focus:ring-2 focus:ring-signal" />
         {num >= minAmt && (
-          <div className="bg-ink/5 rounded-lg px-3 py-2 flex justify-between text-xs text-ink/60">
+          <div className="bg-ink/5 rounded-lg px-3 py-2 flex justify-between text-xs text-ink-muted">
             <span>Frais (3 %) : <strong>{fee.toFixed(2)} USD</strong></span>
-            <span>Reçu : <strong className="text-signal">{netAmt.toFixed(2)} USD</strong></span>
+            <span>Reçu : <strong className="text-signal-deep">{netAmt.toFixed(2)} USD</strong></span>
           </div>
         )}
-        <p className="text-xs text-ink/40">Minimum {minAmt} USD</p>
+        <p className="text-xs text-ink-muted">Minimum {minAmt} USD</p>
       </div>
 
       {error && <p className="text-sm text-danger bg-danger/10 rounded-xl px-4 py-3">{error}</p>}
       {success && (
         <div className="bg-signal/10 border border-signal/30 rounded-xl px-4 py-3 flex items-center gap-2">
           {polling && <Spinner size="md" />}
-          <p className="text-sm text-signal font-medium">{success}</p>
+          <p className="text-sm text-signal-deep font-medium">{success}</p>
         </div>
       )}
 

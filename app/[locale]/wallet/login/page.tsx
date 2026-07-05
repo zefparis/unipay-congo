@@ -56,7 +56,7 @@ export default function WalletLoginPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-ink/70">
+            <label className="text-sm font-medium text-ink-muted">
               Numéro de téléphone
             </label>
             <input
@@ -70,7 +70,7 @@ export default function WalletLoginPage() {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-ink/70">
+            <label className="text-sm font-medium text-ink-muted">
               Code PIN
             </label>
             <input

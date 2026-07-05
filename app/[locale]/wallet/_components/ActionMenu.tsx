@@ -27,7 +27,7 @@ export default function ActionMenu({ open, onClose, title, children }: ActionMen
             className="p-1.5 rounded-full hover:bg-ink/5 transition"
             aria-label="Fermer"
           >
-            <X size={18} className="text-ink/50" />
+            <X size={18} className="text-ink-muted" />
           </button>
         </div>
         <div className="flex flex-col divide-y divide-ink/5 overflow-y-auto">

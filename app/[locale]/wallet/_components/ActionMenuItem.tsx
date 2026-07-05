@@ -29,10 +29,10 @@ export default function ActionMenuItem({
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-heading font-semibold text-ink">{label}</p>
-        {subtext && <p className="text-xs text-ink/50">{subtext}</p>}
+        {subtext && <p className="text-xs text-ink-muted">{subtext}</p>}
       </div>
       {isBlockchain && (
-        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-rust/15 text-rust shrink-0">
+        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-rust/20 text-rust-deep shrink-0">
           🔗
         </span>
       )}

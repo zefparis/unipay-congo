@@ -15,7 +15,7 @@ export default function WalletBottomNav() {
   const { locale } = useParams<{ locale: string }>();
 
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-100 flex items-center z-50 safe-area-inset-bottom">
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-ink border-t border-ink/20 flex items-center z-50 safe-area-inset-bottom">
       {NAV_ITEMS.map(({ key, segment, Icon, label }) => {
         const href = `/${locale}/wallet${segment}`;
         const isActive =
@@ -31,11 +31,11 @@ export default function WalletBottomNav() {
           >
             <Icon
               size={22}
-              className={isActive ? 'text-signal' : 'text-gray-400'}
+              className={isActive ? 'text-signal' : 'text-bone/50'}
             />
             <span
               className={`text-[11px] ${
-                isActive ? 'text-signal-dark font-semibold' : 'text-gray-400'
+                isActive ? 'text-signal font-semibold' : 'text-bone/50'
               }`}
             >
               {label}
