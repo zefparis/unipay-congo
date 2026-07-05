@@ -150,7 +150,7 @@ export default function WalletWithdrawPage() {
           USD via Unipesa
         </button>
         <button type="button" onClick={() => { setTab('cglt'); setAmount(''); setError(''); }}
-          className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition ${tab === 'cglt' ? 'border-purple-500 bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' : 'border-gray-200 bg-white text-gray-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-400'}`}>
+          className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition ${tab === 'cglt' ? 'border-purple-500 bg-purple-50 text-purple-700' : 'border-gray-200 bg-white text-gray-500'}`}>
           CGLT
         </button>
       </div>
@@ -192,7 +192,7 @@ export default function WalletWithdrawPage() {
         {/* BSC Address */}
         {isCglt && (
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold text-gray-600 dark:text-slate-300">
+            <label className="text-sm font-semibold text-gray-600">
               Adresse BSC (MetaMask)
             </label>
             <input
@@ -200,7 +200,7 @@ export default function WalletWithdrawPage() {
               value={bscAddress}
               onChange={(e) => setBscAddress(e.target.value)}
               placeholder="0x..."
-              className="border border-gray-200 dark:border-slate-600 rounded-xl px-4 py-3 text-base bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 font-mono focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
+              className="border border-gray-200 rounded-xl px-4 py-3 text-base bg-white text-gray-900 font-mono focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
             />
           </div>
         )}
