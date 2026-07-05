@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { AlertCircle, CheckCircle2, Eye, Loader2, RefreshCw, ShieldCheck, X, XCircle } from 'lucide-react';
 import clsx from 'clsx';
 
-type KycStatus = 'pending' | 'approved' | 'rejected';
+type KycStatus = 'pending' | 'approved' | 'rejected' | 'failed';
 
 interface WalletUserRef {
   id: string;
@@ -30,6 +30,7 @@ interface KycSubmission {
   reviewed_at: string | null;
   payguard_confidence: number | null;
   payguard_decision: string | null;
+  submission_type: string | null;
   wallet_users: WalletUserRef | null;
 }
 
@@ -44,6 +45,7 @@ const STATUS_LABELS: Record<KycStatus, string> = {
   pending: 'pending',
   approved: 'approved',
   rejected: 'rejected',
+  failed: 'failed',
 };
 
 const DOC_LABELS: Record<string, string> = {
@@ -68,6 +70,7 @@ function StatusBadge({ status }: { status: KycStatus }) {
       status === 'pending' && 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
       status === 'approved' && 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
       status === 'rejected' && 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+      status === 'failed' && 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
     )}>
       {STATUS_LABELS[status]}
     </span>
@@ -352,6 +355,7 @@ export default function WalletKycPage() {
           <option value="pending">pending</option>
           <option value="approved">approved</option>
           <option value="rejected">rejected</option>
+          <option value="failed">failed</option>
         </select>
       </div>
 
@@ -373,7 +377,7 @@ export default function WalletKycPage() {
             <table className="w-full min-w-[1050px] text-sm">
               <thead>
                 <tr className="border-b border-gray-100 dark:border-gray-800">
-                  {['Téléphone user', 'Nom complet', 'Date soumission', 'Statut', 'Score PayGuard', 'Décision PayGuard', 'Actions'].map((col) => (
+                  {['Téléphone user', 'Nom complet', 'Type', 'Date soumission', 'Statut', 'Score PayGuard', 'Décision PayGuard', 'Actions'].map((col) => (
                     <th key={col} className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">
                       {col}
                     </th>
@@ -385,6 +389,7 @@ export default function WalletKycPage() {
                   <tr key={row.id} className="transition hover:bg-gray-50 dark:hover:bg-gray-800/30">
                     <td className="px-4 py-3 font-mono text-gray-900 dark:text-white">{row.wallet_users?.phone ?? '—'}</td>
                     <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{row.full_name}</td>
+                    <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">{row.submission_type === 'cognitive_upgrade' ? 'Upgrade' : 'Initial'}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-gray-500 dark:text-gray-400">{fmtDate(row.submitted_at)}</td>
                     <td className="px-4 py-3"><StatusBadge status={row.status} /></td>
                     <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">{fmtConfidence(row.payguard_confidence)}</td>

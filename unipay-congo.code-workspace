@@ -20,6 +20,24 @@
 		},
 		{
 			"path": "../hcs-u7-proxy"
+		},
+		{
+			"path": "../HCS/payguard"
+		},
+		{
+			"path": "../hybrid-vector-api"
+		},
+		{
+			"path": "../HCS/hcs-u7-backend"
+		},
+		{
+			"path": "../hcs-widget-mvp"
+		},
+		{
+			"path": "../HCS/edguard-v2"
+		},
+		{
+			"path": "../HCS/hcs-u7-admin"
 		}
 	],
 	"settings": {}
