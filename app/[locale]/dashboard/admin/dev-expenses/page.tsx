@@ -5,7 +5,8 @@ import {
   Receipt, RefreshCw, Loader2, Check, Upload, FileText,
   Copy, CheckCircle2, Clock, AlertCircle, Plus, Pencil,
   Trash2, Building2, User, Cloud, Users,
-  CalendarClock, X,
+  CalendarClock, X, Archive, ArchiveRestore,
+  ChevronDown, ChevronRight, FileSearch, ArrowRight,
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -41,6 +42,33 @@ interface DevExpense {
   is_overdue: boolean;
   funded_by: string;
   paid_by: string;
+  archived: boolean;
+  archived_at: string | null;
+}
+
+interface Quote {
+  id: string;
+  creditor_id: string | null;
+  creditor_name: string | null;
+  project_ref: string;
+  category: string | null;
+  amount_usd: number;
+  description: string | null;
+  status: 'draft' | 'sent' | 'accepted' | 'rejected' | 'expired';
+  valid_until: string | null;
+  quote_file_url: string | null;
+  converted_expense_id: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  creditors?: { id: string; name: string; entity_type: string } | null;
+}
+
+interface UpcomingResponse {
+  overdue: DevExpense[];
+  pending: DevExpense[];
+  paid_recent: DevExpense[];
+  as_of: string;
 }
 
 interface MonthHistory {
@@ -54,7 +82,7 @@ interface MonthHistory {
   generated_at: string | null;
 }
 
-type Tab = 'upcoming' | 'entry' | 'creditors' | 'reports';
+type Tab = 'upcoming' | 'entry' | 'creditors' | 'quotes' | 'reports' | 'archives';
 
 /* ── Helpers ────────────────────────────────────────────────── */
 function fmtDate(s: string | null): string {
@@ -96,9 +124,11 @@ const ENTITY_ICONS: Record<string, React.ReactNode> = {
 /* ── Main Component ─────────────────────────────────────────── */
 export default function DevExpensesPage() {
   const [tab, setTab]             = useState<Tab>('upcoming');
-  const [upcoming, setUpcoming]   = useState<DevExpense[]>([]);
+  const [upcoming, setUpcoming]   = useState<UpcomingResponse>({ overdue: [], pending: [], paid_recent: [], as_of: '' });
   const [creditors, setCreditors] = useState<Creditor[]>([]);
   const [history, setHistory]     = useState<MonthHistory[]>([]);
+  const [quotes, setQuotes]       = useState<Quote[]>([]);
+  const [archives, setArchives]   = useState<DevExpense[]>([]);
   const [loading, setLoading]     = useState(false);
   const [msg, setMsg]             = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
@@ -121,7 +151,11 @@ export default function DevExpensesPage() {
     try {
       const r = await fetch('/api/admin/dev-expenses/upcoming');
       const d = await r.json();
-      setUpcoming(d.data ?? []);
+      if (d.overdue) {
+        setUpcoming({ overdue: d.overdue ?? [], pending: d.pending ?? [], paid_recent: d.paid_recent ?? [], as_of: d.as_of ?? '' });
+      } else {
+        setUpcoming(d.data ?? { overdue: [], pending: [], paid_recent: [], as_of: '' });
+      }
     } catch { flashMsg('err', 'Erreur chargement échéances'); }
     setLoading(false);
   }, [flashMsg]);
@@ -144,14 +178,36 @@ export default function DevExpensesPage() {
     setLoading(false);
   }, [flashMsg]);
 
+  const loadQuotes = useCallback(async () => {
+    setLoading(true);
+    try {
+      const r = await fetch('/api/admin/quotes');
+      const d = await r.json();
+      setQuotes(d.data ?? []);
+    } catch { flashMsg('err', 'Erreur chargement devis'); }
+    setLoading(false);
+  }, [flashMsg]);
+
+  const loadArchives = useCallback(async () => {
+    setLoading(true);
+    try {
+      const r = await fetch('/api/admin/dev-expenses?archived=true');
+      const d = await r.json();
+      setArchives(d.data ?? []);
+    } catch { flashMsg('err', 'Erreur chargement archives'); }
+    setLoading(false);
+  }, [flashMsg]);
+
   useEffect(() => {
     loadCreditors();
     loadUpcoming();
   }, [loadCreditors, loadUpcoming]);
 
   useEffect(() => {
-    if (tab === 'reports') loadHistory();
-  }, [tab, loadHistory]);
+    if (tab === 'reports')  loadHistory();
+    if (tab === 'quotes')   loadQuotes();
+    if (tab === 'archives') loadArchives();
+  }, [tab, loadHistory, loadQuotes, loadArchives]);
 
   /* ── Mark paid ────────────────────────────────────────────── */
   async function markPaid() {
@@ -180,12 +236,39 @@ export default function DevExpensesPage() {
     setTimeout(() => setCopied(null), 2000);
   }
 
+  /* ── Archive / Unarchive ──────────────────────────────────── */
+  async function archiveExpense(id: string) {
+    try {
+      const r = await fetch(`/api/admin/dev-expenses/${id}/archive`, { method: 'PATCH' });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error ?? 'Erreur');
+      flashMsg('ok', 'Dépense archivée');
+      loadUpcoming();
+    } catch (e: any) {
+      flashMsg('err', e.message ?? 'Erreur archivage');
+    }
+  }
+
+  async function unarchiveExpense(id: string) {
+    try {
+      const r = await fetch(`/api/admin/dev-expenses/${id}/unarchive`, { method: 'PATCH' });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error ?? 'Erreur');
+      flashMsg('ok', 'Dépense désarchivée');
+      loadArchives();
+    } catch (e: any) {
+      flashMsg('err', e.message ?? 'Erreur désarchivage');
+    }
+  }
+
   /* ── Tabs ─────────────────────────────────────────────────── */
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: 'upcoming',  label: 'À payer',    icon: <CalendarClock className="w-4 h-4" /> },
     { id: 'entry',     label: 'Saisie',     icon: <Plus          className="w-4 h-4" /> },
     { id: 'creditors', label: 'Créanciers', icon: <Building2     className="w-4 h-4" /> },
+    { id: 'quotes',    label: 'Devis',      icon: <FileSearch    className="w-4 h-4" /> },
     { id: 'reports',   label: 'Rapports',   icon: <FileText      className="w-4 h-4" /> },
+    { id: 'archives',  label: 'Archives',   icon: <Archive       className="w-4 h-4" /> },
   ];
 
   return (
@@ -239,6 +322,7 @@ export default function DevExpensesPage() {
           upcoming={upcoming}
           loading={loading}
           onMarkPaid={(e) => { setPayTarget(e); setPayRef(''); }}
+          onArchive={archiveExpense}
         />
       )}
 
@@ -260,6 +344,17 @@ export default function DevExpensesPage() {
         />
       )}
 
+      {/* ── TAB: Devis ───────────────────────────────────────── */}
+      {tab === 'quotes' && (
+        <QuotesTab
+          quotes={quotes}
+          creditors={creditors}
+          loading={loading}
+          onRefresh={loadQuotes}
+          onMsg={flashMsg}
+        />
+      )}
+
       {/* ── TAB: Rapports ─────────────────────────────────────── */}
       {tab === 'reports' && (
         <ReportsTab
@@ -269,6 +364,16 @@ export default function DevExpensesPage() {
           onCopy={copyShare}
           onRefresh={loadHistory}
           onMsg={flashMsg}
+        />
+      )}
+
+      {/* ── TAB: Archives ─────────────────────────────────────── */}
+      {tab === 'archives' && (
+        <ArchivesTab
+          archives={archives}
+          loading={loading}
+          onUnarchive={unarchiveExpense}
+          onRefresh={loadArchives}
         />
       )}
 
@@ -318,17 +423,20 @@ export default function DevExpensesPage() {
 
 /* ── UpcomingTab ─────────────────────────────────────────────── */
 function UpcomingTab({
-  upcoming, loading, onMarkPaid,
+  upcoming, loading, onMarkPaid, onArchive,
 }: {
-  upcoming: DevExpense[];
+  upcoming: UpcomingResponse;
   loading: boolean;
   onMarkPaid: (e: DevExpense) => void;
+  onArchive: (id: string) => void;
 }) {
-  const overdue = upcoming.filter(e => e.is_overdue);
-  const soon    = upcoming.filter(e => !e.is_overdue);
+  const [showPaid, setShowPaid] = useState(false);
 
   if (loading) return <Spinner />;
-  if (upcoming.length === 0) return (
+
+  const hasAny = upcoming.overdue.length > 0 || upcoming.pending.length > 0 || upcoming.paid_recent.length > 0;
+
+  if (!hasAny) return (
     <div className="text-center py-16 text-gray-400 text-sm">
       <CalendarClock className="w-10 h-10 mx-auto mb-3 opacity-30" />
       Aucune facture à régler dans les 7 prochains jours.
@@ -337,16 +445,75 @@ function UpcomingTab({
 
   return (
     <div className="space-y-4">
-      {overdue.length > 0 && (
-        <Section title={`En retard (${overdue.length})`} color="red">
-          {overdue.map(e => <ExpenseRow key={e.id} expense={e} onMarkPaid={onMarkPaid} />)}
+      {upcoming.overdue.length > 0 && (
+        <Section title={`En retard (${upcoming.overdue.length})`} color="red">
+          {upcoming.overdue.map(e => (
+            <ExpenseRow key={e.id} expense={e} onMarkPaid={onMarkPaid} />
+          ))}
         </Section>
       )}
-      {soon.length > 0 && (
-        <Section title={`À payer bientôt (${soon.length})`} color="amber">
-          {soon.map(e => <ExpenseRow key={e.id} expense={e} onMarkPaid={onMarkPaid} />)}
+      {upcoming.pending.length > 0 && (
+        <Section title={`À venir (${upcoming.pending.length})`} color="amber">
+          {upcoming.pending.map(e => (
+            <ExpenseRow key={e.id} expense={e} onMarkPaid={onMarkPaid} />
+          ))}
         </Section>
       )}
+      {upcoming.paid_recent.length > 0 && (
+        <div>
+          <button
+            onClick={() => setShowPaid(s => !s)}
+            className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wide mb-2 text-emerald-600 hover:text-emerald-700"
+          >
+            {showPaid ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+            Payées récemment ({upcoming.paid_recent.length})
+          </button>
+          {showPaid && (
+            <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+              {upcoming.paid_recent.map(e => (
+                <PaidRow key={e.id} expense={e} onArchive={onArchive} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PaidRow({
+  expense: e, onArchive,
+}: {
+  expense: DevExpense; onArchive: (id: string) => void;
+}) {
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="font-medium text-sm text-gray-900 dark:text-white truncate">
+            {e.creditor_name ?? e.category}
+          </span>
+          {e.project_ref && (
+            <span className="text-xs text-gray-500 truncate">{e.project_ref}</span>
+          )}
+        </div>
+        <div className="text-xs text-gray-500 mt-0.5">
+          {e.category} · payé {e.paid_at ? fmtDate(e.paid_at.slice(0, 10)) : '—'}
+        </div>
+      </div>
+      <span className="font-mono text-sm font-semibold text-gray-900 dark:text-white">
+        ${Number(e.amount_usd).toFixed(2)}
+      </span>
+      <span className="text-xs px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 font-medium">
+        <CheckCircle2 className="w-3.5 h-3.5 inline mr-1" />Payé
+      </span>
+      <button
+        onClick={() => onArchive(e.id)}
+        className="text-xs px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-colors flex items-center gap-1"
+        title="Archiver"
+      >
+        <Archive className="w-3.5 h-3.5" />
+      </button>
     </div>
   );
 }
@@ -946,6 +1113,406 @@ function ReportsTab({
             <div className="px-4 py-8 text-center text-sm text-gray-400">Aucun historique disponible</div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── QuotesTab ────────────────────────────────────────────────── */
+const QUOTE_STATUS_CFG: Record<string, { label: string; cls: string }> = {
+  draft:    { label: 'Brouillon',  cls: 'bg-gray-100 text-gray-600 border-gray-200' },
+  sent:     { label: 'Envoyé',     cls: 'bg-blue-100 text-blue-700 border-blue-200' },
+  accepted: { label: 'Accepté',    cls: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
+  rejected: { label: 'Rejeté',     cls: 'bg-red-100 text-red-700 border-red-200' },
+  expired:  { label: 'Expiré',     cls: 'bg-orange-100 text-orange-700 border-orange-200' },
+};
+
+function QuotesTab({
+  quotes, creditors, loading, onRefresh, onMsg,
+}: {
+  quotes: Quote[];
+  creditors: Creditor[];
+  loading: boolean;
+  onRefresh: () => void;
+  onMsg: (type: 'ok' | 'err', text: string) => void;
+}) {
+  const [showForm, setShowForm]   = useState(false);
+  const [filterStatus, setFS]     = useState('');
+  const [acceptTarget, setAccept] = useState<Quote | null>(null);
+  const [acceptDue, setAcceptDue] = useState('');
+  const [accepting, setAccepting] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [form, setForm] = useState({
+    creditor_id: '', creditor_name: '', project_ref: '',
+    category: '', amount_usd: '', description: '', valid_until: '', notes: '',
+  });
+  const [file, setFile]       = useState<File | null>(null);
+  const [submitting, setSub] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+
+  const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300';
+  const labelCls = 'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1';
+
+  const activeCreditors = creditors.filter(c => c.active);
+
+  const filtered = filterStatus ? quotes.filter(q => q.status === filterStatus) : quotes;
+
+  // Auto-expire: sent quotes past valid_until
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const displayStatus = (q: Quote): Quote['status'] => {
+    if (q.status === 'sent' && q.valid_until && q.valid_until < todayStr) return 'expired';
+    return q.status;
+  };
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setSub(true);
+    const fd = new FormData();
+    if (form.creditor_id) fd.append('creditor_id', form.creditor_id);
+    if (form.creditor_name && !form.creditor_id) fd.append('creditor_name', form.creditor_name);
+    fd.append('project_ref', form.project_ref);
+    fd.append('amount_usd',  form.amount_usd);
+    if (form.category)     fd.append('category',     form.category);
+    if (form.description)  fd.append('description',  form.description);
+    if (form.valid_until)  fd.append('valid_until',  form.valid_until);
+    if (form.notes)        fd.append('notes',         form.notes);
+    if (file)              fd.append('quote_file',    file);
+
+    try {
+      const r = await fetch('/api/admin/quotes', { method: 'POST', body: fd });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error ?? 'Erreur');
+      onMsg('ok', 'Devis créé');
+      setShowForm(false);
+      setForm({ creditor_id: '', creditor_name: '', project_ref: '', category: '', amount_usd: '', description: '', valid_until: '', notes: '' });
+      setFile(null);
+      if (fileRef.current) fileRef.current.value = '';
+      onRefresh();
+    } catch (err: any) {
+      onMsg('err', err.message);
+    }
+    setSub(false);
+  }
+
+  async function acceptQuote() {
+    if (!acceptTarget || !acceptDue) return;
+    setAccepting(true);
+    try {
+      const r = await fetch(`/api/admin/quotes/${acceptTarget.id}/accept`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ due_date: acceptDue }),
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error ?? 'Erreur');
+      onMsg('ok', 'Devis accepté → dépense créée');
+      setAccept(null); setAcceptDue('');
+      onRefresh();
+    } catch (err: any) {
+      onMsg('err', err.message);
+    }
+    setAccepting(false);
+  }
+
+  async function rejectQuote(q: Quote) {
+    if (!confirm(`Rejeter le devis "${q.project_ref}" ?`)) return;
+    try {
+      const r = await fetch(`/api/admin/quotes/${q.id}/reject`, { method: 'POST' });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error ?? 'Erreur');
+      onMsg('ok', 'Devis rejeté');
+      onRefresh();
+    } catch (err: any) {
+      onMsg('err', err.message);
+    }
+  }
+
+  async function sendQuote(q: Quote) {
+    try {
+      const r = await fetch(`/api/admin/quotes/${q.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'sent' }),
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error ?? 'Erreur');
+      onMsg('ok', 'Devis marqué comme envoyé');
+      onRefresh();
+    } catch (err: any) {
+      onMsg('err', err.message);
+    }
+  }
+
+  const set = (k: keyof typeof form) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+      setForm(f => ({ ...f, [k]: e.target.value }));
+
+  if (loading) return <Spinner />;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center flex-wrap gap-2">
+        <div className="flex items-center gap-2">
+          <select
+            value={filterStatus}
+            onChange={e => setFS(e.target.value)}
+            className="text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-600"
+          >
+            <option value="">Tous statuts</option>
+            <option value="draft">Brouillon</option>
+            <option value="sent">Envoyé</option>
+            <option value="accepted">Accepté</option>
+            <option value="rejected">Rejeté</option>
+            <option value="expired">Expiré</option>
+          </select>
+          <span className="text-sm text-gray-500">{filtered.length} devis</span>
+        </div>
+        <button
+          onClick={() => setShowForm(s => !s)}
+          className="flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-medium transition-colors"
+        >
+          <Plus className="w-4 h-4" /> Nouveau devis
+        </button>
+      </div>
+
+      {showForm && (
+        <form
+          onSubmit={submit}
+          className="bg-white dark:bg-gray-900 rounded-xl border border-purple-200 dark:border-purple-800 p-5 space-y-4"
+        >
+          <div className="flex justify-between items-center">
+            <h3 className="font-medium text-gray-900 dark:text-white">Nouveau devis</h3>
+            <button type="button" onClick={() => setShowForm(false)}>
+              <X className="w-4 h-4 text-gray-400" />
+            </button>
+          </div>
+          <div>
+            <label className={labelCls}>Créancier *</label>
+            <select
+              value={form.creditor_id}
+              onChange={e => {
+                if (e.target.value === '__new__') {
+                  setShowNew(true);
+                  setForm(f => ({ ...f, creditor_id: '', creditor_name: '' }));
+                } else {
+                  setShowNew(false);
+                  setForm(f => ({ ...f, creditor_id: e.target.value, creditor_name: '' }));
+                }
+              }}
+              className={inputCls}
+            >
+              <option value="">— Sélectionner —</option>
+              {activeCreditors.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              <option value="__new__">+ Nouveau créancier</option>
+            </select>
+            {showNew && (
+              <input
+                value={form.creditor_name}
+                onChange={set('creditor_name')}
+                required
+                placeholder="Nom du créancier"
+                className={inputCls + ' mt-2'}
+              />
+            )}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>Projet / Référence *</label>
+              <input value={form.project_ref} onChange={set('project_ref')} required placeholder="ex: Tekkbridge - Refonte" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Catégorie</label>
+              <input value={form.category} onChange={set('category')} placeholder="ex: Développement" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Montant USD *</label>
+              <input type="number" step="0.01" min="0" value={form.amount_usd} onChange={set('amount_usd')} required placeholder="0.00" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Valide jusqu&apos;au</label>
+              <input type="date" value={form.valid_until} onChange={set('valid_until')} className={inputCls} />
+            </div>
+          </div>
+          <div>
+            <label className={labelCls}>Description</label>
+            <textarea value={form.description} onChange={set('description')} rows={2} className={inputCls + ' resize-none'} placeholder="Détails du devis…" />
+          </div>
+          <div>
+            <label className={labelCls}>Devis PDF (optionnel)</label>
+            <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+              <Upload className="w-4 h-4 text-gray-400" />
+              <span className="text-sm text-gray-500">{file ? file.name : 'Choisir un fichier…'}</span>
+              <input ref={fileRef} type="file" accept=".pdf,.png,.jpg,.jpeg" className="hidden" onChange={e => setFile(e.target.files?.[0] ?? null)} />
+            </label>
+          </div>
+          <button type="submit" disabled={submitting} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold disabled:opacity-50">
+            {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+            Créer le devis
+          </button>
+        </form>
+      )}
+
+      <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        {filtered.map(q => {
+          const st = displayStatus(q);
+          const cfg = QUOTE_STATUS_CFG[st] ?? QUOTE_STATUS_CFG.draft;
+          const cname = q.creditors?.name ?? q.creditor_name ?? '—';
+          return (
+            <div key={q.id} className="px-4 py-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+              <div className="flex items-center gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-medium text-sm text-gray-900 dark:text-white truncate">{q.project_ref}</span>
+                    <span className={clsx('text-xs px-1.5 py-0.5 rounded border font-medium', cfg.cls)}>{cfg.label}</span>
+                    {st === 'sent' && q.valid_until && q.valid_until >= todayStr && (
+                      <span className="text-xs text-gray-400">valide jusqu&apos;au {fmtDate(q.valid_until)}</span>
+                    )}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-0.5">
+                    {cname} · {q.category ?? '—'}
+                    {q.description && <span className="ml-1 truncate">· {q.description}</span>}
+                  </div>
+                </div>
+                <span className="font-mono text-sm font-semibold text-gray-900 dark:text-white">
+                  ${Number(q.amount_usd).toFixed(2)}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mt-2">
+                {st === 'draft' && (
+                  <button onClick={() => sendQuote(q)} className="text-xs px-2.5 py-1 rounded-lg border border-blue-200 text-blue-700 hover:bg-blue-50 font-medium">
+                    Marquer envoyé
+                  </button>
+                )}
+                {st === 'sent' && (
+                  <>
+                    <button onClick={() => { setAccept(q); setAcceptDue(''); }} className="text-xs px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium">
+                      Accepter
+                    </button>
+                    <button onClick={() => rejectQuote(q)} className="text-xs px-2.5 py-1 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 font-medium">
+                      Rejeter
+                    </button>
+                  </>
+                )}
+                {st === 'accepted' && q.converted_expense_id && (
+                  <span className="text-xs text-emerald-600 flex items-center gap-1">
+                    <ArrowRight className="w-3 h-3" /> voir dans À payer
+                  </span>
+                )}
+                {st === 'expired' && (
+                  <span className="text-xs text-orange-500">Devis expiré</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+        {filtered.length === 0 && (
+          <div className="px-4 py-8 text-center text-sm text-gray-400">Aucun devis</div>
+        )}
+      </div>
+
+      {/* Accept modal */}
+      {acceptTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl w-full max-w-md p-6 space-y-4">
+            <h3 className="font-semibold text-gray-900 dark:text-white">Accepter le devis</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {acceptTarget.project_ref} — <span className="font-mono font-bold">${Number(acceptTarget.amount_usd).toFixed(2)}</span>
+            </p>
+            <div>
+              <label className={labelCls}>Date d&apos;échéance *</label>
+              <input type="date" value={acceptDue} onChange={e => setAcceptDue(e.target.value)} required className={inputCls} />
+            </div>
+            <div className="flex gap-2 justify-end">
+              <button onClick={() => setAccept(null)} className="px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50">
+                Annuler
+              </button>
+              <button
+                onClick={acceptQuote}
+                disabled={!acceptDue || accepting}
+                className="px-4 py-2 text-sm rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium flex items-center gap-2 disabled:opacity-50"
+              >
+                {accepting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                Accepter &amp; créer la dépense
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── ArchivesTab ─────────────────────────────────────────────── */
+function ArchivesTab({
+  archives, loading, onUnarchive, onRefresh,
+}: {
+  archives: DevExpense[];
+  loading: boolean;
+  onUnarchive: (id: string) => void;
+  onRefresh: () => void;
+}) {
+  const [search, setSearch] = useState('');
+
+  const filtered = archives.filter(e => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      (e.creditor_name ?? '').toLowerCase().includes(q) ||
+      (e.project_ref ?? '').toLowerCase().includes(q) ||
+      e.category.toLowerCase().includes(q) ||
+      e.billing_month.includes(q)
+    );
+  });
+
+  if (loading) return <Spinner />;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-1">
+          <FileSearch className="w-4 h-4 text-gray-400" />
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Rechercher par créancier, projet, mois…"
+            className="flex-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300"
+          />
+        </div>
+        <button onClick={onRefresh} className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1">
+          <RefreshCw className="w-3 h-3" /> Actualiser
+        </button>
+      </div>
+
+      <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        {filtered.map(e => (
+          <div key={e.id} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-900">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-medium text-sm text-gray-700 dark:text-gray-300 truncate">
+                  {e.creditor_name ?? e.category}
+                </span>
+                {e.project_ref && <span className="text-xs text-gray-400 truncate">{e.project_ref}</span>}
+              </div>
+              <div className="text-xs text-gray-400 mt-0.5">
+                {e.category} · {fmtMonth(e.billing_month)}
+                {e.archived_at && <span> · archivé {fmtDate(e.archived_at.slice(0, 10))}</span>}
+              </div>
+            </div>
+            <span className="font-mono text-sm text-gray-500">${Number(e.amount_usd).toFixed(2)}</span>
+            <button
+              onClick={() => onUnarchive(e.id)}
+              className="text-xs px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-colors flex items-center gap-1"
+              title="Désarchiver"
+            >
+              <ArchiveRestore className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <div className="px-4 py-8 text-center text-sm text-gray-400">
+            {archives.length === 0 ? 'Aucune dépense archivée' : 'Aucun résultat'}
+          </div>
+        )}
       </div>
     </div>
   );
