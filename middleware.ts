@@ -31,20 +31,6 @@ export default async function middleware(request: NextRequest) {
     }
   }
 
-  // Protect all /{locale}/wallet routes (B2C wallet) — except login & register
-  if (/^\/(fr|en)\/wallet(\/.*)?$/.test(pathname)) {
-    const isPublicWalletPath = /^\/(fr|en)\/wallet\/(login|register)(\/.*)?$/.test(pathname);
-    if (!isPublicWalletPath) {
-      const token = request.cookies.get('wallet_token');
-      if (!token?.value) {
-        const locale = pathname.startsWith('/en/') ? 'en' : 'fr';
-        const url = request.nextUrl.clone();
-        url.pathname = `/${locale}/wallet/login`;
-        return NextResponse.redirect(url);
-      }
-    }
-  }
-
   return intlMiddleware(request);
 }
 
