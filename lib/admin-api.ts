@@ -39,8 +39,10 @@ export interface SwapRate {
   rate: number;
   fee: number;
   paused: boolean;
+  /** Operational hot wallet USDT balance (legacy field name — not a liquidity pool) */
   pool_usdt: number;
-  pool_cglt: number;
+  /** Same value as pool_usdt — honest field name, prefer this going forward */
+  hot_wallet_usdt: number;
 }
 
 export interface WalletUser {

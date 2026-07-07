@@ -84,7 +84,7 @@ export default function AdminOverviewPage() {
       bg: 'bg-sky-500/10',
     },
     {
-      label: 'Réserve USDT (pool)',
+      label: 'Hot Wallet USDT (BSC)',
       value: swap ? fmtDec(swap.pool_usdt) : '—',
       unit: 'USDT',
       icon: Landmark,
