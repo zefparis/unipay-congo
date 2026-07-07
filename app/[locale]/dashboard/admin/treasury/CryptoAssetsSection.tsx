@@ -404,7 +404,7 @@ export default function CryptoAssetsSection() {
                   <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Libellé *</label>
                   <input required value={wForm.label}
                     onChange={(e) => setWForm((p) => ({ ...p, label: e.target.value }))}
-                    placeholder="Ex : PredictStreet RDC Treasury"
+                    placeholder="Ex : BSC Hot Wallet Treasury"
                     className={inputCls} />
                 </div>
                 <div>
