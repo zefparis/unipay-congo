@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 
+// Anti-cache: session-dependent page, must never be served statically/from cache
+export const dynamic = 'force-dynamic';
+
 export default function WalletLoginPage() {
   const router = useRouter();
   const { locale } = useParams<{ locale: string }>();
