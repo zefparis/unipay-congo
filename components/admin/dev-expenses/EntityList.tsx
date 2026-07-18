@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Plus, Pencil, X, Loader2, Check } from 'lucide-react';
-import { listEntities, createEntity, updateEntity } from '@/lib/dev-expenses/api';
+import { useState, useEffect, useRef } from 'react';
+import { Plus, Pencil, X, Loader2, Check, AlertCircle } from 'lucide-react';
+import { listEntities, createEntity, updateEntity, ApiError } from '@/lib/dev-expenses/api';
 import { ENTITY_TYPE_LABELS } from '@/lib/dev-expenses/labels';
+import { toEntityCode } from '@/lib/dev-expenses/utils';
 import type { ExpenseEntity } from '@/lib/dev-expenses/types';
 
 const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-300';
@@ -27,6 +28,8 @@ export default function EntityList() {
     can_cover_expenses: true, can_receive_reimbursements: true,
   });
   const [showBankSection, setShowBankSection] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [codeManuallyEdited, setCodeManuallyEdited] = useState(false);
 
   useEffect(() => {
     listEntities()
@@ -73,12 +76,15 @@ export default function EntityList() {
   function openNew() {
     setEditing(null);
     setForm({ code: '', display_name: '', entity_type: 'company', legal_name: '', trade_name: '', country_code: '', active: true, email: '', phone: '', address: '', city: '', postal_code: '', tax_id: '', registration_number: '', vat_number: '', address_line_1: '', address_line_2: '', region: '', contact_name: '', billing_email: '', contact_email: '', website: '', legal_notes: '', can_incur_expenses: true, can_receive_invoices: true, can_pay_expenses: true, can_cover_expenses: true, can_receive_reimbursements: true });
+    setErrorMessage(null);
+    setCodeManuallyEdited(false);
     setShowForm(true);
   }
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
+    setErrorMessage(null);
     try {
       if (editing) {
         await updateEntity(editing.id, {
@@ -144,8 +150,9 @@ export default function EntityList() {
       setShowForm(false);
       const res = await listEntities();
       setEntities(res.items ?? []);
-    } catch {
-      // Error handled by API layer
+    } catch (err) {
+      const msg = err instanceof ApiError ? err.message : 'Une erreur est survenue lors de la création.';
+      setErrorMessage(msg);
     }
     setSaving(false);
   }
@@ -153,6 +160,12 @@ export default function EntityList() {
   const set = (k: keyof typeof form) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
       const value = e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value;
+      if (k === 'code') setCodeManuallyEdited(true);
+      if (k === 'display_name' && !editing && !codeManuallyEdited) {
+        const strValue = typeof value === 'string' ? value : '';
+        setForm((f) => ({ ...f, display_name: strValue, code: toEntityCode(strValue) }));
+        return;
+      }
       setForm((f) => ({ ...f, [k]: value }));
     };
 
@@ -180,11 +193,20 @@ export default function EntityList() {
               <X className="w-4 h-4 text-gray-400" />
             </button>
           </div>
+          {errorMessage && (
+            <div className="flex items-start gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-sm text-red-700 dark:text-red-400">
+              <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {/* Identité */}
             <div>
               <label className={labelCls}>Code *</label>
-              <input value={form.code} onChange={set('code')} required disabled={!!editing} className={inputCls + ' disabled:opacity-50'} placeholder="ex: UNIPAY" />
+              <input value={form.code} onChange={set('code')} required disabled={!!editing} className={inputCls + ' disabled:opacity-50'} placeholder="ex: ia_solution" />
+              {!editing && (
+                <p className="text-[11px] text-gray-400 mt-0.5">Généré automatiquement depuis le nom. Modifiable.</p>
+              )}
             </div>
             <div>
               <label className={labelCls}>Nom affiché *</label>
@@ -312,7 +334,7 @@ export default function EntityList() {
             <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50">Annuler</button>
             <button type="submit" disabled={saving} className="px-4 py-2 text-sm rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-medium flex items-center gap-2 disabled:opacity-50">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-              {editing ? 'Mettre à jour' : 'Créer'}
+              {saving ? (editing ? 'Mise à jour…' : 'Création…') : (editing ? 'Mettre à jour' : 'Créer')}
             </button>
           </div>
         </form>
