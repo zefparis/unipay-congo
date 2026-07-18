@@ -9,6 +9,7 @@ interface Props {
   supplierId: string;
   incurredByEntityId: string;
   coveredByEntityId: string;
+  billingRecipientEntityId: string;
   currency: string;
   dateFrom: string;
   dateTo: string;
@@ -23,6 +24,7 @@ interface Props {
   onStatusChange: (v: string) => void;
   onSupplierChange: (v: string) => void;
   onIncurredByChange: (v: string) => void;
+  onBillingRecipientChange: (v: string) => void;
   onCoveredByChange: (v: string) => void;
   onCurrencyChange: (v: string) => void;
   onDateFromChange: (v: string) => void;
@@ -41,7 +43,7 @@ const labelCls = 'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-
 export default function ExpenseFilters(props: Props) {
   const hasActiveFilters =
     props.search || props.status || props.supplierId || props.incurredByEntityId ||
-    props.coveredByEntityId || props.currency || props.dateFrom || props.dateTo ||
+    props.coveredByEntityId || props.billingRecipientEntityId || props.currency || props.dateFrom || props.dateTo ||
     props.archived || props.migrationReviewRequired;
 
   return (
@@ -113,6 +115,16 @@ export default function ExpenseFilters(props: Props) {
           <label className={labelCls}>Prise en charge par</label>
           <select value={props.coveredByEntityId} onChange={(e) => props.onCoveredByChange(e.target.value)} className={inputCls}>
             <option value="">Toutes</option>
+            {props.entities.map((e) => (
+              <option key={e.id} value={e.id}>{e.display_name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className={labelCls}>Destinataire de facturation</label>
+          <select value={props.billingRecipientEntityId} onChange={(e) => props.onBillingRecipientChange(e.target.value)} className={inputCls}>
+            <option value="">Tous</option>
             {props.entities.map((e) => (
               <option key={e.id} value={e.id}>{e.display_name}</option>
             ))}

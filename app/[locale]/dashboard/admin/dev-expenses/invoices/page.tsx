@@ -37,6 +37,7 @@ export default function InvoicesPage() {
   const supplierId = searchParams.get('supplier_id') ?? '';
   const incurredByEntityId = searchParams.get('incurred_by_entity_id') ?? '';
   const coveredByEntityId = searchParams.get('covered_by_entity_id') ?? '';
+  const billingRecipientEntityId = searchParams.get('billing_recipient_entity_id') ?? '';
   const currency = searchParams.get('currency') ?? '';
   const dateFrom = searchParams.get('date_from') ?? '';
   const dateTo = searchParams.get('date_to') ?? '';
@@ -75,6 +76,7 @@ export default function InvoicesPage() {
             page, limit, search, status, supplier_id: supplierId,
             incurred_by_entity_id: incurredByEntityId,
             covered_by_entity_id: coveredByEntityId,
+            billing_recipient_entity_id: billingRecipientEntityId,
             currency, date_from: dateFrom, date_to: dateTo,
             archived, migration_review_required: migrationReviewRequired,
             sort, order,
@@ -96,7 +98,7 @@ export default function InvoicesPage() {
       }
     })();
     return () => { cancelled = true; };
-  }, [page, limit, search, status, supplierId, incurredByEntityId, coveredByEntityId, currency, dateFrom, dateTo, archived, migrationReviewRequired, sort, order]);
+  }, [page, limit, search, status, supplierId, incurredByEntityId, coveredByEntityId, billingRecipientEntityId, currency, dateFrom, dateTo, archived, migrationReviewRequired, sort, order]);
 
   function flashMsg(type: 'ok' | 'err', text: string) {
     setMsg({ type, text });
@@ -109,6 +111,8 @@ export default function InvoicesPage() {
 
   const supplierOptions = suppliers.map((c) => ({ id: c.id, name: c.name }));
   const entityOptions = entities.map((e) => ({ id: e.id, display_name: e.display_name }));
+  const entityMap: Record<string, typeof entities[number]> = {};
+  for (const e of entities) entityMap[e.id] = e;
 
   return (
     <div className="space-y-4">
@@ -150,6 +154,7 @@ export default function InvoicesPage() {
         supplierId={supplierId}
         incurredByEntityId={incurredByEntityId}
         coveredByEntityId={coveredByEntityId}
+        billingRecipientEntityId={billingRecipientEntityId}
         currency={currency}
         dateFrom={dateFrom}
         dateTo={dateTo}
@@ -165,6 +170,7 @@ export default function InvoicesPage() {
         onSupplierChange={(v) => updateUrl({ supplier_id: v })}
         onIncurredByChange={(v) => updateUrl({ incurred_by_entity_id: v })}
         onCoveredByChange={(v) => updateUrl({ covered_by_entity_id: v })}
+        onBillingRecipientChange={(v) => updateUrl({ billing_recipient_entity_id: v })}
         onCurrencyChange={(v) => updateUrl({ currency: v })}
         onDateFromChange={(v) => updateUrl({ date_from: v })}
         onDateToChange={(v) => updateUrl({ date_to: v })}
@@ -185,7 +191,7 @@ export default function InvoicesPage() {
         <EmptyState icon={Receipt} title="Aucune facture" message="Aucune facture ne correspond aux filtres sélectionnés." />
       ) : (
         <>
-          <ExpenseTable expenses={expenses} suppliers={supplierOptions} locale={locale} />
+          <ExpenseTable expenses={expenses} suppliers={supplierOptions} entities={entityMap} locale={locale} />
           <ExpenseMobileCard expenses={expenses} suppliers={supplierOptions} locale={locale} />
 
           {/* Pagination */}

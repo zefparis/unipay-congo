@@ -53,6 +53,9 @@ export interface DevExpenseV4 {
   initially_paid_by_entity_id: string | null;
   covered_by_entity_id: string | null;
   reimbursement_recipient_entity_id: string | null;
+  billing_recipient_entity_id: string | null;
+  billing_recipient_snapshot: Record<string, unknown> | null;
+  billing_recipient_reviewed: boolean;
   amount_usd: number;
   invoice_amount: number | null;
   invoice_currency: string;
@@ -124,7 +127,33 @@ export interface ExpenseEntity {
   display_name: string;
   entity_type: string;
   legal_name: string | null;
+  trade_name: string | null;
   country_code: string | null;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+  city: string | null;
+  postal_code: string | null;
+  tax_id: string | null;
+  // New legal profile fields
+  registration_number: string | null;
+  vat_number: string | null;
+  address_line_1: string | null;
+  address_line_2: string | null;
+  region: string | null;
+  contact_name: string | null;
+  billing_email: string | null;
+  contact_email: string | null;
+  website: string | null;
+  legal_notes: string | null;
+  // Role capabilities
+  can_incur_expenses: boolean;
+  can_receive_invoices: boolean;
+  can_pay_expenses: boolean;
+  can_cover_expenses: boolean;
+  can_receive_reimbursements: boolean;
+  // Sensitive — never exposed in lists
+  bank_details: Record<string, unknown>;
   active: boolean;
   metadata: Record<string, unknown>;
   created_at: string;

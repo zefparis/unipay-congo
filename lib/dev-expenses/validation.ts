@@ -14,6 +14,7 @@ export interface CreateExpenseForm {
   initially_paid_by_entity_id: string;
   covered_by_entity_id: string;
   reimbursement_recipient_entity_id: string;
+  billing_recipient_entity_id: string;
   initial_payment_status: string;
   initial_payment_method: string;
   requested_amount: string;
@@ -35,6 +36,7 @@ export const EMPTY_FORM: CreateExpenseForm = {
   initially_paid_by_entity_id: '',
   covered_by_entity_id: '',
   reimbursement_recipient_entity_id: '',
+  billing_recipient_entity_id: '',
   initial_payment_status: 'unpaid',
   initial_payment_method: '',
   requested_amount: '',
@@ -96,6 +98,7 @@ export function formToApiPayload(form: CreateExpenseForm): Record<string, unknow
   if (form.initially_paid_by_entity_id) payload.initially_paid_by_entity_id = form.initially_paid_by_entity_id;
   if (form.covered_by_entity_id) payload.covered_by_entity_id = form.covered_by_entity_id;
   if (form.reimbursement_recipient_entity_id) payload.reimbursement_recipient_entity_id = form.reimbursement_recipient_entity_id;
+  if (form.billing_recipient_entity_id) payload.billing_recipient_entity_id = form.billing_recipient_entity_id;
   if (form.initial_payment_method) payload.initial_payment_method = form.initial_payment_method;
   if (form.requested_amount) {
     payload.requested_amount = parseFloat(form.requested_amount);

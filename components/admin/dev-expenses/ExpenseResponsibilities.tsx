@@ -19,6 +19,7 @@ export default function ExpenseResponsibilities({ expense, entities }: Props) {
     { label: 'Payée initialement par', value: entityName(expense.initially_paid_by_entity_id) },
     { label: 'Prise en charge par', value: entityName(expense.covered_by_entity_id) },
     { label: 'Remboursement destiné à', value: entityName(expense.reimbursement_recipient_entity_id) },
+    { label: 'Destinataire de facturation', value: entityName(expense.billing_recipient_entity_id) },
     {
       label: 'Situation du paiement',
       value: expense.initial_payment_status

@@ -38,6 +38,7 @@ export default function MigrationReviewForm({ expense, entities, onClose, onReso
   const [initiallyPaidBy, setInitiallyPaidBy] = useState(expense.initially_paid_by_entity_id ?? '');
   const [coveredBy, setCoveredBy] = useState(expense.covered_by_entity_id ?? '');
   const [reimbursementTo, setReimbursementTo] = useState(expense.reimbursement_recipient_entity_id ?? '');
+  const [billingRecipient, setBillingRecipient] = useState(expense.billing_recipient_entity_id ?? '');
   const [approvedAmount, setApprovedAmount] = useState(
     expense.approved_amount != null ? String(expense.approved_amount) : '',
   );
@@ -50,6 +51,16 @@ export default function MigrationReviewForm({ expense, entities, onClose, onReso
 
   const entityOptions = Object.values(entities);
 
+  // Legal completeness warning for billing recipient
+  const billingEntity = billingRecipient ? entities[billingRecipient] : null;
+  const legalWarnings: string[] = [];
+  if (billingEntity) {
+    if (!billingEntity.country_code) legalWarnings.push('Pays manquant');
+    if (!billingEntity.legal_name && !billingEntity.display_name) legalWarnings.push('Nom légal manquant');
+    if (!billingEntity.address_line_1 && !billingEntity.address) legalWarnings.push('Adresse manquante');
+    if (!billingEntity.billing_email && !billingEntity.email) legalWarnings.push('Email de facturation manquant');
+  }
+
   async function handleResolve() {
     setLoading(true);
     setError(null);
@@ -60,6 +71,7 @@ export default function MigrationReviewForm({ expense, entities, onClose, onReso
         initially_paid_by_entity_id: initiallyPaidBy || null,
         covered_by_entity_id: coveredBy || null,
         reimbursement_recipient_entity_id: reimbursementTo || null,
+        billing_recipient_entity_id: billingRecipient || null,
         approved_amount: approvedAmount ? parseFloat(approvedAmount) : null,
         settled_amount: settledAmount ? parseFloat(settledAmount) : null,
         notes: notes.trim() || undefined,
@@ -100,7 +112,7 @@ export default function MigrationReviewForm({ expense, entities, onClose, onReso
               <label className={labelCls}>Dépense engagée par</label>
               <select value={incurredBy} onChange={(e) => setIncurredBy(e.target.value)} className={inputCls}>
                 <option value="">— Sélectionner —</option>
-                {entityOptions.map((e) => (
+                {entityOptions.filter((e) => e.can_incur_expenses).map((e) => (
                   <option key={e.id} value={e.id}>{e.display_name}</option>
                 ))}
               </select>
@@ -109,7 +121,7 @@ export default function MigrationReviewForm({ expense, entities, onClose, onReso
               <label className={labelCls}>Payée initialement par</label>
               <select value={initiallyPaidBy} onChange={(e) => setInitiallyPaidBy(e.target.value)} className={inputCls}>
                 <option value="">— Aucune —</option>
-                {entityOptions.map((e) => (
+                {entityOptions.filter((e) => e.can_pay_expenses).map((e) => (
                   <option key={e.id} value={e.id}>{e.display_name}</option>
                 ))}
               </select>
@@ -118,7 +130,7 @@ export default function MigrationReviewForm({ expense, entities, onClose, onReso
               <label className={labelCls}>Prise en charge par</label>
               <select value={coveredBy} onChange={(e) => setCoveredBy(e.target.value)} className={inputCls}>
                 <option value="">— Sélectionner —</option>
-                {entityOptions.map((e) => (
+                {entityOptions.filter((e) => e.can_cover_expenses).map((e) => (
                   <option key={e.id} value={e.id}>{e.display_name}</option>
                 ))}
               </select>
@@ -127,7 +139,16 @@ export default function MigrationReviewForm({ expense, entities, onClose, onReso
               <label className={labelCls}>Bénéficiaire du remboursement</label>
               <select value={reimbursementTo} onChange={(e) => setReimbursementTo(e.target.value)} className={inputCls}>
                 <option value="">— Aucun —</option>
-                {entityOptions.map((e) => (
+                {entityOptions.filter((e) => e.can_receive_reimbursements).map((e) => (
+                  <option key={e.id} value={e.id}>{e.display_name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className={labelCls}>Destinataire de facturation</label>
+              <select value={billingRecipient} onChange={(e) => setBillingRecipient(e.target.value)} className={inputCls}>
+                <option value="">— Aucun —</option>
+                {entityOptions.filter((e) => e.can_receive_invoices).map((e) => (
                   <option key={e.id} value={e.id}>{e.display_name}</option>
                 ))}
               </select>
@@ -149,6 +170,18 @@ export default function MigrationReviewForm({ expense, entities, onClose, onReso
           {error && (
             <div className="rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-700 dark:text-red-400">
               {error}
+            </div>
+          )}
+
+          {legalWarnings.length > 0 && (
+            <div className="rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 px-4 py-3">
+              <p className="text-xs font-medium text-amber-700 dark:text-amber-400 mb-1">Coordonnées légales incomplètes :</p>
+              <ul className="text-xs text-amber-600 dark:text-amber-400 list-disc list-inside">
+                {legalWarnings.map((w) => (
+                  <li key={w}>{w}</li>
+                ))}
+              </ul>
+              <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">Compl&eacute;tez l&apos;entit&eacute; puis rafra&icirc;chissez le snapshot.</p>
             </div>
           )}
 

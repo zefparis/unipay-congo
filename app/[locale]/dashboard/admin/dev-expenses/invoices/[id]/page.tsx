@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import { Check, AlertCircle } from 'lucide-react';
-import { getExpenseDetail, listCreditors } from '@/lib/dev-expenses/api';
+import { Check, AlertCircle, RefreshCw } from 'lucide-react';
+import { getExpenseDetail, listCreditors, refreshSnapshot } from '@/lib/dev-expenses/api';
 import ExpenseDetailHeader from '@/components/admin/dev-expenses/ExpenseDetailHeader';
 import ExpenseSummary from '@/components/admin/dev-expenses/ExpenseSummary';
 import ExpenseAmounts from '@/components/admin/dev-expenses/ExpenseAmounts';
@@ -26,6 +26,7 @@ export default function InvoiceDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [msg, setMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
   const [showMigrationForm, setShowMigrationForm] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const locale = 'fr';
 
   const loadDetail = useCallback(async () => {
@@ -125,6 +126,31 @@ export default function InvoiceDetailPage() {
 
       {/* Responsibilities */}
       <ExpenseResponsibilities expense={detail.expense} entities={detail.entities} />
+
+      {/* Refresh snapshot button */}
+      {detail.expense.billing_recipient_entity_id && (
+        <div className="flex justify-end">
+          <button
+            onClick={async () => {
+              setRefreshing(true);
+              try {
+                await refreshSnapshot(detail.expense.id);
+                flashMsg('ok', 'Snapshot du destinataire mis à jour');
+                setLoading(true);
+                loadDetail();
+              } catch (err) {
+                flashMsg('err', err instanceof Error ? err.message : 'Erreur');
+              }
+              setRefreshing(false);
+            }}
+            disabled={refreshing}
+            className="flex items-center gap-1.5 px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+            Actualiser le snapshot destinataire
+          </button>
+        </div>
+      )}
 
       {/* Settlements */}
       <div id="settlements">

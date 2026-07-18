@@ -5,18 +5,23 @@ import { Receipt } from 'lucide-react';
 import ExpenseStatusBadge from './ExpenseStatusBadge';
 import ExpenseNextAction from './ExpenseNextAction';
 import { formatDate, formatMoney, getRemainingAmount, isOverdue } from '@/lib/dev-expenses/formatters';
-import type { DevExpenseV4 } from '@/lib/dev-expenses/types';
+import type { DevExpenseV4, ExpenseEntity } from '@/lib/dev-expenses/types';
 
 interface Props {
   expenses: DevExpenseV4[];
   suppliers: { id: string; name: string }[];
+  entities: Record<string, ExpenseEntity>;
   locale: string;
 }
 
-export default function ExpenseTable({ expenses, suppliers, locale }: Props) {
+export default function ExpenseTable({ expenses, suppliers, entities, locale }: Props) {
   const supplierName = (id: string | null) => {
     if (!id) return '—';
     return suppliers.find((s) => s.id === id)?.name ?? '—';
+  };
+  const entityName = (id: string | null) => {
+    if (!id) return '—';
+    return entities[id]?.display_name ?? '—';
   };
 
   return (
@@ -26,6 +31,7 @@ export default function ExpenseTable({ expenses, suppliers, locale }: Props) {
           <tr className="bg-gray-50 dark:bg-gray-800/50 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
             <th className="px-4 py-3">Facture / Objet</th>
             <th className="px-4 py-3">Fournisseur</th>
+            <th className="px-4 py-3">Destinataire</th>
             <th className="px-4 py-3">Projet</th>
             <th className="px-4 py-3 text-right">Montant</th>
             <th className="px-4 py-3 text-right">Demandé</th>
@@ -59,6 +65,9 @@ export default function ExpenseTable({ expenses, suppliers, locale }: Props) {
                 </td>
                 <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
                   {supplierName(e.creditor_id)}
+                </td>
+                <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
+                  {entityName(e.billing_recipient_entity_id)}
                 </td>
                 <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
                   {e.project_ref || e.project_code}
@@ -95,7 +104,7 @@ export default function ExpenseTable({ expenses, suppliers, locale }: Props) {
           })}
           {expenses.length === 0 && (
             <tr>
-              <td colSpan={11} className="px-4 py-12 text-center text-gray-400">
+              <td colSpan={12} className="px-4 py-12 text-center text-gray-400">
                 <Receipt className="w-8 h-8 mx-auto mb-2 opacity-30" />
                 Aucune facture
               </td>

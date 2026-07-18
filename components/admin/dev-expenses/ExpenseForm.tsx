@@ -6,6 +6,7 @@ import { createExpense, transitionExpense, listEntities, listCreditors } from '@
 import { validateCreateForm, formToApiPayload, EMPTY_FORM, type CreateExpenseForm, type FormErrors } from '@/lib/dev-expenses/validation';
 import { PAYMENT_METHOD_LABELS, INITIAL_PAYMENT_STATUS_LABELS } from '@/lib/dev-expenses/labels';
 import type { ExpenseEntity, Creditor } from '@/lib/dev-expenses/types';
+import BillingRecipientSelect from './BillingRecipientSelect';
 
 interface Props {
   onClose: () => void;
@@ -187,6 +188,15 @@ export default function ExpenseForm({ onClose, onCreated }: Props) {
               <textarea value={form.description} onChange={set('description')} rows={2} className={inputCls + ' resize-none'} placeholder="Notes libres…" />
             </div>
             <div>
+              <label className={labelCls}>Destinataire de facturation</label>
+              <BillingRecipientSelect
+                value={form.billing_recipient_entity_id}
+                onChange={(id) => setForm((f) => ({ ...f, billing_recipient_entity_id: id }))}
+                entities={entities}
+                onEntityCreated={(entity) => setEntities((prev) => [...prev, entity])}
+              />
+            </div>
+            <div>
               <label className={labelCls}>Pièce jointe (PDF / PNG / JPEG, max 10 Mo)</label>
               <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                 <Upload className="w-4 h-4 text-gray-400" />
@@ -212,39 +222,51 @@ export default function ExpenseForm({ onClose, onCreated }: Props) {
                 <label className={labelCls}>Dépense engagée par *</label>
                 <select value={form.incurred_by_entity_id} onChange={set('incurred_by_entity_id')} className={inputCls}>
                   <option value="">— Sélectionner —</option>
-                  {entities.map((e) => (
+                  {entities.filter((e) => e.can_incur_expenses).map((e) => (
                     <option key={e.id} value={e.id}>{e.display_name}</option>
                   ))}
                 </select>
+                {entities.filter((e) => e.can_incur_expenses).length === 0 && (
+                  <p className="text-xs text-amber-600 mt-1">Aucune entit&eacute; compatible. Ajoutez une entit&eacute; ou modifiez ses r&ocirc;les.</p>
+                )}
                 {errors.incurred_by_entity_id && <p className="text-xs text-red-600 mt-1">{errors.incurred_by_entity_id}</p>}
               </div>
               <div>
                 <label className={labelCls}>Facture payée initialement par</label>
                 <select value={form.initially_paid_by_entity_id} onChange={set('initially_paid_by_entity_id')} className={inputCls}>
                   <option value="">— Aucune —</option>
-                  {entities.map((e) => (
+                  {entities.filter((e) => e.can_pay_expenses).map((e) => (
                     <option key={e.id} value={e.id}>{e.display_name}</option>
                   ))}
                 </select>
+                {entities.filter((e) => e.can_pay_expenses).length === 0 && (
+                  <p className="text-xs text-amber-600 mt-1">Aucune entit&eacute; compatible. Ajoutez une entit&eacute; ou modifiez ses r&ocirc;les.</p>
+                )}
               </div>
               <div>
                 <label className={labelCls}>Prise en charge par *</label>
                 <select value={form.covered_by_entity_id} onChange={set('covered_by_entity_id')} className={inputCls}>
                   <option value="">— Sélectionner —</option>
-                  {entities.map((e) => (
+                  {entities.filter((e) => e.can_cover_expenses).map((e) => (
                     <option key={e.id} value={e.id}>{e.display_name}</option>
                   ))}
                 </select>
+                {entities.filter((e) => e.can_cover_expenses).length === 0 && (
+                  <p className="text-xs text-amber-600 mt-1">Aucune entit&eacute; compatible. Ajoutez une entit&eacute; ou modifiez ses r&ocirc;les.</p>
+                )}
                 {errors.covered_by_entity_id && <p className="text-xs text-red-600 mt-1">{errors.covered_by_entity_id}</p>}
               </div>
               <div>
                 <label className={labelCls}>Remboursement destiné à</label>
                 <select value={form.reimbursement_recipient_entity_id} onChange={set('reimbursement_recipient_entity_id')} className={inputCls}>
                   <option value="">— Aucun —</option>
-                  {entities.map((e) => (
+                  {entities.filter((e) => e.can_receive_reimbursements).map((e) => (
                     <option key={e.id} value={e.id}>{e.display_name}</option>
                   ))}
                 </select>
+                {entities.filter((e) => e.can_receive_reimbursements).length === 0 && (
+                  <p className="text-xs text-amber-600 mt-1">Aucune entit&eacute; compatible. Ajoutez une entit&eacute; ou modifiez ses r&ocirc;les.</p>
+                )}
               </div>
               <div>
                 <label className={labelCls}>Situation actuelle du paiement *</label>

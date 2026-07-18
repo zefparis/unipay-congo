@@ -107,6 +107,7 @@ export function listExpenses(params: {
   supplier_id?: string;
   incurred_by_entity_id?: string;
   covered_by_entity_id?: string;
+  billing_recipient_entity_id?: string;
   currency?: string;
   date_from?: string;
   date_to?: string;
@@ -198,6 +199,7 @@ export function resolveMigrationReview(
     initially_paid_by_entity_id?: string | null;
     covered_by_entity_id?: string | null;
     reimbursement_recipient_entity_id?: string | null;
+    billing_recipient_entity_id?: string | null;
     approved_amount?: number | null;
     settled_amount?: number | null;
     notes?: string;
@@ -208,7 +210,17 @@ export function resolveMigrationReview(
 
 /* ── Expense Entities ─────────────────────────────────────── */
 
-export function listEntities(params?: { active?: boolean; entity_type?: string }): Promise<{ items: ExpenseEntity[] }> {
+export function listEntities(params?: {
+  active?: boolean;
+  entity_type?: string;
+  can_incur_expenses?: boolean;
+  can_receive_invoices?: boolean;
+  can_pay_expenses?: boolean;
+  can_cover_expenses?: boolean;
+  can_receive_reimbursements?: boolean;
+  country_code?: string;
+  search?: string;
+}): Promise<{ items: ExpenseEntity[] }> {
   return get(`${BASE_ENTITIES}${buildQuery(params as Record<string, string | boolean | undefined> ?? {})}`);
 }
 
@@ -217,7 +229,30 @@ export function createEntity(data: {
   display_name: string;
   entity_type: string;
   legal_name?: string;
+  trade_name?: string;
   country_code?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  postal_code?: string;
+  tax_id?: string;
+  registration_number?: string;
+  vat_number?: string;
+  address_line_1?: string;
+  address_line_2?: string;
+  region?: string;
+  contact_name?: string;
+  billing_email?: string;
+  contact_email?: string;
+  website?: string;
+  legal_notes?: string;
+  can_incur_expenses?: boolean;
+  can_receive_invoices?: boolean;
+  can_pay_expenses?: boolean;
+  can_cover_expenses?: boolean;
+  can_receive_reimbursements?: boolean;
+  bank_details?: Record<string, unknown>;
   active?: boolean;
 }): Promise<{ entity: ExpenseEntity }> {
   return post(`${BASE_ENTITIES}`, data);
@@ -262,3 +297,9 @@ export function generateReport(month: string): Promise<{
 }
 
 export { ApiError };
+
+/* ── Refresh snapshot ─────────────────────────────────────── */
+
+export function refreshSnapshot(id: string): Promise<{ expense: DevExpenseV4 }> {
+  return post(`${BASE_V4}/${id}/refresh-snapshot`);
+}
