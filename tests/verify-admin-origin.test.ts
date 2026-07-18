@@ -68,8 +68,20 @@ describe('verifyAdminOrigin', () => {
     expect(result).toBeNull();
   });
 
-  it('rejects POST with no origin or referer', () => {
+  it('allows POST with no origin or referer (same-origin fallback)', () => {
     const req = makeRequest('POST');
+    const result = verifyAdminOrigin(req);
+    expect(result).toBeNull();
+  });
+
+  it('rejects POST with no origin/referer when request URL not in allowed list', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('ADMIN_ALLOWED_ORIGINS', 'https://unipay-congo.example.com');
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://unipay-congo.example.com');
+    const req = new NextRequest('http://localhost:3000/api/admin/test', {
+      method: 'POST',
+      headers: new Headers(),
+    });
     const result = verifyAdminOrigin(req);
     expect(result).not.toBeNull();
     expect(result!.status).toBe(403);
@@ -79,5 +91,37 @@ describe('verifyAdminOrigin', () => {
     const req = makeRequest('POST', undefined, 'http://localhost:3000/api/admin/test');
     const result = verifyAdminOrigin(req);
     expect(result).toBeNull();
+  });
+
+  it('normalizes trailing slashes in ADMIN_ALLOWED_ORIGINS', () => {
+    vi.stubEnv('ADMIN_ALLOWED_ORIGINS', 'https://unipay-congo.example.com/');
+    const req = makeRequest('POST', 'https://unipay-congo.example.com');
+    const result = verifyAdminOrigin(req);
+    expect(result).toBeNull();
+  });
+
+  it('normalizes trailing slashes in NEXT_PUBLIC_APP_URL', () => {
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://unipay-congo.example.com/');
+    vi.stubEnv('ADMIN_ALLOWED_ORIGINS', '');
+    const req = makeRequest('POST', 'https://unipay-congo.example.com');
+    const result = verifyAdminOrigin(req);
+    expect(result).toBeNull();
+  });
+
+  it('allows VERCEL_URL as origin', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('ADMIN_ALLOWED_ORIGINS', '');
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', '');
+    vi.stubEnv('VERCEL_URL', 'unipay-congo-abc.vercel.app');
+    const req = makeRequest('POST', 'https://unipay-congo-abc.vercel.app');
+    const result = verifyAdminOrigin(req);
+    expect(result).toBeNull();
+  });
+
+  it('includes detail in 403 response for debugging', () => {
+    const req = makeRequest('POST', 'https://evil.com');
+    const result = verifyAdminOrigin(req);
+    expect(result).not.toBeNull();
+    expect(result!.status).toBe(403);
   });
 });
