@@ -1,13 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { requireAdminSession } from '@/lib/require-admin-session';
+import { adminProxyFetch } from '@/lib/admin-proxy';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://unipay-api.onrender.com';
-const ADMIN_SECRET = process.env.ADMIN_SECRET ?? '';
+export async function GET(request: NextRequest) {
+  const auth = await requireAdminSession(request);
+  if (!auth.ok) return auth.response;
 
-export async function GET() {
-  const upstream = await fetch(`${API_URL}/v1/admin/merchants`, {
-    headers: { 'x-admin-secret': ADMIN_SECRET },
-    cache: 'no-store',
-  });
-  const data = await upstream.json();
-  return NextResponse.json(data, { status: upstream.status });
+  return adminProxyFetch('/v1/admin/merchants', { method: 'GET' });
 }

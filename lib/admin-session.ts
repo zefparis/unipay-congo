@@ -1,4 +1,6 @@
-const ADMIN_SECRET = process.env.ADMIN_SECRET ?? '';
+function getAdminSecret(): string {
+  return process.env.ADMIN_SECRET ?? '';
+}
 export const COOKIE_NAME = 'admin_session';
 const SESSION_TTL = 8 * 60 * 60; // 8 hours in seconds
 
@@ -29,7 +31,7 @@ function timingSafeCompare(a: Uint8Array, b: Uint8Array): boolean {
 async function hmacSign(data: string): Promise<string> {
   const key = await crypto.subtle.importKey(
     'raw',
-    enc.encode('admin-session-signing-key' + ADMIN_SECRET),
+    enc.encode('admin-session-signing-key' + getAdminSecret()),
     { name: 'HMAC', hash: 'SHA-256' },
     false,
     ['sign'],
@@ -58,7 +60,7 @@ export async function createSessionToken(): Promise<string> {
  * Does NOT compare against ADMIN_SECRET directly.
  */
 export async function verifySessionToken(token: string | undefined | null): Promise<boolean> {
-  if (!ADMIN_SECRET || !token) return false;
+  if (!getAdminSecret() || !token) return false;
 
   const parts = token.split('.');
   if (parts.length !== 3) return false;
@@ -84,8 +86,8 @@ export async function verifySessionToken(token: string | undefined | null): Prom
  * Verify the admin password using a constant-time comparison.
  */
 export function verifyAdminPassword(password: string): boolean {
-  if (!ADMIN_SECRET) return false;
+  if (!getAdminSecret()) return false;
   const a = enc.encode(password);
-  const b = enc.encode(ADMIN_SECRET);
+  const b = enc.encode(getAdminSecret());
   return timingSafeCompare(a, b);
 }

@@ -1,17 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://unipay-api.onrender.com';
-const ADMIN_SECRET = process.env.ADMIN_SECRET ?? '';
+import { NextRequest } from 'next/server';
+import { requireAdminSession } from '@/lib/require-admin-session';
+import { adminProxyFetch } from '@/lib/admin-proxy';
 
 export async function GET(request: NextRequest) {
-  if (!ADMIN_SECRET) return NextResponse.json({ error: 'Admin not configured' }, { status: 503 });
+  const auth = await requireAdminSession(request);
+  if (!auth.ok) return auth.response;
 
-  const { searchParams } = new URL(request.url);
-  const qs = searchParams.toString();
-
-  const upstream = await fetch(`${API_URL}/v1/admin/kyc${qs ? `?${qs}` : ''}`, {
-    headers: { 'x-admin-secret': ADMIN_SECRET },
+  const qs = request.nextUrl.searchParams.toString();
+  return adminProxyFetch(`/v1/admin/kyc${qs ? `?${qs}` : ''}`, {
+    method: 'GET',
   });
-  const data = await upstream.json();
-  return NextResponse.json(data, { status: upstream.status });
 }

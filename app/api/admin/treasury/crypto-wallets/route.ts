@@ -1,26 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { requireAdminSession } from '@/lib/require-admin-session';
+import { verifyAdminOrigin } from '@/lib/verify-admin-origin';
+import { adminProxyFetch } from '@/lib/admin-proxy';
 
-const API = process.env.NEXT_PUBLIC_API_URL ?? 'https://unipay-api.onrender.com';
-const KEY = process.env.ADMIN_SECRET        ?? '';
+export async function GET(request: NextRequest) {
+  const auth = await requireAdminSession(request);
+  if (!auth.ok) return auth.response;
 
-export async function GET() {
-  if (!KEY) return NextResponse.json({ error: 'Admin not configured' }, { status: 503 });
-  const res = await fetch(`${API}/v1/admin/treasury/crypto-wallets`, {
-    headers: { 'x-admin-secret': KEY },
-    cache:   'no-store',
-  });
-  const body = await res.json();
-  return NextResponse.json(body, { status: res.status });
+  return adminProxyFetch('/v1/admin/treasury/crypto-wallets', { method: 'GET' });
 }
 
-export async function POST(req: NextRequest) {
-  if (!KEY) return NextResponse.json({ error: 'Admin not configured' }, { status: 503 });
-  const body = await req.json();
-  const res  = await fetch(`${API}/v1/admin/treasury/crypto-wallets`, {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json', 'x-admin-secret': KEY },
-    body:    JSON.stringify(body),
+export async function POST(request: NextRequest) {
+  const auth = await requireAdminSession(request);
+  if (!auth.ok) return auth.response;
+
+  const originError = verifyAdminOrigin(request);
+  if (originError) return originError;
+
+  const body = await request.json();
+  return adminProxyFetch('/v1/admin/treasury/crypto-wallets', {
+    method: 'POST',
+    body,
   });
-  const json = await res.json();
-  return NextResponse.json(json, { status: res.status });
 }

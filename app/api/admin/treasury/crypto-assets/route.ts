@@ -1,13 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { requireAdminSession } from '@/lib/require-admin-session';
+import { adminProxyFetch } from '@/lib/admin-proxy';
 
-const API  = process.env.NEXT_PUBLIC_API_URL ?? '';
-const KEY  = process.env.ADMIN_SECRET        ?? '';
+export async function GET(request: NextRequest) {
+  const auth = await requireAdminSession(request);
+  if (!auth.ok) return auth.response;
 
-export async function GET(req: NextRequest) {
-  const res = await fetch(`${API}/v1/admin/treasury/crypto-assets`, {
-    headers: { 'x-admin-secret': KEY },
-    cache:   'no-store',
-  });
-  const body = await res.json();
-  return NextResponse.json(body, { status: res.status });
+  return adminProxyFetch('/v1/admin/treasury/crypto-assets', { method: 'GET' });
 }

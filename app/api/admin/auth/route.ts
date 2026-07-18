@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdminPassword, createSessionToken, COOKIE_NAME } from '@/lib/admin-session';
 
-const ADMIN_SECRET = process.env.ADMIN_SECRET ?? '';
-
 export async function POST(request: NextRequest) {
-  if (!ADMIN_SECRET) {
+  if (!process.env.ADMIN_SECRET) {
     return NextResponse.json({ error: 'Admin not configured' }, { status: 503 });
   }
   const body = await request.json().catch(() => ({})) as { password?: string };

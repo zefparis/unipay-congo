@@ -1,64 +1,76 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminSession } from '@/lib/require-admin-session';
+import { verifyAdminOrigin } from '@/lib/verify-admin-origin';
+import { adminProxyFetch } from '@/lib/admin-proxy';
+import { isValidUUID } from '@/lib/validate-uuid';
 
 export const dynamic = 'force-dynamic';
 
-const API          = process.env.NEXT_PUBLIC_API_URL ?? 'https://unipay-api.onrender.com';
-const ADMIN_SECRET = process.env.ADMIN_SECRET ?? '';
-
-function notConfigured() {
-  return NextResponse.json({ error: 'Admin not configured' }, { status: 503 });
-}
-
-/* ── GET /api/admin/treasury/crypto-receipts/:id ─────────────────────── */
 export async function GET(
-  _req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } },
 ) {
-  if (!ADMIN_SECRET) return notConfigured();
+  const auth = await requireAdminSession(request);
+  if (!auth.ok) return auth.response;
 
-  const up   = await fetch(`${API}/v1/admin/treasury/crypto-receipts/${params.id}`, {
-    headers: { 'x-admin-secret': ADMIN_SECRET },
-    cache:   'no-store',
+  if (!isValidUUID(params.id)) {
+    return NextResponse.json(
+      { error: 'Invalid resource identifier', code: 'INVALID_RESOURCE_ID' },
+      { status: 400 },
+    );
+  }
+
+  return adminProxyFetch(`/v1/admin/treasury/crypto-receipts/${params.id}`, {
+    method: 'GET',
   });
-  const data = await up.json();
-  return NextResponse.json(data, { status: up.status });
 }
 
-/* ── PATCH /api/admin/treasury/crypto-receipts/:id ──────────────────── */
 export async function PATCH(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } },
 ) {
-  if (!ADMIN_SECRET) return notConfigured();
+  const auth = await requireAdminSession(request);
+  if (!auth.ok) return auth.response;
 
-  const body = await req.json();
-  const up   = await fetch(`${API}/v1/admin/treasury/crypto-receipts/${params.id}`, {
-    method:  'PATCH',
-    headers: {
-      'Content-Type':   'application/json',
-      'x-admin-secret': ADMIN_SECRET,
-    },
-    body: JSON.stringify(body),
+  const originError = verifyAdminOrigin(request);
+  if (originError) return originError;
+
+  if (!isValidUUID(params.id)) {
+    return NextResponse.json(
+      { error: 'Invalid resource identifier', code: 'INVALID_RESOURCE_ID' },
+      { status: 400 },
+    );
+  }
+
+  const body = await request.json();
+  return adminProxyFetch(`/v1/admin/treasury/crypto-receipts/${params.id}`, {
+    method: 'PATCH',
+    body,
   });
-  const data = await up.json();
-  return NextResponse.json(data, { status: up.status });
 }
 
-/* ── DELETE /api/admin/treasury/crypto-receipts/:id ─────────────────── */
 export async function DELETE(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } },
 ) {
-  if (!ADMIN_SECRET) return notConfigured();
+  const auth = await requireAdminSession(request);
+  if (!auth.ok) return auth.response;
 
-  const { searchParams } = new URL(req.url);
-  const deleted_by = searchParams.get('deleted_by') ?? '';
-  const qs = deleted_by ? `?deleted_by=${encodeURIComponent(deleted_by)}` : '';
+  const originError = verifyAdminOrigin(request);
+  if (originError) return originError;
 
-  const up = await fetch(`${API}/v1/admin/treasury/crypto-receipts/${params.id}${qs}`, {
-    method:  'DELETE',
-    headers: { 'x-admin-secret': ADMIN_SECRET },
+  if (!isValidUUID(params.id)) {
+    return NextResponse.json(
+      { error: 'Invalid resource identifier', code: 'INVALID_RESOURCE_ID' },
+      { status: 400 },
+    );
+  }
+
+  const deletedBy = request.nextUrl.searchParams.get('deleted_by') ?? '';
+  const extraQueryParams = deletedBy ? `deleted_by=${encodeURIComponent(deletedBy)}` : undefined;
+
+  return adminProxyFetch(`/v1/admin/treasury/crypto-receipts/${params.id}`, {
+    method: 'DELETE',
+    extraQueryParams,
   });
-  const data = await up.json();
-  return NextResponse.json(data, { status: up.status });
 }

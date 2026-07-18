@@ -1,16 +1,17 @@
-import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { requireAdminSession } from '@/lib/require-admin-session';
+import { verifyAdminOrigin } from '@/lib/verify-admin-origin';
+import { adminProxyFetch } from '@/lib/admin-proxy';
 
-const API = process.env.NEXT_PUBLIC_API_URL ?? 'https://unipay-api.onrender.com';
-const ADMIN_SECRET = process.env.ADMIN_SECRET ?? '';
+export async function POST(request: NextRequest) {
+  const auth = await requireAdminSession(request);
+  if (!auth.ok) return auth.response;
 
-export async function POST() {
-  if (!ADMIN_SECRET) return NextResponse.json({ error: 'Admin not configured' }, { status: 503 });
+  const originError = verifyAdminOrigin(request);
+  if (originError) return originError;
 
-  const up = await fetch(`${API}/v1/internal/backfill-cdp-wallets`, {
+  return adminProxyFetch('/v1/internal/backfill-cdp-wallets', {
     method: 'POST',
-    headers: { 'x-admin-secret': ADMIN_SECRET },
-    cache: 'no-store',
+    body: {},
   });
-  const data = await up.json();
-  return NextResponse.json(data, { status: up.status });
 }

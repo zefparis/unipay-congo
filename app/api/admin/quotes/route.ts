@@ -1,26 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
-
-const API          = process.env.NEXT_PUBLIC_API_URL ?? 'https://unipay-api.onrender.com';
-const ADMIN_SECRET = process.env.ADMIN_SECRET ?? '';
+import { NextRequest } from 'next/server';
+import { requireAdminSession } from '@/lib/require-admin-session';
+import { verifyAdminOrigin } from '@/lib/verify-admin-origin';
+import { adminProxyFetch } from '@/lib/admin-proxy';
 
 export async function GET(request: NextRequest) {
-  if (!ADMIN_SECRET) return NextResponse.json({ error: 'Admin not configured' }, { status: 503 });
-  const search = request.nextUrl.searchParams.toString();
-  const r = await fetch(`${API}/v1/admin/quotes${search ? '?' + search : ''}`, {
-    headers: { 'x-admin-secret': ADMIN_SECRET },
+  const auth = await requireAdminSession(request);
+  if (!auth.ok) return auth.response;
+
+  const qs = request.nextUrl.searchParams.toString();
+  return adminProxyFetch(`/v1/admin/quotes${qs ? `?${qs}` : ''}`, {
+    method: 'GET',
   });
-  const data = await r.json();
-  return NextResponse.json(data, { status: r.status });
 }
 
 export async function POST(request: NextRequest) {
-  if (!ADMIN_SECRET) return NextResponse.json({ error: 'Admin not configured' }, { status: 503 });
-  const body = await request.formData();
-  const r = await fetch(`${API}/v1/admin/quotes`, {
+  const auth = await requireAdminSession(request);
+  if (!auth.ok) return auth.response;
+
+  const originError = verifyAdminOrigin(request);
+  if (originError) return originError;
+
+  const formData = await request.formData();
+  return adminProxyFetch('/v1/admin/quotes', {
     method: 'POST',
-    headers: { 'x-admin-secret': ADMIN_SECRET },
-    body,
+    body: formData,
   });
-  const data = await r.json();
-  return NextResponse.json(data, { status: r.status });
 }
