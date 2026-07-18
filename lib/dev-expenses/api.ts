@@ -31,12 +31,17 @@ class ApiError extends Error {
   }
 }
 
+function redirectToAdminLogin() {
+  if (typeof window === 'undefined') return;
+  const pathname = window.location.pathname;
+  const locale = pathname.startsWith('/en/') ? 'en' : 'fr';
+  window.location.href = `/${locale}/dashboard/admin/login?redirect=${encodeURIComponent(pathname)}`;
+}
+
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(path, { cache: 'no-store' });
   if (res.status === 401) {
-    if (typeof window !== 'undefined') {
-      window.location.href = '/api/admin/auth?redirect=' + encodeURIComponent(window.location.pathname);
-    }
+    redirectToAdminLogin();
     throw new ApiError('Session expirée', 401);
   }
   if (!res.ok) {
@@ -54,9 +59,7 @@ async function post<T>(path: string, body?: unknown): Promise<T> {
     cache: 'no-store',
   });
   if (res.status === 401) {
-    if (typeof window !== 'undefined') {
-      window.location.href = '/api/admin/auth?redirect=' + encodeURIComponent(window.location.pathname);
-    }
+    redirectToAdminLogin();
     throw new ApiError('Session expirée', 401);
   }
   if (!res.ok) {
@@ -74,9 +77,7 @@ async function patch<T>(path: string, body?: unknown): Promise<T> {
     cache: 'no-store',
   });
   if (res.status === 401) {
-    if (typeof window !== 'undefined') {
-      window.location.href = '/api/admin/auth?redirect=' + encodeURIComponent(window.location.pathname);
-    }
+    redirectToAdminLogin();
     throw new ApiError('Session expirée', 401);
   }
   if (!res.ok) {

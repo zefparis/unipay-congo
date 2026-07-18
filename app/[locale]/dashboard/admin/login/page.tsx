@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { ShieldCheck, Loader2, Eye, EyeOff } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [password, setPassword] = useState('');
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,7 +27,8 @@ export default function AdminLoginPage() {
         const d = await res.json() as { error?: string };
         setError(d.error ?? 'Accès refusé');
       } else {
-        router.push('/fr/dashboard/admin');
+        const redirect = searchParams.get('redirect');
+        router.push(redirect || '/fr/dashboard/admin');
         router.refresh();
       }
     } catch {
