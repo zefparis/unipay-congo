@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X, Shield, Users, SlidersHorizontal, Landmark, Wallet, Receipt, Building2, TrendingUp } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X, Shield, Users, SlidersHorizontal, Landmark, Wallet, Receipt, Building2, TrendingUp, Headset } from 'lucide-react';
 import clsx from 'clsx';
 
 interface DashboardSidebarProps {
@@ -38,6 +38,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
     { href: '/dashboard/admin/merchants/list', label: 'Marchands', icon: Building2, exact: false },
     { href: '/dashboard/admin/merchants/kyc', label: 'KYC Merchants', icon: ShieldCheck, exact: false },
     { href: '/dashboard/admin/merchants/transactions', label: 'Transactions Marchands', icon: ArrowLeftRight, exact: false },
+    { href: '/dashboard/admin/merchants/support', label: 'Support Marchands', icon: Headset, exact: false },
   ];
 
   const infraAdminItems = [
@@ -51,6 +52,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
     { href: '/dashboard/webhooks', label: t('dashboard.nav.webhooks'), icon: Webhook, exact: false },
     { href: '/dashboard/kyc', label: t('dashboard.nav.kyc'), icon: ShieldCheck, exact: false },
     { href: '/dashboard/sandbox', label: t('dashboard.nav.sandbox'), icon: FlaskConical, exact: false },
+    { href: '/dashboard/support', label: 'Support', icon: Headset, exact: false },
   ];
 
   const isActive = (href: string, exact: boolean) =>
