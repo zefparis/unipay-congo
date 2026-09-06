@@ -186,6 +186,8 @@ export interface Merchant {
   total_volume?: number;
   last_transaction_at?: string | null;
   api_key_status?: 'none' | 'active' | 'inactive';
+  last_kyc_reminder_count?: number;
+  last_kyc_reminder_at?: string | null;
 }
 
 export interface MerchantStats {

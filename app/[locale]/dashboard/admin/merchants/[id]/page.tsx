@@ -6,7 +6,7 @@ import { Link } from '@/i18n/navigation';
 import {
   Building2, ArrowLeft, RefreshCw, KeyRound, Ban, CheckCircle2,
   AlertCircle, Loader2, FlaskConical, Globe, ShieldCheck,
-  Copy, Check, Trash2, ArrowDownLeft, ArrowUpRight, Mail, Headset, X, Send,
+  Copy, Check, Trash2, ArrowDownLeft, ArrowUpRight, Mail, Headset, X, Send, AlertTriangle,
 } from 'lucide-react';
 import {
   getMerchantDetail, revokeApiKey, regenerateApiKey,
@@ -67,6 +67,7 @@ export default function MerchantDetailPage() {
   const [emailSubject, setEmailSubject] = useState('');
   const [emailBody, setEmailBody] = useState('');
   const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailHistorySummary, setEmailHistorySummary] = useState<Array<{ template_label: string; count: number; last_sent_at: string }>>([]);
 
   // Support history state
   const [supportConvs, setSupportConvs] = useState<Array<{ id: string; status: string; updated_at: string }>>([]);
@@ -155,19 +156,25 @@ export default function MerchantDetailPage() {
     setEmailSubject('');
     setEmailBody('');
     setTemplates([]);
+    setEmailHistorySummary([]);
     setTemplatesLoading(true);
     try {
-      const res = await fetch(`/api/admin/wallet/merchants/${id}/support-templates`, {
-        cache: 'no-store',
-      });
-      if (res.ok) {
-        const data = await res.json();
+      const [tplRes, histRes] = await Promise.all([
+        fetch(`/api/admin/wallet/merchants/${id}/support-templates`, { cache: 'no-store' }),
+        fetch(`/api/admin/wallet/merchants/${id}/email-history-summary`, { cache: 'no-store' }),
+      ]);
+      if (tplRes.ok) {
+        const data = await tplRes.json();
         setTemplates(data.templates ?? []);
       } else {
-        console.error('[email-modal] templates fetch failed:', res.status, await res.text().catch(() => ''));
+        console.error('[email-modal] templates fetch failed:', tplRes.status, await tplRes.text().catch(() => ''));
+      }
+      if (histRes.ok) {
+        const histData = await histRes.json();
+        setEmailHistorySummary(histData.summary ?? []);
       }
     } catch (err) {
-      console.error('[email-modal] templates fetch error:', err);
+      console.error('[email-modal] fetch error:', err);
     } finally {
       setTemplatesLoading(false);
     }
@@ -193,6 +200,7 @@ export default function MerchantDetailPage() {
           subject: emailSubject,
           body: emailBody,
           conversation_id: activeConvId ?? undefined,
+          template_label: selectedTemplate || undefined,
         }),
       });
       if (!res.ok) throw new Error('Échec envoi email');
@@ -640,6 +648,20 @@ export default function MerchantDetailPage() {
                   <option key={t.label} value={t.label}>{t.label}</option>
                 ))}
               </select>
+              {selectedTemplate && (() => {
+                const hist = emailHistorySummary.find((h) => h.template_label === selectedTemplate);
+                if (!hist || hist.count === 0) return null;
+                const lastDate = new Date(hist.last_sent_at).toLocaleDateString('fr-CD', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                return (
+                  <div className="mt-2 flex items-start gap-2 p-2.5 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 text-xs text-amber-700 dark:text-amber-400">
+                    <AlertTriangle size={14} className="flex-shrink-0 mt-0.5" />
+                    <span>
+                      Ce template a déjà été envoyé <strong>{hist.count}</strong> fois
+                      {hist.count > 1 ? 's' : ''}, la dernière fois le <strong>{lastDate}</strong>.
+                    </span>
+                  </div>
+                );
+              })()}
             </div>
 
               {/* Subject */}

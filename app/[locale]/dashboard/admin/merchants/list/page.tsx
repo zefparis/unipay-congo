@@ -5,7 +5,7 @@ import { Link } from '@/i18n/navigation';
 import {
   Building2, Search, ChevronLeft, ChevronRight, Eye,
   Loader2, RefreshCw, FlaskConical, Globe, ShieldCheck,
-  Ban, CheckCircle2, AlertCircle, KeyRound,
+  Ban, CheckCircle2, AlertCircle, KeyRound, Bell,
 } from 'lucide-react';
 import {
   getMerchants, setMerchantMode, suspendMerchant, reactivateMerchant,
@@ -207,9 +207,20 @@ export default function MerchantsListPage() {
                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{m.email}</td>
                     <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{m.company_name ?? m.name ?? '—'}</td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', KYC_STYLES[m.kyc_status] ?? 'bg-gray-100 text-gray-600')}>
-                        {KYC_LABELS[m.kyc_status] ?? m.kyc_status}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', KYC_STYLES[m.kyc_status] ?? 'bg-gray-100 text-gray-600')}>
+                          {KYC_LABELS[m.kyc_status] ?? m.kyc_status}
+                        </span>
+                        {m.last_kyc_reminder_count != null && m.last_kyc_reminder_count > 0 && (
+                          <span
+                            title={`Relancé ${m.last_kyc_reminder_count} fois${m.last_kyc_reminder_at ? `, dernière le ${fmtDate(m.last_kyc_reminder_at)}` : ''}`}
+                            className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 cursor-help"
+                          >
+                            <Bell size={10} />
+                            {m.last_kyc_reminder_count}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <span className={clsx('inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold',
