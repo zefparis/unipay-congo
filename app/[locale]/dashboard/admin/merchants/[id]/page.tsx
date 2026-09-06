@@ -62,6 +62,7 @@ export default function MerchantDetailPage() {
   // Email modal state
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [templates, setTemplates] = useState<Array<{ label: string; subject: string; body: string }>>([]);
+  const [templatesLoading, setTemplatesLoading] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState('');
   const [emailSubject, setEmailSubject] = useState('');
   const [emailBody, setEmailBody] = useState('');
@@ -153,13 +154,23 @@ export default function MerchantDetailPage() {
     setSelectedTemplate('');
     setEmailSubject('');
     setEmailBody('');
+    setTemplates([]);
+    setTemplatesLoading(true);
     try {
-      const res = await fetch(`/api/admin/wallet/merchants/${id}/support-templates`);
+      const res = await fetch(`/api/admin/wallet/merchants/${id}/support-templates`, {
+        cache: 'no-store',
+      });
       if (res.ok) {
         const data = await res.json();
         setTemplates(data.templates ?? []);
+      } else {
+        console.error('[email-modal] templates fetch failed:', res.status, await res.text().catch(() => ''));
       }
-    } catch { /* templates optional */ }
+    } catch (err) {
+      console.error('[email-modal] templates fetch error:', err);
+    } finally {
+      setTemplatesLoading(false);
+    }
   };
 
   const applyTemplate = (label: string) => {
@@ -611,24 +622,25 @@ export default function MerchantDetailPage() {
 
             {/* Modal body */}
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-              {/* Template selector */}
-              {templates.length > 0 && (
-                <div>
-                  <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    Template
-                  </label>
-                  <select
-                    value={selectedTemplate}
-                    onChange={(e) => applyTemplate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white"
-                  >
-                    <option value="">— Sélectionner un template —</option>
-                    {templates.map((t) => (
-                      <option key={t.label} value={t.label}>{t.label}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
+            {/* Template selector */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                Template
+              </label>
+              <select
+                value={selectedTemplate}
+                onChange={(e) => applyTemplate(e.target.value)}
+                disabled={templatesLoading}
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white disabled:opacity-50"
+              >
+                <option value="">
+                  {templatesLoading ? 'Chargement des templates…' : '— Sélectionner un template —'}
+                </option>
+                {templates.map((t) => (
+                  <option key={t.label} value={t.label}>{t.label}</option>
+                ))}
+              </select>
+            </div>
 
               {/* Subject */}
               <div>
