@@ -6,7 +6,7 @@ import { Link } from '@/i18n/navigation';
 import {
   Building2, ArrowLeft, RefreshCw, KeyRound, Ban, CheckCircle2,
   AlertCircle, Loader2, FlaskConical, Globe, ShieldCheck,
-  Copy, Check, Trash2, ArrowDownLeft, ArrowUpRight,
+  Copy, Check, Trash2, ArrowDownLeft, ArrowUpRight, Mail, Headset, X, Send,
 } from 'lucide-react';
 import {
   getMerchantDetail, revokeApiKey, regenerateApiKey,
@@ -58,6 +58,20 @@ export default function MerchantDetailPage() {
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
   const [newKey, setNewKey] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Email modal state
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [templates, setTemplates] = useState<Array<{ label: string; subject: string; body: string }>>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState('');
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailBody, setEmailBody] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
+
+  // Support history state
+  const [supportConvs, setSupportConvs] = useState<Array<{ id: string; status: string; updated_at: string }>>([]);
+  const [supportMessages, setSupportMessages] = useState<Array<{ id: string; role: string; content: string; channel: string; subject: string | null; created_at: string }>>([]);
+  const [activeConvId, setActiveConvId] = useState<string | null>(null);
+  const [supportLoading, setSupportLoading] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -134,6 +148,82 @@ export default function MerchantDetailPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const openEmailModal = async () => {
+    setEmailModalOpen(true);
+    setSelectedTemplate('');
+    setEmailSubject('');
+    setEmailBody('');
+    try {
+      const res = await fetch(`/api/admin/wallet/merchants/${id}/support-templates`);
+      if (res.ok) {
+        const data = await res.json();
+        setTemplates(data.templates ?? []);
+      }
+    } catch { /* templates optional */ }
+  };
+
+  const applyTemplate = (label: string) => {
+    setSelectedTemplate(label);
+    const t = templates.find((x) => x.label === label);
+    if (t) {
+      setEmailSubject(t.subject);
+      setEmailBody(t.body);
+    }
+  };
+
+  const handleSendEmail = async () => {
+    if (!emailSubject.trim() || !emailBody.trim() || sendingEmail) return;
+    setSendingEmail(true);
+    try {
+      const res = await fetch(`/api/admin/wallet/merchants/${id}/email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subject: emailSubject,
+          body: emailBody,
+          conversation_id: activeConvId ?? undefined,
+        }),
+      });
+      if (!res.ok) throw new Error('Échec envoi email');
+      const data = await res.json();
+      setToast({ msg: `Email envoyé à ${merchant?.email}`, type: 'success' });
+      setEmailModalOpen(false);
+      if (data.conversation_id) {
+        setActiveConvId(data.conversation_id);
+      }
+      void loadSupportHistory();
+    } catch (e) {
+      setToast({ msg: (e as Error).message, type: 'error' });
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
+  const loadSupportHistory = useCallback(async () => {
+    setSupportLoading(true);
+    try {
+      const res = await fetch(`/api/admin/wallet/merchants/${id}/support`);
+      if (!res.ok) return;
+      const data = await res.json();
+      const allConvs = (data.data ?? []).filter((c: { merchant_id?: string }) => c.merchant_id === id);
+      setSupportConvs(allConvs);
+      if (allConvs.length > 0 && !activeConvId) {
+        setActiveConvId(allConvs[0].id);
+      }
+      if (activeConvId) {
+        const msgRes = await fetch(`/api/admin/support/conversations/${activeConvId}/messages`);
+        if (msgRes.ok) {
+          const msgData = await msgRes.json();
+          setSupportMessages(msgData.messages ?? []);
+        }
+      }
+    } catch { /* silent */ } finally {
+      setSupportLoading(false);
+    }
+  }, [id, activeConvId]);
+
+  useEffect(() => { void loadSupportHistory(); }, [loadSupportHistory]);
+
   if (loading && !merchant) {
     return (
       <div className="flex items-center justify-center py-16">
@@ -183,14 +273,23 @@ export default function MerchantDetailPage() {
             {merchant.company_name ?? merchant.name ?? merchant.email}
           </h1>
         </div>
-        <button
-          onClick={load}
-          disabled={loading}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all disabled:opacity-50"
-        >
-          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-          Actualiser
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={openEmailModal}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-signal text-white text-sm font-medium hover:bg-signal/85 transition-all"
+          >
+            <Mail size={14} />
+            Contacter par email
+          </button>
+          <button
+            onClick={load}
+            disabled={loading}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all disabled:opacity-50"
+          >
+            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+            Actualiser
+          </button>
+        </div>
       </div>
 
       {/* Profile */}
@@ -421,6 +520,165 @@ export default function MerchantDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Support history */}
+      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            <Headset size={16} className="text-purple-500" />
+            Historique support
+          </h2>
+          {supportConvs.length > 1 && (
+            <select
+              value={activeConvId ?? ''}
+              onChange={(e) => setActiveConvId(e.target.value)}
+              className="px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs text-gray-700 dark:text-gray-300"
+            >
+              {supportConvs.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.status} — {new Date(c.updated_at).toLocaleDateString('fr-CD')}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+
+        {supportLoading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 size={20} className="animate-spin text-purple-500" />
+          </div>
+        ) : supportMessages.length === 0 ? (
+          <div className="text-sm text-gray-400 text-center py-4">
+            Aucune conversation de support. Utilisez « Contacter par email » pour démarrer.
+          </div>
+        ) : (
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            {supportMessages.map((m) => (
+              <div
+                key={m.id}
+                className={clsx('flex', m.role === 'admin' ? 'justify-end' : 'justify-start')}
+              >
+                <div
+                  className={clsx(
+                    'max-w-[75%] rounded-2xl px-4 py-2.5 text-sm',
+                    m.role === 'admin'
+                      ? m.channel === 'email'
+                        ? 'bg-blue-500 text-white rounded-br-sm'
+                        : 'bg-purple-500 text-white rounded-br-sm'
+                      : m.role === 'merchant'
+                      ? 'bg-signal text-white rounded-bl-sm'
+                      : 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 rounded-bl-sm',
+                  )}
+                >
+                  <div className="flex items-center gap-1.5 text-[10px] font-semibold mb-1 opacity-70">
+                    {m.role === 'admin' && m.channel === 'email' && <><Mail size={10} /> Email admin</>}
+                    {m.role === 'admin' && m.channel === 'chat' && <><Headset size={10} /> Admin (chat)</>}
+                    {m.role === 'merchant' && 'Marchand'}
+                    {m.role === 'bot' && 'Assistant IA'}
+                  </div>
+                  {m.channel === 'email' && m.subject && (
+                    <div className="text-xs font-semibold mb-1 opacity-80">Objet: {m.subject}</div>
+                  )}
+                  <p className="whitespace-pre-wrap">{m.content}</p>
+                  <div className={clsx('text-[10px] mt-1', m.role === 'admin' || m.role === 'merchant' ? 'text-white/60' : 'text-gray-400')}>
+                    {new Date(m.created_at).toLocaleString('fr-CD', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Email modal */}
+      {emailModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setEmailModalOpen(false)} />
+          <div className="relative w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 max-h-[90vh] flex flex-col">
+            {/* Modal header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+              <h3 className="text-lg font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <Mail size={18} className="text-signal" />
+                Contacter {merchant.email}
+              </h3>
+              <button
+                onClick={() => setEmailModalOpen(false)}
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal body */}
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+              {/* Template selector */}
+              {templates.length > 0 && (
+                <div>
+                  <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                    Template
+                  </label>
+                  <select
+                    value={selectedTemplate}
+                    onChange={(e) => applyTemplate(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white"
+                  >
+                    <option value="">— Sélectionner un template —</option>
+                    {templates.map((t) => (
+                      <option key={t.label} value={t.label}>{t.label}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Subject */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                  Objet
+                </label>
+                <input
+                  type="text"
+                  value={emailSubject}
+                  onChange={(e) => setEmailSubject(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-signal/30"
+                  placeholder="Objet de l'email"
+                />
+              </div>
+
+              {/* Body */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                  Message
+                </label>
+                <textarea
+                  value={emailBody}
+                  onChange={(e) => setEmailBody(e.target.value)}
+                  rows={10}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-signal/30 resize-none"
+                  placeholder="Votre message…"
+                />
+              </div>
+            </div>
+
+            {/* Modal footer */}
+            <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-gray-100 dark:border-gray-800">
+              <button
+                onClick={() => setEmailModalOpen(false)}
+                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleSendEmail}
+                disabled={!emailSubject.trim() || !emailBody.trim() || sendingEmail}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-signal text-white text-sm font-medium hover:bg-signal/85 transition-colors disabled:opacity-50"
+              >
+                {sendingEmail ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                Envoyer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
