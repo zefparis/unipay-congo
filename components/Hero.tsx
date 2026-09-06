@@ -77,25 +77,25 @@ export default function Hero() {
                   <div className="w-3 h-3 rounded-full bg-danger/70" />
                   <div className="w-3 h-3 rounded-full bg-rust/70" />
                   <div className="w-3 h-3 rounded-full bg-signal/70" />
-                  <span className="ml-3 text-xs text-bone/40 font-mono">POST /v1/payments/initiate</span>
+                  <span className="ml-3 text-xs text-bone/40 font-mono">POST /v1/payment/initiate</span>
                 </div>
                 {/* Code content */}
                 <div className="p-5 font-mono text-sm leading-relaxed">
                   <pre className="text-bone/80 whitespace-pre-wrap">
                     <span className="text-rust">{'{'}</span>
                     {'\n'}
-                    {'  '}<span className="text-signal">&quot;amount&quot;</span>
-                    <span className="text-bone/50">: </span>
-                    <span className="text-bone">5000</span>,{'\n'}
-                    {'  '}<span className="text-signal">&quot;currency&quot;</span>
-                    <span className="text-bone/50">: </span>
-                    <span className="text-rust">&quot;CDF&quot;</span>,{'\n'}
-                    {'  '}<span className="text-signal">&quot;channel&quot;</span>
+                    {'  '}<span className="text-signal">&quot;operator&quot;</span>
                     <span className="text-bone/50">: </span>
                     <span className="text-rust">&quot;orange&quot;</span>,{'\n'}
                     {'  '}<span className="text-signal">&quot;phone&quot;</span>
                     <span className="text-bone/50">: </span>
-                    <span className="text-rust">&quot;+243810000000&quot;</span>{'\n'}
+                    <span className="text-rust">&quot;+243810000000&quot;</span>,{'\n'}
+                    {'  '}<span className="text-signal">&quot;amount&quot;</span>
+                    <span className="text-bone/50">: </span>
+                    <span className="text-bone">5000</span>,{'\n'}
+                    {'  '}<span className="text-signal">&quot;direction&quot;</span>
+                    <span className="text-bone/50">: </span>
+                    <span className="text-rust">&quot;collect&quot;</span>{'\n'}
                     <span className="text-rust">{'}'}</span>
                   </pre>
                   <div className="mt-4 pt-4 border-t border-bone/10">
@@ -111,7 +111,7 @@ export default function Hero() {
               {/* Floating badge — convergence diagram replaces text badge */}
               <div className="absolute -bottom-4 -left-4 bg-ink border border-bone/15 rounded-xl px-4 py-2.5 shadow-lg flex items-center gap-2.5">
                 <ConvergenceDiagram size={16} className="text-signal" />
-                <span className="text-xs font-semibold text-bone/80">4 réseaux connectés</span>
+                <span className="text-xs font-semibold text-bone/80">3 réseaux connectés</span>
               </div>
             </div>
           </div>
