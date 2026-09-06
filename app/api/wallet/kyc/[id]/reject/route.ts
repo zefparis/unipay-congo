@@ -1,17 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminSession } from '@/lib/require-admin-session';
+import { verifyAdminOrigin } from '@/lib/verify-admin-origin';
+import { adminProxyFetch } from '@/lib/admin-proxy';
+import { isValidUUID } from '@/lib/validate-uuid';
 
-const API_URL      = process.env.NEXT_PUBLIC_API_URL ?? 'https://unipay-api.onrender.com';
-const ADMIN_SECRET = process.env.ADMIN_SECRET ?? '';
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
+  const auth = await requireAdminSession(request);
+  if (!auth.ok) return auth.response;
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
-  if (!ADMIN_SECRET) return NextResponse.json({ error: 'Admin not configured' }, { status: 503 });
-  let body: unknown;
-  try { body = await request.json(); } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }); }
-  const upstream = await fetch(`${API_URL}/v1/admin/wallet/kyc/${params.id}/reject`, {
+  const originError = verifyAdminOrigin(request);
+  if (originError) return originError;
+
+  if (!isValidUUID(params.id)) {
+    return NextResponse.json(
+      { error: 'Invalid resource identifier', code: 'INVALID_RESOURCE_ID' },
+      { status: 400 },
+    );
+  }
+
+  const body = await request.json().catch(() => ({}));
+  return adminProxyFetch(`/v1/admin/wallet/kyc/${params.id}/reject`, {
     method: 'POST',
-    headers: { 'x-admin-secret': ADMIN_SECRET, 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body,
   });
-  const data = await upstream.json();
-  return NextResponse.json(data, { status: upstream.status });
 }
