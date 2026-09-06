@@ -741,7 +741,7 @@ ${BASE}/v1/merchant/balance`}</pre>
                   {[
                     { label: isFr ? 'Commission' : 'Fee', value: '4%', sub: isFr ? 'par transaction (TTC)' : 'per transaction (all-in)' },
                     { label: isFr ? 'Devise' : 'Currency', value: 'CDF', sub: isFr ? 'Franc Congolais' : 'Congolese Franc' },
-                    { label: 'Settlement', value: 'J+1', sub: isFr ? 'jours ouvrés' : 'business days' },
+                    { label: 'Settlement', value: isFr ? 'À la demande' : 'On demand', sub: isFr ? 'versement sous quelques minutes' : 'paid out within minutes' },
                   ].map(({ label, value, sub }) => (
                     <div key={label} className="p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-ink/60 text-center">
                       <div className="text-3xl font-heading font-bold text-signal mb-1">{value}</div>
