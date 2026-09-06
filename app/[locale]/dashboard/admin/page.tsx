@@ -290,10 +290,10 @@ export default function AdminOverviewPage() {
                 border: 'border-amber-500/20',
               },
               {
-                label: 'Frais clients (4%)',
+                label: 'Frais clients (5%)',
                 note: 'Revenus bruts estimés',
                 value: revData[revPeriod].frais_client,
-                sub: '4% du volume',
+                sub: '5% du volume',
                 icon: Banknote,
                 color: 'text-emerald-500',
                 bg: 'bg-emerald-500/10',

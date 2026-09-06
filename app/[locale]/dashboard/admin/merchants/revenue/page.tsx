@@ -154,7 +154,7 @@ export default function MerchantRevenuePage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Revenus Marchands</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Répartition des revenus par marchand — marge UniPay (1%), coût Avada (3%), fees client (4%)
+            Répartition des revenus par marchand — marge UniPay (2%), coût Avada (3%), fees client (5%)
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -267,9 +267,9 @@ export default function MerchantRevenuePage() {
                 <th className="px-4 py-3 font-semibold">Marchand</th>
                 <th className="px-4 py-3 font-semibold text-right">Nb tx</th>
                 <th className="px-4 py-3 font-semibold text-right">Volume collecté</th>
-                <th className="px-4 py-3 font-semibold text-right">Fees client (4%)</th>
+                <th className="px-4 py-3 font-semibold text-right">Fees client (5%)</th>
                 <th className="px-4 py-3 font-semibold text-right">Coût Avada (3%)</th>
-                <th className="px-4 py-3 font-semibold text-right">Marge UniPay (1%)</th>
+                <th className="px-4 py-3 font-semibold text-right">Marge UniPay (2%)</th>
                 <th className="px-4 py-3 font-semibold text-right">Dû au marchand</th>
               </tr>
             </thead>

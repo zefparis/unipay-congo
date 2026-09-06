@@ -332,8 +332,8 @@ const PAYMENT_RESPONSE = `{
   "transaction_id": "TXN-83921",
   "status": "pending",
   "amount": 5000,
-  "fee": 200,
-  "net_amount": 4800,
+  "fee": 250,
+  "net_amount": 4750,
   "currency": "CDF"
 }`;
 const STATUS_RESPONSE = `{
@@ -342,8 +342,8 @@ const STATUS_RESPONSE = `{
   "operator": "orange",
   "phone": "+243810000000",
   "amount": 5000,
-  "fee": 200,
-  "net_amount": 4800,
+  "fee": 250,
+  "net_amount": 4750,
   "currency": "CDF",
   "created_at": "2026-06-04T20:00:00.000Z"
 }`;
@@ -358,8 +358,8 @@ const HISTORY_RESPONSE = `{
       "operator": "orange",
       "phone": "+243810000000",
       "amount": 5000,
-      "fee": 200,
-      "net_amount": 4800,
+      "fee": 250,
+      "net_amount": 4750,
       "status": "success",
       "direction": "collect",
       "created_at": "2026-06-04T20:00:00.000Z"
@@ -739,7 +739,7 @@ ${BASE}/v1/merchant/balance`}</pre>
                 <h2 className="text-xl font-heading font-bold text-gray-900 dark:text-white mb-4">{t('s_fees')}</h2>
                 <div className="grid sm:grid-cols-3 gap-4">
                   {[
-                    { label: isFr ? 'Commission' : 'Fee', value: '4%', sub: isFr ? 'par transaction (TTC)' : 'per transaction (all-in)' },
+                    { label: isFr ? 'Commission' : 'Fee', value: '5%', sub: isFr ? 'par transaction (TTC)' : 'per transaction (all-in)' },
                     { label: isFr ? 'Devise' : 'Currency', value: 'CDF', sub: isFr ? 'Franc Congolais' : 'Congolese Franc' },
                     { label: 'Settlement', value: isFr ? 'À la demande' : 'On demand', sub: isFr ? 'versement sous quelques minutes' : 'paid out within minutes' },
                   ].map(({ label, value, sub }) => (
@@ -752,8 +752,8 @@ ${BASE}/v1/merchant/balance`}</pre>
                 </div>
                 <p className="mt-6 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
                   {isFr
-                    ? 'Les frais de 4% sont prélevés sur chaque transaction (collect et payout). Le net_amount retourné dans la réponse correspond au montant après déduction des frais.'
-                    : 'The 4% fee is deducted from each transaction (collect and payout). The net_amount in the response is the amount after fee deduction.'}
+                    ? 'Les frais de 5% sont prélevés sur chaque transaction (collect et payout). Le net_amount retourné dans la réponse correspond au montant après déduction des frais.'
+                    : 'The 5% fee is deducted from each transaction (collect and payout). The net_amount in the response is the amount after fee deduction.'}
                 </p>
               </section>
 
