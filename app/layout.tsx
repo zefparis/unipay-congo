@@ -23,7 +23,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'UniPay Congo — Paiements mobiles unifiés pour la RDC',
   description:
-    'Agrégateur de paiements mobiles licencié en République Démocratique du Congo. Intégrez Vodacash, Orange Money, Airtel Money via une seule API.',
+    'Agrégateur de paiements mobiles licencié en République Démocratique du Congo. Intégrez Orange Money, Airtel Money, Afrimoney via une seule API.',
   metadataBase: new URL('https://unipaycongo.com'),
   icons: {
     icon: '/favicon.ico',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'UniPay Congo — Paiements mobiles unifiés pour la RDC',
     description:
-      'Agrégateur de paiements mobiles licencié en RDC. Intégrez Vodacash, Orange Money, Airtel Money via une seule API.',
+      'Agrégateur de paiements mobiles licencié en RDC. Intégrez Orange Money, Airtel Money, Afrimoney via une seule API.',
     url: 'https://unipaycongo.com',
     siteName: 'UniPay Congo',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UniPay Congo — Your Payment Infrastructure in DRC' }],

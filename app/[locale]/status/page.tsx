@@ -51,16 +51,6 @@ const OPERATORS: Operator[] = [
     latency: '1.6s',
     description: 'Afrimoney RDC',
   },
-  {
-    id: 'vodacash',
-    name: 'Vodacash / M-Pesa',
-    color: '#E31837',
-    bgColor: 'rgba(227,24,55,0.08)',
-    status: 'coming_soon',
-    uptime: '—',
-    latency: '—',
-    description: 'Vodacom DRC · Intégration en cours',
-  },
 ];
 
 const AUTO_REFRESH_SECONDS = 60;

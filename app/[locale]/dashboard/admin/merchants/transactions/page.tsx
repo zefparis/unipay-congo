@@ -147,7 +147,6 @@ export default function MerchantTransactionsPage() {
           <option value="orange">Orange</option>
           <option value="airtel">Airtel</option>
           <option value="afrimoney">Afrimoney</option>
-          <option value="vodacash">VodaCash</option>
           <option value="usdt">USDT</option>
         </select>
         <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white" />

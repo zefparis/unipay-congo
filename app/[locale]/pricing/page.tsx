@@ -14,7 +14,6 @@ const OPERATORS = [
   { code: 'orange',    name: 'Orange Money',    color: '#FF7900', status: true  },
   { code: 'airtel',    name: 'Airtel Money',    color: '#E40000', status: true  },
   { code: 'afrimoney', name: 'Afrimoney',       color: '#0057A8', status: true  },
-  { code: 'vodacash',  name: 'Vodacash/M-Pesa', color: '#E31837', status: false },
 ];
 
 /* ── FAQ accordion item ─────────────────────────────────────── */

@@ -183,7 +183,6 @@ export default function AdminTransactionsPage() {
           className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
         >
           <option value="">Tous opérateurs</option>
-          <option value="vodacash">Vodacash</option>
           <option value="orange">Orange</option>
           <option value="airtel">Airtel</option>
           <option value="afrimoney">Afrimoney</option>

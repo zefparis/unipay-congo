@@ -113,7 +113,6 @@ const OPERATORS = [
   { code: 'orange',    name: 'Orange Money',   status: '✅ Actif',    statusEn: '✅ Active' },
   { code: 'airtel',    name: 'Airtel Money',   status: '✅ Actif',    statusEn: '✅ Active' },
   { code: 'afrimoney', name: 'Afrimoney',      status: '✅ Actif',    statusEn: '✅ Active' },
-  { code: 'vodacash',  name: 'Vodacash/M-Pesa',status: '🔜 Bientôt', statusEn: '🔜 Soon' },
 ];
 const ERRORS = [
   { code: '400', desc: 'Erreur de validation des champs',  descEn: 'Field validation error' },
@@ -315,7 +314,7 @@ bearer_headers = {
 };
 
 const paymentParams: Param[] = [
-  { field: 'operator',  type: 'string',  req: true,  desc: 'orange | airtel | afrimoney | vodacash' },
+  { field: 'operator',  type: 'string',  req: true,  desc: 'orange | airtel | afrimoney' },
   { field: 'phone',     type: 'string',  req: true,  desc: 'Numéro mobile E.164 (+243…)' },
   { field: 'amount',    type: 'number',  req: true,  desc: 'Montant en CDF (> 0)' },
   { field: 'reference', type: 'string',  req: false, desc: 'Référence interne de votre système' },

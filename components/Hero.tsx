@@ -92,7 +92,7 @@ export default function Hero() {
                     <span className="text-rust">&quot;CDF&quot;</span>,{'\n'}
                     {'  '}<span className="text-signal">&quot;channel&quot;</span>
                     <span className="text-bone/50">: </span>
-                    <span className="text-rust">&quot;vodacash&quot;</span>,{'\n'}
+                    <span className="text-rust">&quot;orange&quot;</span>,{'\n'}
                     {'  '}<span className="text-signal">&quot;phone&quot;</span>
                     <span className="text-bone/50">: </span>
                     <span className="text-rust">&quot;+243810000000&quot;</span>{'\n'}
