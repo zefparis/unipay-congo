@@ -7,6 +7,8 @@ export async function GET(request: NextRequest) {
   if (!auth.ok) return auth.response;
 
   const qs = request.nextUrl.searchParams.toString();
-  const path = qs ? `/v1/admin/merchants?${qs}` : '/v1/admin/merchants';
-  return adminProxyFetch(path, { method: 'GET' });
+  const path = qs
+    ? `/v1/admin/merchants/transactions/export?${qs}`
+    : '/v1/admin/merchants/transactions/export';
+  return adminProxyFetch(path, { method: 'GET', responseType: 'text' });
 }

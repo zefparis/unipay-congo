@@ -6,7 +6,5 @@ export async function GET(request: NextRequest) {
   const auth = await requireAdminSession(request);
   if (!auth.ok) return auth.response;
 
-  const qs = request.nextUrl.searchParams.toString();
-  const path = qs ? `/v1/admin/merchants?${qs}` : '/v1/admin/merchants';
-  return adminProxyFetch(path, { method: 'GET' });
+  return adminProxyFetch('/v1/admin/merchants/stats', { method: 'GET' });
 }

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X, Shield, Users, SlidersHorizontal, Landmark, Wallet, Receipt } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X, Shield, Users, SlidersHorizontal, Landmark, Wallet, Receipt, Building2, TrendingUp } from 'lucide-react';
 import clsx from 'clsx';
 
 interface DashboardSidebarProps {
@@ -23,16 +23,25 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
     router.refresh();
   };
 
-  const adminItems = [
+  const walletAdminItems = [
     { href: '/dashboard/admin', label: 'Vue d\'ensemble', icon: Shield, exact: true },
     { href: '/dashboard/admin/wallet-users', label: 'Wallet Users', icon: Users, exact: false },
     { href: '/dashboard/admin/transactions', label: 'Transactions', icon: ArrowLeftRight, exact: false },
     { href: '/dashboard/admin/adjustments', label: 'Ajustements', icon: SlidersHorizontal, exact: false },
     { href: '/dashboard/admin/wallet-kyc', label: 'KYC Wallet', icon: ShieldCheck, exact: false },
-    { href: '/dashboard/admin/kyc-merchants', label: 'KYC Merchants', icon: ShieldCheck, exact: false },
     { href: '/dashboard/admin/treasury', label: 'Trésorerie', icon: Landmark, exact: false },
-    { href: '/dashboard/admin/cdp-wallets',   label: 'CDP Wallets',   icon: Wallet,   exact: false },
-    { href: '/dashboard/admin/dev-expenses',   label: 'Dev Expenses',  icon: Receipt,  exact: false },
+    { href: '/dashboard/admin/cdp-wallets', label: 'CDP Wallets', icon: Wallet, exact: false },
+  ];
+
+  const merchantAdminItems = [
+    { href: '/dashboard/admin/merchants', label: 'Vue d\'ensemble', icon: TrendingUp, exact: true },
+    { href: '/dashboard/admin/merchants/list', label: 'Marchands', icon: Building2, exact: false },
+    { href: '/dashboard/admin/merchants/kyc', label: 'KYC Merchants', icon: ShieldCheck, exact: false },
+    { href: '/dashboard/admin/merchants/transactions', label: 'Transactions Marchands', icon: ArrowLeftRight, exact: false },
+  ];
+
+  const infraAdminItems = [
+    { href: '/dashboard/admin/dev-expenses', label: 'Dev Expenses', icon: Receipt, exact: false },
   ];
 
   const navItems = [
@@ -77,12 +86,59 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
 
         {isAdmin && (
           <>
+            {/* Section: App Wallet */}
             <div className="pt-4 pb-1 px-3">
               <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest">
-                Administration Wallet
+                App Wallet
               </p>
             </div>
-            {adminItems.map(({ href, label, icon: Icon, exact }) => (
+            {walletAdminItems.map(({ href, label, icon: Icon, exact }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={onItemClick}
+                className={clsx(
+                  'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
+                  isActive(href, exact)
+                    ? 'bg-signal/10 text-signal dark:bg-signal/15 dark:text-signal'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
+                )}
+              >
+                <Icon size={18} />
+                {label}
+              </Link>
+            ))}
+
+            {/* Section: Paiements Marchands */}
+            <div className="pt-5 pb-1 px-3">
+              <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest">
+                Paiements Marchands
+              </p>
+            </div>
+            {merchantAdminItems.map(({ href, label, icon: Icon, exact }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={onItemClick}
+                className={clsx(
+                  'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
+                  isActive(href, exact)
+                    ? 'bg-purple-500/10 text-purple-600 dark:bg-purple-500/15 dark:text-purple-400'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
+                )}
+              >
+                <Icon size={18} />
+                {label}
+              </Link>
+            ))}
+
+            {/* Section: Infrastructure */}
+            <div className="pt-5 pb-1 px-3">
+              <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest">
+                Infrastructure
+              </p>
+            </div>
+            {infraAdminItems.map(({ href, label, icon: Icon, exact }) => (
               <Link
                 key={href}
                 href={href}

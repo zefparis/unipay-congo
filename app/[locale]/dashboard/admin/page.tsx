@@ -355,7 +355,7 @@ export default function AdminOverviewPage() {
           { href: '/dashboard/admin/wallet-users', label: 'Wallet Users', icon: Users },
           { href: '/dashboard/admin/transactions', label: 'Transactions', icon: ArrowLeftRight },
           { href: '/dashboard/admin/adjustments', label: 'Ajustements', icon: TrendingUp },
-          { href: '/dashboard/admin/kyc-merchants', label: 'KYC Merchants', icon: ShieldCheck },
+          { href: '/dashboard/admin/merchants/kyc', label: 'KYC Merchants', icon: ShieldCheck },
         ].map(({ href, label, icon: Icon }) => (
           <Link
             key={href}

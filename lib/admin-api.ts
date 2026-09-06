@@ -169,6 +169,8 @@ export interface Merchant {
   id: string;
   name: string | null;
   email: string;
+  phone: string | null;
+  country: string;
   mode: 'sandbox' | 'live';
   kyc_status: string;
   status: string;
@@ -177,10 +179,93 @@ export interface Merchant {
   company_idnat: string | null;
   kyc_submitted_at: string | null;
   kyc_notes: string | null;
+  kyc_reviewed_at?: string | null;
+  created_at?: string;
+  updated_at?: string | null;
+  transaction_count?: number;
+  total_volume?: number;
+  last_transaction_at?: string | null;
+  api_key_status?: 'none' | 'active' | 'inactive';
 }
 
-export function getMerchants(): Promise<{ data: Merchant[] }> {
-  return get<{ data: Merchant[] }>(`${BASE}/merchants`);
+export interface MerchantStats {
+  total_merchants: number;
+  mode_breakdown: { sandbox: number; live: number };
+  kyc_breakdown: { pending: number; submitted: number; approved: number };
+  volume_30d: Record<string, number>;
+  transactions_today: number;
+}
+
+export interface MerchantApiKey {
+  id: string;
+  key_prefix: string;
+  label: string;
+  is_active: boolean;
+  last_used_at: string | null;
+  created_at: string;
+}
+
+export interface MerchantTransaction {
+  id: string;
+  merchant_id: string;
+  direction: 'collect' | 'payout';
+  operator: string;
+  phone: string;
+  amount: number;
+  fee: number;
+  net_amount: number;
+  currency: string;
+  status: string;
+  reference: string | null;
+  avada_transaction_id: string | null;
+  created_at: string;
+  updated_at: string;
+  merchants?: { name: string; email: string }[] | null;
+}
+
+export function getMerchants(params?: Record<string, string | number>): Promise<{ data: Merchant[]; pagination: Pagination }> {
+  if (params && Object.keys(params).length > 0) {
+    const qs = new URLSearchParams(
+      Object.entries(params)
+        .filter(([, v]) => v !== '' && v !== undefined && v !== null)
+        .map(([k, v]) => [k, String(v)]),
+    );
+    return get(`${BASE}/merchants?${qs}`);
+  }
+  return get(`${BASE}/merchants`);
+}
+
+export function getMerchantStats(): Promise<MerchantStats> {
+  return get<MerchantStats>(`${BASE}/merchants/stats`);
+}
+
+export function getMerchantDetail(id: string): Promise<{ merchant: Merchant; api_keys: MerchantApiKey[]; transactions: MerchantTransaction[] }> {
+  return get(`${BASE}/merchants/${id}`);
+}
+
+export function getMerchantTransactions(params: Record<string, string | number>): Promise<{ data: MerchantTransaction[]; pagination: Pagination }> {
+  const qs = new URLSearchParams(
+    Object.entries(params)
+      .filter(([, v]) => v !== '' && v !== undefined && v !== null)
+      .map(([k, v]) => [k, String(v)]),
+  );
+  return get(`${BASE}/merchants/transactions?${qs}`);
+}
+
+export function revokeApiKey(merchantId: string, keyId: string): Promise<{ ok: boolean; key: MerchantApiKey }> {
+  return post(`${BASE}/merchants/${merchantId}/api-keys/revoke`, { key_id: keyId });
+}
+
+export function regenerateApiKey(merchantId: string, label?: string): Promise<{ ok: boolean; api_key: string; key_prefix: string; label: string; note: string }> {
+  return post(`${BASE}/merchants/${merchantId}/api-keys/regenerate`, label ? { label } : {});
+}
+
+export function suspendMerchant(id: string): Promise<{ ok: boolean; merchant: Merchant }> {
+  return post(`${BASE}/merchants/${id}/suspend`);
+}
+
+export function reactivateMerchant(id: string): Promise<{ ok: boolean; merchant: Merchant }> {
+  return post(`${BASE}/merchants/${id}/reactivate`);
 }
 
 export function setMerchantMode(id: string, mode: 'sandbox' | 'live'): Promise<{ ok: boolean; merchant: Merchant }> {
