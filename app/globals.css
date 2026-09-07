@@ -24,25 +24,6 @@
   body {
     @apply font-body bg-[#F5F7FA] text-gray-900 dark:bg-navy dark:text-text-primary;
     transition: background-color 0.3s ease, color 0.2s ease;
-    position: relative;
-  }
-
-  /* Subtle radial gradient at top of page — light mode only */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 60vh;
-    pointer-events: none;
-    z-index: 0;
-    background: radial-gradient(ellipse 80% 100% at 50% 0%, #FFFFFF 0%, #EDF1F6 60%, transparent 100%);
-  }
-
-  /* Dark mode: no gradient overlay */
-  .dark body::before {
-    display: none;
   }
 
   h1,

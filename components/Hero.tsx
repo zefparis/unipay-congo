@@ -10,14 +10,6 @@ export default function Hero() {
       className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-[#F5F7FA] dark:bg-navy"
     >
       {/* ── Background ───────────────────────────────────────────── */}
-      {/* Light mode: soft radial gradient — white center → pale blue-grey edges */}
-      <div
-        className="absolute inset-0 pointer-events-none dark:hidden"
-        style={{
-          background:
-            'radial-gradient(ellipse at 50% 35%, #FFFFFF 0%, #EDF1F6 70%, #E2E8F0 100%)',
-        }}
-      />
       {/* Dark mode: subtle green radial glow (existing pattern) */}
       <div
         className="absolute inset-0 pointer-events-none hidden dark:block"
