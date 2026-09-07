@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { ArrowRight, BookOpen, ShieldCheck, Check } from 'lucide-react';
+import HeroCanvas from './HeroCanvas';
 
 export default function Hero() {
   const t = useTranslations('hero');
@@ -39,8 +40,12 @@ export default function Hero() {
         }}
       />
 
+      {/* ── Animated particle network (canvas, vanilla JS) ──────── */}
+      {/* Mask: 0% opacity on left third (text zone), full on right third */}
+      <HeroCanvas />
+
       {/* ── Content ──────────────────────────────────────────────── */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Text */}
           <div>
