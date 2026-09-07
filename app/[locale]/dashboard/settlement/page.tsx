@@ -100,11 +100,10 @@ export default function SettlementPage() {
       const balData = await balRes.json() as BalanceResponse;
       setBalance(balData);
 
-      // Auto-select first currency with a positive balance
+      // Auto-select first currency with a positive balance, fallback to CDF
+      // (CDF is always present in balances[] per backend guarantee).
       const positiveBalance = balData.balances?.find((b) => b.balance > 0);
-      if (positiveBalance) {
-        setSelectedCurrency(positiveBalance.currency);
-      }
+      setSelectedCurrency(positiveBalance?.currency ?? 'CDF');
 
       if (histRes.ok) {
         const histData = await histRes.json() as HistoryResponse;
@@ -181,9 +180,11 @@ export default function SettlementPage() {
   const selectedBalance = balance?.balances?.find((b) => b.currency === selectedCurrency);
   const canRequest = selectedBalance && selectedBalance.balance > 0 && balance?.settlement_phone;
 
-  // Currencies with positive balances
-  const availableCurrencies = balance?.balances?.filter((b) => b.balance > 0) ?? [];
-  const hasMultipleCurrencies = availableCurrencies.length > 1;
+  // All visible currencies (CDF + USD always, USDT if present).
+  // Selector shows all visible currencies — those at 0 are greyed but selectable
+  // so the merchant can see the service exists.
+  const visibleCurrencies = balance?.balances ?? [];
+  const hasMultipleCurrencies = visibleCurrencies.length > 1;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -353,7 +354,8 @@ export default function SettlementPage() {
       {/* Request settlement — currency selector + button */}
       {balance && (
         <div className="flex items-center gap-3 flex-wrap">
-          {/* Currency selector (only if multiple currencies with positive balances) */}
+          {/* Currency selector — always shows CDF + USD (greyed if 0) so the
+              merchant sees the service exists. USDT only if present. */}
           {hasMultipleCurrencies && (
             <div className="flex items-center gap-2">
               <label className="text-sm text-gray-500 dark:text-gray-400">Devise :</label>
@@ -362,9 +364,13 @@ export default function SettlementPage() {
                 onChange={(e) => setSelectedCurrency(e.target.value)}
                 className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-signal/30"
               >
-                {availableCurrencies.map((b) => (
-                  <option key={b.currency} value={b.currency}>
-                    {b.currency} ({fmt(b.balance)})
+                {visibleCurrencies.map((b) => (
+                  <option
+                    key={b.currency}
+                    value={b.currency}
+                    className={b.balance <= 0 ? 'text-gray-400' : ''}
+                  >
+                    {b.currency} ({fmt(b.balance)}){b.balance <= 0 ? ' — indisponible' : ''}
                   </option>
                 ))}
               </select>
