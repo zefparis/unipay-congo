@@ -12,6 +12,7 @@ import {
 type Mode = 'sandbox' | 'live';
 type Direction = 'collect' | 'payout';
 type Operator = 'orange' | 'airtel' | 'afrimoney';
+type Currency = 'CDF' | 'USD';
 
 interface ModeData { mode: Mode; kyc_status: string }
 interface TxResult {
@@ -54,6 +55,7 @@ export default function SandboxPage() {
   const [phone, setPhone] = useState('+243812345678');
   const [amount, setAmount] = useState('5000');
   const [direction, setDirection] = useState<Direction>('collect');
+  const [currency, setCurrency] = useState<Currency>('CDF');
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<TxResult | null>(null);
 
@@ -97,7 +99,7 @@ export default function SandboxPage() {
     const res = await fetch('/api/merchant/sandbox/test', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ operator, direction, amount: Number(amount), currency: 'CDF', phone }),
+      body: JSON.stringify({ operator, direction, amount: Number(amount), currency, phone }),
     });
     const data = await res.json() as TxResult;
     setTestResult(data);
@@ -222,6 +224,26 @@ export default function SandboxPage() {
                 }`}
               >
                 {op}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Currency */}
+        <div>
+          <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5">Devise</label>
+          <div className="flex gap-2 flex-wrap">
+            {(['CDF', 'USD'] as Currency[]).map((cur) => (
+              <button
+                key={cur}
+                onClick={() => setCurrency(cur)}
+                className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${
+                  currency === cur
+                    ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-transparent'
+                    : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400'
+                }`}
+              >
+                {cur}
               </button>
             ))}
           </div>

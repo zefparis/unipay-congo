@@ -7,10 +7,16 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 
-interface BalanceResponse {
+interface CurrencyBalance {
+  currency: string;
   balance: number;
   total_credits: number;
   total_settlements: number;
+}
+
+interface BalanceResponse {
+  balance: number;  // deprecated — sum of all currencies (may mix)
+  balances: CurrencyBalance[];
   settlement_phone: string | null;
   kyc_status: string;
   mode: string;
@@ -19,6 +25,7 @@ interface BalanceResponse {
 interface SettlementRequest {
   id: string;
   amount: number;
+  currency?: string;
   phone: string;
   status: string;
   provider_ref: string | null;
@@ -38,6 +45,7 @@ interface RequestResult {
   request_id: string;
   status: string;
   amount: number;
+  currency?: string;
   provider_ref?: string;
   balance_after?: number;
   auto_payout: boolean;
@@ -76,6 +84,9 @@ export default function SettlementPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [requestResult, setRequestResult] = useState<RequestResult | null>(null);
 
+  // Selected currency for settlement request
+  const [selectedCurrency, setSelectedCurrency] = useState<string>('CDF');
+
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
@@ -88,6 +99,12 @@ export default function SettlementPage() {
       if (!balRes.ok) throw new Error('Échec chargement solde');
       const balData = await balRes.json() as BalanceResponse;
       setBalance(balData);
+
+      // Auto-select first currency with a positive balance
+      const positiveBalance = balData.balances?.find((b) => b.balance > 0);
+      if (positiveBalance) {
+        setSelectedCurrency(positiveBalance.currency);
+      }
 
       if (histRes.ok) {
         const histData = await histRes.json() as HistoryResponse;
@@ -136,7 +153,7 @@ export default function SettlementPage() {
       const res = await fetch('/api/merchant/settlement/request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),  // empty = full balance
+        body: JSON.stringify({ currency: selectedCurrency }),  // full balance in selected currency
       });
       const data = await res.json() as RequestResult & { error?: string; message?: string };
 
@@ -157,9 +174,16 @@ export default function SettlementPage() {
     }
   };
 
-  const canRequest = balance && balance.balance > 0 && balance.settlement_phone;
   const kycApproved = balance?.kyc_status === 'approved';
   const liveMode = balance?.mode === 'live';
+
+  // Get the balance for the selected currency
+  const selectedBalance = balance?.balances?.find((b) => b.currency === selectedCurrency);
+  const canRequest = selectedBalance && selectedBalance.balance > 0 && balance?.settlement_phone;
+
+  // Currencies with positive balances
+  const availableCurrencies = balance?.balances?.filter((b) => b.balance > 0) ?? [];
+  const hasMultipleCurrencies = availableCurrencies.length > 1;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -205,13 +229,51 @@ export default function SettlementPage() {
         </div>
       )}
 
-      {/* Balance card */}
+      {/* Balance cards — one per currency */}
       {loading && !balance ? (
         <div className="p-6 rounded-2xl bg-gray-100 dark:bg-gray-800 animate-pulse h-32" />
+      ) : balance && balance.balances && balance.balances.length > 0 ? (
+        <div className={clsx('space-y-4', balance.balances.length === 1 && 'space-y-0')}>
+          {balance.balances.map((cur) => (
+            <div
+              key={cur.currency}
+              className={clsx(
+                'relative overflow-hidden rounded-2xl p-6 text-white shadow-lg',
+                cur.currency === 'CDF'
+                  ? 'bg-gradient-to-br from-signal to-[#0f6b4f] shadow-signal/20'
+                  : 'bg-gradient-to-br from-blue-600 to-blue-800 shadow-blue-600/20',
+              )}
+            >
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full" />
+              <div className="absolute -bottom-8 -right-2 w-24 h-24 bg-white/5 rounded-full" />
+              <div className="relative">
+                <div className="flex items-center gap-2 mb-3">
+                  <Wallet size={16} className="text-white/70" />
+                  <span className="text-sm font-medium text-white/70">
+                    Solde disponible {cur.currency === 'USD' ? '(USD)' : ''}
+                  </span>
+                </div>
+                <div className="text-4xl font-heading font-bold tracking-tight">
+                  {fmt(cur.balance)} <span className="text-lg text-white/60">{cur.currency}</span>
+                </div>
+                <div className="flex gap-6 mt-4 text-sm">
+                  <div>
+                    <span className="text-white/50">Total collecté : </span>
+                    <span className="font-medium">{fmt(cur.total_credits)} {cur.currency}</span>
+                  </div>
+                  <div>
+                    <span className="text-white/50">Total réglé : </span>
+                    <span className="font-medium">{fmt(cur.total_settlements)} {cur.currency}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : balance ? (
+        // Fallback for backward compat (no balances array)
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-signal to-[#0f6b4f] p-6 text-white shadow-lg shadow-signal/20">
           <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full" />
-          <div className="absolute -bottom-8 -right-2 w-24 h-24 bg-white/5 rounded-full" />
           <div className="relative">
             <div className="flex items-center gap-2 mb-3">
               <Wallet size={16} className="text-white/70" />
@@ -219,16 +281,6 @@ export default function SettlementPage() {
             </div>
             <div className="text-4xl font-heading font-bold tracking-tight">
               {fmt(balance.balance)} <span className="text-lg text-white/60">CDF</span>
-            </div>
-            <div className="flex gap-6 mt-4 text-sm">
-              <div>
-                <span className="text-white/50">Total collecté : </span>
-                <span className="font-medium">{fmt(balance.total_credits)} CDF</span>
-              </div>
-              <div>
-                <span className="text-white/50">Total réglé : </span>
-                <span className="font-medium">{fmt(balance.total_settlements)} CDF</span>
-              </div>
             </div>
           </div>
         </div>
@@ -298,14 +350,33 @@ export default function SettlementPage() {
         </div>
       )}
 
-      {/* Request settlement button */}
+      {/* Request settlement — currency selector + button */}
       {balance && (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Currency selector (only if multiple currencies with positive balances) */}
+          {hasMultipleCurrencies && (
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-gray-500 dark:text-gray-400">Devise :</label>
+              <select
+                value={selectedCurrency}
+                onChange={(e) => setSelectedCurrency(e.target.value)}
+                className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-signal/30"
+              >
+                {availableCurrencies.map((b) => (
+                  <option key={b.currency} value={b.currency}>
+                    {b.currency} ({fmt(b.balance)})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {showConfirm ? (
             <div className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 w-full">
               <div className="flex-1">
                 <p className="text-sm font-medium text-gray-900 dark:text-white">
-                  Confirmer le règlement de <strong>{fmt(balance.balance)} CDF</strong> ?
+                  Confirmer le règlement de{' '}
+                  <strong>{fmt(selectedBalance?.balance ?? 0)} {selectedCurrency}</strong> ?
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                   Le montant sera versé sur votre numéro Mobile Money.
@@ -332,11 +403,11 @@ export default function SettlementPage() {
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-signal text-white text-sm font-medium hover:bg-signal/85 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ArrowDownToLine size={16} />
-              Demander un règlement
+              Demander un règlement {hasMultipleCurrencies && `(${selectedCurrency})`}
             </button>
           )}
-          {!canRequest && balance.balance === 0 && (
-            <span className="text-xs text-gray-400">Solde insuffisant</span>
+          {!canRequest && (!selectedBalance || selectedBalance.balance === 0) && (
+            <span className="text-xs text-gray-400">Solde insuffisant en {selectedCurrency}</span>
           )}
         </div>
       )}
@@ -363,7 +434,9 @@ export default function SettlementPage() {
                 <p>Statut : <strong>{requestResult.status}</strong></p>
               )}
               {requestResult.amount && (
-                <p className="text-xs mt-1 opacity-70">Montant : {fmt(requestResult.amount)} CDF</p>
+                <p className="text-xs mt-1 opacity-70">
+                  Montant : {fmt(requestResult.amount)} {requestResult.currency ?? selectedCurrency}
+                </p>
               )}
               {requestResult.provider_ref && (
                 <p className="text-xs mt-0.5 opacity-70">Référence : {requestResult.provider_ref}</p>
@@ -399,10 +472,11 @@ export default function SettlementPage() {
                 history.map((req) => {
                   const cfg = STATUS_CONFIG[req.status] ?? { label: req.status, icon: AlertCircle, color: 'text-gray-500', bg: 'bg-gray-100' };
                   const Icon = cfg.icon;
+                  const cur = req.currency ?? 'CDF';
                   return (
                     <tr key={req.id} className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
                       <td className="px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap">{fmtDate(req.created_at)}</td>
-                      <td className="px-4 py-3 text-right font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(req.amount)} CDF</td>
+                      <td className="px-4 py-3 text-right font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(req.amount)} {cur}</td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <span className={clsx('inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold', cfg.bg, cfg.color)}>
                           <Icon size={10} className={req.status === 'processing' ? 'animate-spin' : ''} />

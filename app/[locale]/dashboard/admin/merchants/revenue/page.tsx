@@ -4,6 +4,16 @@ import { useState, useEffect, useCallback } from 'react';
 import { TrendingUp, DollarSign, Building2, ArrowDownToLine, RefreshCw, AlertCircle } from 'lucide-react';
 import clsx from 'clsx';
 
+interface CurrencyBreakdown {
+  currency: string;
+  transaction_count: number;
+  volume_collected: number;
+  client_fees: number;
+  avada_cost: number;
+  net_margin: number;
+  net_amount_owed: number;
+}
+
 interface MerchantRevenue {
   merchant_id: string;
   name: string;
@@ -13,6 +23,7 @@ interface MerchantRevenue {
   avada_cost: number;
   net_margin: number;
   net_amount_owed: number;
+  by_currency: CurrencyBreakdown[];
 }
 
 interface RevenueResponse {
@@ -26,6 +37,7 @@ interface RevenueResponse {
     net_amount_owed: number;
     merchant_count: number;
   };
+  totals_by_currency: CurrencyBreakdown[];
   merchants: MerchantRevenue[];
 }
 
@@ -141,12 +153,20 @@ export default function MerchantRevenuePage() {
   };
 
   const totals = data?.totals;
-  const kpis = totals ? [
-    { label: 'Volume collecté', value: `${fmt(totals.volume_collected)} CDF`, icon: TrendingUp, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-    { label: 'Marge UniPay', value: `${fmt(totals.net_margin)} CDF`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-    { label: 'Coût Avada', value: `${fmt(totals.avada_cost)} CDF`, icon: Building2, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-    { label: 'Transactions', value: fmt(totals.transaction_count), icon: ArrowDownToLine, color: 'text-signal-dark', bg: 'bg-signal/10' },
-  ] : [];
+  const totalsByCurrency = data?.totals_by_currency ?? [];
+
+  // Build KPI cards — one set per currency if multiple, otherwise single
+  const kpis = totalsByCurrency.length > 0
+    ? totalsByCurrency.flatMap((tc) => [
+        { label: `Volume collecté (${tc.currency})`, value: `${fmt(tc.volume_collected)} ${tc.currency}`, icon: TrendingUp, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+        { label: `Marge UniPay (${tc.currency})`, value: `${fmt(tc.net_margin)} ${tc.currency}`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+      ])
+    : totals ? [
+        { label: 'Volume collecté', value: `${fmt(totals.volume_collected)} CDF`, icon: TrendingUp, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+        { label: 'Marge UniPay', value: `${fmt(totals.net_margin)} CDF`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+        { label: 'Coût Avada', value: `${fmt(totals.avada_cost)} CDF`, icon: Building2, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+        { label: 'Transactions', value: fmt(totals.transaction_count), icon: ArrowDownToLine, color: 'text-signal-dark', bg: 'bg-signal/10' },
+      ] : [];
 
   return (
     <div className="space-y-6">
@@ -265,6 +285,7 @@ export default function MerchantRevenuePage() {
             <thead>
               <tr className="border-b border-gray-100 dark:border-gray-800 text-left text-xs uppercase tracking-wider text-gray-400">
                 <th className="px-4 py-3 font-semibold">Marchand</th>
+                <th className="px-4 py-3 font-semibold">Devise</th>
                 <th className="px-4 py-3 font-semibold text-right">Nb tx</th>
                 <th className="px-4 py-3 font-semibold text-right">Volume collecté</th>
                 <th className="px-4 py-3 font-semibold text-right">Fees client (5%)</th>
@@ -276,35 +297,70 @@ export default function MerchantRevenuePage() {
             <tbody>
               {data.merchants.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center text-gray-400">
+                  <td colSpan={8} className="px-4 py-12 text-center text-gray-400">
                     Aucune transaction sur cette période.
                   </td>
                 </tr>
               ) : (
-                data.merchants.map((m) => (
-                  <tr key={m.merchant_id} className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
-                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{m.name}</td>
-                    <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{fmt(m.transaction_count)}</td>
-                    <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{fmt(m.volume_collected)}</td>
-                    <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{fmt(m.client_fees)}</td>
-                    <td className="px-4 py-3 text-right text-amber-600 dark:text-amber-400">{fmt(m.avada_cost)}</td>
-                    <td className="px-4 py-3 text-right font-semibold text-emerald-600 dark:text-emerald-400">{fmt(m.net_margin)}</td>
-                    <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{fmt(m.net_amount_owed)}</td>
-                  </tr>
-                ))
+                data.merchants.flatMap((m) => {
+                  // If by_currency exists, show one row per currency; otherwise single row
+                  const rows = m.by_currency?.length > 0
+                    ? m.by_currency
+                    : [{ currency: 'CDF', transaction_count: m.transaction_count, volume_collected: m.volume_collected, client_fees: m.client_fees, avada_cost: m.avada_cost, net_margin: m.net_margin, net_amount_owed: m.net_amount_owed }];
+
+                  return rows.map((c, idx) => (
+                    <tr key={`${m.merchant_id}-${c.currency}`} className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">
+                        {idx === 0 ? m.name : ''}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={clsx(
+                          'inline-flex px-2 py-0.5 rounded-full text-xs font-semibold',
+                          c.currency === 'CDF'
+                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                            : c.currency === 'USD'
+                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                            : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+                        )}>
+                          {c.currency}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{fmt(c.transaction_count)}</td>
+                      <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{fmt(c.volume_collected)}</td>
+                      <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{fmt(c.client_fees)}</td>
+                      <td className="px-4 py-3 text-right text-amber-600 dark:text-amber-400">{fmt(c.avada_cost)}</td>
+                      <td className="px-4 py-3 text-right font-semibold text-emerald-600 dark:text-emerald-400">{fmt(c.net_margin)}</td>
+                      <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{fmt(c.net_amount_owed)}</td>
+                    </tr>
+                  ));
+                })
               )}
             </tbody>
-            {data.merchants.length > 0 && (
+            {data.merchants.length > 0 && totalsByCurrency.length > 0 && (
               <tfoot>
-                <tr className="border-t-2 border-gray-200 dark:border-gray-700 font-semibold">
-                  <td className="px-4 py-3 text-gray-900 dark:text-white">Total ({data.totals.merchant_count} marchands)</td>
-                  <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{fmt(data.totals.transaction_count)}</td>
-                  <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{fmt(data.totals.volume_collected)}</td>
-                  <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{fmt(data.totals.client_fees)}</td>
-                  <td className="px-4 py-3 text-right text-amber-600 dark:text-amber-400">{fmt(data.totals.avada_cost)}</td>
-                  <td className="px-4 py-3 text-right text-emerald-600 dark:text-emerald-400">{fmt(data.totals.net_margin)}</td>
-                  <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{fmt(data.totals.net_amount_owed)}</td>
-                </tr>
+                {totalsByCurrency.map((tc) => (
+                  <tr key={tc.currency} className="border-t-2 border-gray-200 dark:border-gray-700 font-semibold">
+                    <td className="px-4 py-3 text-gray-900 dark:text-white">Total {tc.currency}</td>
+                    <td className="px-4 py-3">
+                      <span className={clsx(
+                        'inline-flex px-2 py-0.5 rounded-full text-xs font-semibold',
+                        tc.currency === 'CDF'
+                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                          : tc.currency === 'USD'
+                          ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                          : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+                      )}>
+                        {tc.currency}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{fmt(tc.transaction_count)}</td>
+                    <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{fmt(tc.volume_collected)}</td>
+                    <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{fmt(tc.client_fees)}</td>
+                    <td className="px-4 py-3 text-right text-amber-600 dark:text-amber-400">{fmt(tc.avada_cost)}</td>
+                    <td className="px-4 py-3 text-right text-emerald-600 dark:text-emerald-400">{fmt(tc.net_margin)}</td>
+                    <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{fmt(tc.net_amount_owed)}</td>
+                  </tr>
+                ))}
               </tfoot>
             )}
           </table>

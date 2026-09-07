@@ -11,6 +11,7 @@ interface Props {
 const OPERATORS = ['orange', 'airtel', 'afrimoney', 'usdt'];
 const DIRECTIONS = ['collect', 'payout'];
 const STATUSES = ['pending', 'processing', 'success', 'failed', 'cancelled'];
+const CURRENCIES = ['CDF', 'USD', 'USDT'];
 
 export default function TransactionFilters({ searchParams }: Props) {
   const t = useTranslations('dashboard.transactions');
@@ -74,6 +75,19 @@ export default function TransactionFilters({ searchParams }: Props) {
         <option value="">{t('filter_status')} — {t('all')}</option>
         {STATUSES.map((s) => (
           <option key={s} value={s}>{s}</option>
+        ))}
+      </select>
+
+      {/* Currency */}
+      <select
+        value={searchParams.currency ?? ''}
+        onChange={(e) => updateFilter('currency', e.target.value)}
+        className={selectClass}
+        aria-label="Devise"
+      >
+        <option value="">Devise — Toutes</option>
+        {CURRENCIES.map((c) => (
+          <option key={c} value={c}>{c}</option>
         ))}
       </select>
     </div>

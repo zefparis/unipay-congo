@@ -40,6 +40,7 @@ export interface TransactionParams {
   status?: string;
   operator?: string;
   direction?: string;
+  currency?: string;
 }
 
 async function apiGet<T>(path: string, token: string): Promise<T> {
@@ -73,6 +74,7 @@ export function getTransactions(token: string, params: TransactionParams = {}): 
   if (params.status) p.set('status', params.status);
   if (params.operator) p.set('operator', params.operator);
   if (params.direction) p.set('direction', params.direction);
+  if (params.currency) p.set('currency', params.currency);
   return apiGet<TransactionsResponse>(`/v1/merchant/transactions${p.size ? `?${p}` : ''}`, token);
 }
 

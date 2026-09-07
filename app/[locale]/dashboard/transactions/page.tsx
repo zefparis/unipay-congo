@@ -107,9 +107,9 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
                         {t(`dashboard.transactions.${tx.direction}`)}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.amount)}</td>
-                    <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmt(tx.fee)}</td>
-                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.net_amount)}</td>
+                    <td className="px-4 py-3 text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                    <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmt(tx.fee)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
                     <td className="px-4 py-3">
                       <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status])}>
                         {t(`dashboard.status.${tx.status}`)}
