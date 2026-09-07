@@ -8,10 +8,10 @@ export default function Hero() {
 
   return (
     <section
-      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-[#F5F7FA] dark:bg-navy"
+      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-[#E8EBF0] dark:bg-navy"
     >
       {/* ── Background ───────────────────────────────────────────── */}
-      {/* Flat color only: navy (#0A1930) in dark, #F5F7FA in light */}
+      {/* Flat color only: navy (#0A1930) in dark, #E8EBF0 in light */}
       {/* No texture, gradient, or pattern — just the canvas above */}
 
       {/* ── Animated particle network (canvas, vanilla JS) ──────── */}

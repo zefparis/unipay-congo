@@ -443,7 +443,7 @@ export default function ApiDocPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-[#F5F7FA] dark:bg-navy pt-16">
+      <div className="min-h-screen bg-[#E8EBF0] dark:bg-navy pt-16">
 
         {/* ── Hero ──────────────────────────────────────────────── */}
         <section className="relative overflow-hidden py-14 lg:py-20 border-b border-gray-200 dark:border-text-secondary/15">

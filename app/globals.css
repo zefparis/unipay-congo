@@ -22,7 +22,7 @@
   }
 
   body {
-    @apply font-body bg-[#F5F7FA] text-gray-900 dark:bg-navy dark:text-text-primary;
+    @apply font-body bg-[#E8EBF0] text-gray-900 dark:bg-navy dark:text-text-primary;
     transition: background-color 0.3s ease, color 0.2s ease;
   }
 
