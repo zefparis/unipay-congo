@@ -7,46 +7,14 @@ export default function Hero() {
 
   return (
     <section
-      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-navy"
+      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-white dark:bg-navy"
     >
-      {/* ── Background image — dark/light switch ─────────────────── */}
+      {/* Subtle radial glow — same pattern as other sections, no image */}
       <div
-        className="absolute inset-0 bg-cover bg-[position:right_center] bg-[url(/hero-bg-light.webp)] dark:bg-[url(/hero-bg-dark.webp)] pointer-events-none"
-        aria-hidden="true"
-      />
-
-      {/* ── Readability overlays ─────────────────────────────────── */}
-      {/* Desktop dark: left-to-right fade — strong on left, shield visible on right */}
-      <div
-        className="absolute inset-0 pointer-events-none hidden md:block dark:block"
+        className="absolute inset-0 pointer-events-none dark:block"
         style={{
           background:
-            'linear-gradient(to right, rgba(10,25,48,0.92) 0%, rgba(10,25,48,0.78) 38%, rgba(10,25,48,0.45) 65%, rgba(10,25,48,0.25) 100%)',
-        }}
-      />
-      {/* Desktop light: white fade — strong on left for text, shield visible on right */}
-      <div
-        className="absolute inset-0 pointer-events-none hidden md:block dark:hidden"
-        style={{
-          background:
-            'linear-gradient(to right, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 38%, rgba(255,255,255,0.50) 65%, rgba(255,255,255,0.20) 100%)',
-        }}
-      />
-
-      {/* Mobile dark: full overlay top-to-bottom */}
-      <div
-        className="absolute inset-0 pointer-events-none md:hidden dark:block"
-        style={{
-          background:
-            'linear-gradient(to bottom, rgba(10,25,48,0.88) 0%, rgba(10,25,48,0.82) 50%, rgba(10,25,48,0.92) 100%)',
-        }}
-      />
-      {/* Mobile light: full white overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none md:hidden dark:hidden"
-        style={{
-          background:
-            'linear-gradient(to bottom, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0.93) 100%)',
+            'radial-gradient(ellipse at 70% 50%, rgba(15,110,86,0.08) 0%, transparent 60%)',
         }}
       />
 
@@ -56,7 +24,7 @@ export default function Hero() {
           {/* Left: Text */}
           <div>
             {/* Institutional badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-navy-panel/60 dark:bg-navy-panel/60 border border-gold/40 text-navy dark:text-text-primary text-sm font-medium mb-8 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-navy-panel/60 dark:bg-navy-panel/60 border border-gold/40 text-navy dark:text-text-primary text-sm font-medium mb-8">
               <ShieldCheck size={16} className="text-gold" />
               <span>{t('badge')}</span>
             </div>
@@ -90,11 +58,11 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right: Trust panel — positioned to sit below the shield tip */}
-          <div className="hidden lg:flex flex-col justify-end self-end pb-4">
-            <div className="relative rounded-xl border border-text-secondary/15 bg-navy-panel/95 dark:bg-navy-panel/95 backdrop-blur-md shadow-2xl shadow-black/50 overflow-hidden max-w-sm ml-auto">
+          {/* Right: Trust panel — official document style */}
+          <div className="hidden lg:block">
+            <div className="relative rounded-xl border border-text-secondary/15 bg-navy-panel shadow-2xl shadow-black/40 overflow-hidden max-w-sm ml-auto">
               {/* Panel header */}
-              <div className="px-6 py-4 border-b border-text-secondary/10 bg-navy/60">
+              <div className="px-6 py-4 border-b border-text-secondary/10 bg-navy/50">
                 <div className="flex items-center gap-2.5">
                   <ShieldCheck size={18} className="text-gold" />
                   <span className="text-sm font-serif font-semibold text-text-primary tracking-wide">
