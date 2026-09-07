@@ -10,6 +10,26 @@ export default function Hero() {
       className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-[#F5F7FA] dark:bg-navy"
     >
       {/* ── Background ───────────────────────────────────────────── */}
+      {/* Circuit board texture — tiled mosaic, very low opacity */}
+      {/* Light mode: navy lines on light bg, 5% opacity */}
+      <div
+        className="absolute inset-0 pointer-events-none dark:hidden"
+        style={{
+          backgroundImage: 'url(/circuit-pattern-light.svg)',
+          backgroundRepeat: 'repeat',
+          opacity: 0.05,
+        }}
+      />
+      {/* Dark mode: gold/green lines on navy bg, 9% opacity */}
+      <div
+        className="absolute inset-0 pointer-events-none hidden dark:block"
+        style={{
+          backgroundImage: 'url(/circuit-pattern-dark.svg)',
+          backgroundRepeat: 'repeat',
+          opacity: 0.09,
+        }}
+      />
+
       {/* Dark mode: subtle green radial glow (existing pattern) */}
       <div
         className="absolute inset-0 pointer-events-none hidden dark:block"
