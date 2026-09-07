@@ -11,34 +11,8 @@ export default function Hero() {
       className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-[#F5F7FA] dark:bg-navy"
     >
       {/* ── Background ───────────────────────────────────────────── */}
-      {/* Circuit board texture — tiled mosaic, very low opacity */}
-      {/* Light mode: navy lines on light bg, 5% opacity */}
-      <div
-        className="absolute inset-0 pointer-events-none dark:hidden"
-        style={{
-          backgroundImage: 'url(/circuit-pattern-light.svg)',
-          backgroundRepeat: 'repeat',
-          opacity: 0.05,
-        }}
-      />
-      {/* Dark mode: gold/green lines on navy bg, 9% opacity */}
-      <div
-        className="absolute inset-0 pointer-events-none hidden dark:block"
-        style={{
-          backgroundImage: 'url(/circuit-pattern-dark.svg)',
-          backgroundRepeat: 'repeat',
-          opacity: 0.09,
-        }}
-      />
-
-      {/* Dark mode: subtle green radial glow (existing pattern) */}
-      <div
-        className="absolute inset-0 pointer-events-none hidden dark:block"
-        style={{
-          background:
-            'radial-gradient(ellipse at 70% 50%, rgba(15,110,86,0.08) 0%, transparent 60%)',
-        }}
-      />
+      {/* Flat color only: navy (#0A1930) in dark, #F5F7FA in light */}
+      {/* No texture, gradient, or pattern — just the canvas above */}
 
       {/* ── Animated particle network (canvas, vanilla JS) ──────── */}
       {/* Mask: 0% opacity on left third (text zone), full on right third */}
