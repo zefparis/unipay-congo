@@ -52,7 +52,7 @@ export default function HowItWorks() {
   return (
     <section
       ref={containerRef}
-      className="py-20 bg-navy dark:bg-navy border-t border-text-secondary/10"
+      className="py-20 bg-[#F5F7FA] dark:bg-navy border-t border-text-secondary/10"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}

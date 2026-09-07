@@ -11,7 +11,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
   const isAdmin = await verifySessionToken(adminSession);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-navy">
+    <div className="min-h-screen bg-[#F5F7FA] dark:bg-navy">
       <DashboardShell isAdmin={isAdmin}>{children}</DashboardShell>
     </div>
   );

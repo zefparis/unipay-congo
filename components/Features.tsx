@@ -15,7 +15,7 @@ export default function Features() {
   ];
 
   return (
-    <section id="solutions" className="py-24 bg-white dark:bg-navy">
+    <section id="solutions" className="py-24 bg-[#F5F7FA] dark:bg-navy">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center mb-16">

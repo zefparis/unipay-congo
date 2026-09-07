@@ -11,7 +11,7 @@ export default function Stats() {
   ];
 
   return (
-    <section className="py-14 bg-gray-50 dark:bg-navy-panel/40 border-y border-gray-200 dark:border-text-secondary/10">
+    <section className="py-14 bg-[#EDF1F6] dark:bg-navy-panel/40 border-y border-gray-200 dark:border-text-secondary/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-200 dark:divide-text-secondary/15">
           {stats.map(({ icon: Icon, value, label }, i) => (

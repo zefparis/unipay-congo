@@ -65,7 +65,7 @@ export default function PricingPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-white dark:bg-navy pt-16 overflow-x-hidden">
+      <main className="min-h-screen bg-[#F5F7FA] dark:bg-navy pt-16 overflow-x-hidden">
 
         {/* ── Hero ──────────────────────────────────────────────── */}
         <section className="relative overflow-hidden py-20 lg:py-28">

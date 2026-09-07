@@ -54,8 +54,11 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled
           ? 'bg-white/90 dark:bg-navy/90 backdrop-blur-md shadow-sm border-b border-gray-200/80 dark:border-text-secondary/15'
-          : 'bg-transparent'
+          : 'bg-transparent border-b border-[rgba(10,25,48,0.08)] dark:border-transparent'
       }`}
+      style={!scrolled ? {
+        boxShadow: '0 1px 3px rgba(10,25,48,0.04)',
+      } : undefined}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">

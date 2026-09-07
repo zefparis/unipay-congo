@@ -6,7 +6,7 @@ export default function Footer() {
   const t = useTranslations('footer');
 
   return (
-    <footer id="contact" className="py-12 bg-white dark:bg-navy border-t border-gray-200 dark:border-text-secondary/10">
+    <footer id="contact" className="py-12 bg-[#F5F7FA] dark:bg-navy border-t border-gray-200 dark:border-text-secondary/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Logo */}

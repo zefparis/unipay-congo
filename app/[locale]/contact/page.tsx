@@ -35,7 +35,7 @@ export default function ContactPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-white dark:bg-navy pt-16">
+      <main className="min-h-screen bg-[#F5F7FA] dark:bg-navy pt-16">
 
         {/* ── Hero ─────────────────────────────────────────── */}
         <section className="relative overflow-hidden py-20 lg:py-28">

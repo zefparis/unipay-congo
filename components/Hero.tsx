@@ -7,7 +7,7 @@ export default function Hero() {
 
   return (
     <section
-      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-white dark:bg-navy"
+      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-[#F5F7FA] dark:bg-navy"
     >
       {/* ── Background ───────────────────────────────────────────── */}
       {/* Light mode: soft radial gradient — white center → pale blue-grey edges */}
