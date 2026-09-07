@@ -61,6 +61,7 @@ export default function MerchantRevenuePage() {
   const [customTo, setCustomTo] = useState('');
   const [sortBy, setSortBy] = useState<SortBy>('margin');
   const [exporting, setExporting] = useState(false);
+  const [kpiCurrency, setKpiCurrency] = useState<string>('CDF');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -155,12 +156,15 @@ export default function MerchantRevenuePage() {
   const totals = data?.totals;
   const totalsByCurrency = data?.totals_by_currency ?? [];
 
-  // Build KPI cards — one set per currency if multiple, otherwise single
-  const kpis = totalsByCurrency.length > 0
-    ? totalsByCurrency.flatMap((tc) => [
-        { label: `Volume collecté (${tc.currency})`, value: `${fmt(tc.volume_collected)} ${tc.currency}`, icon: TrendingUp, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-        { label: `Marge UniPay (${tc.currency})`, value: `${fmt(tc.net_margin)} ${tc.currency}`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-      ])
+  // KPI cards for the selected currency only (switch between CDF/USD)
+  const selectedCurrencyTotals = totalsByCurrency.find((tc) => tc.currency === kpiCurrency);
+  const kpis = selectedCurrencyTotals
+    ? [
+        { label: `Volume collecté (${kpiCurrency})`, value: `${fmt(selectedCurrencyTotals.volume_collected)} ${kpiCurrency}`, icon: TrendingUp, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+        { label: `Marge UniPay (${kpiCurrency})`, value: `${fmt(selectedCurrencyTotals.net_margin)} ${kpiCurrency}`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+        { label: `Coût Avada (${kpiCurrency})`, value: `${fmt(selectedCurrencyTotals.avada_cost)} ${kpiCurrency}`, icon: Building2, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+        { label: `Transactions (${kpiCurrency})`, value: fmt(selectedCurrencyTotals.transaction_count), icon: ArrowDownToLine, color: 'text-signal-dark', bg: 'bg-signal/10' },
+      ]
     : totals ? [
         { label: 'Volume collecté', value: `${fmt(totals.volume_collected)} CDF`, icon: TrendingUp, color: 'text-blue-500', bg: 'bg-blue-500/10' },
         { label: 'Marge UniPay', value: `${fmt(totals.net_margin)} CDF`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
@@ -254,6 +258,29 @@ export default function MerchantRevenuePage() {
         <div className="flex items-center gap-2 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
           <AlertCircle size={18} />
           {error}
+        </div>
+      )}
+
+      {/* Currency switch for KPI cards */}
+      {totalsByCurrency.length > 1 && (
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-400">KPI par devise :</span>
+          {totalsByCurrency.map((tc) => (
+            <button
+              key={tc.currency}
+              onClick={() => setKpiCurrency(tc.currency)}
+              className={clsx(
+                'px-3 py-1 rounded-lg text-xs font-medium transition-colors',
+                kpiCurrency === tc.currency
+                  ? tc.currency === 'CDF'
+                    ? 'bg-emerald-500 text-white'
+                    : 'bg-blue-500 text-white'
+                  : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800',
+              )}
+            >
+              {tc.currency}
+            </button>
+          ))}
         </div>
       )}
 
