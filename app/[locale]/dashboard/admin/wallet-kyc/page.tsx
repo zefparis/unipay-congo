@@ -25,6 +25,10 @@ interface KycSubmission {
   doc_number: string | null;
   selfie_url: string | null;
   selfie_signed_url: string | null;
+  doc_front_url: string | null;
+  doc_front_signed_url: string | null;
+  doc_back_url: string | null;
+  doc_back_signed_url: string | null;
   reviewer_note: string | null;
   submitted_at: string;
   reviewed_at: string | null;
@@ -106,6 +110,7 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState<'approve' | 'reject' | null>(null);
   const [error, setError] = useState('');
+  const [zoomImg, setZoomImg] = useState<string | null>(null);
 
   async function approve() {
     console.log('[wallet-kyc] approve click modal', { id: submission.id, submission });
@@ -195,12 +200,25 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
           </div>
 
           <div className="space-y-4">
-            <div className="overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-800/40">
-              {submission.selfie_signed_url ? (
-                <img src={submission.selfie_signed_url} alt="Selfie KYC" className="h-80 w-full object-cover" />
-              ) : (
-                <div className="flex h-80 items-center justify-center text-sm text-gray-400">Selfie indisponible</div>
-              )}
+            {/* Documents KYC : Recto + Verso + Selfie */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Documents</h3>
+
+              <DocImage
+                label="Recto (ID)"
+                signedUrl={submission.doc_front_signed_url}
+                onZoom={() => submission.doc_front_signed_url && setZoomImg(submission.doc_front_signed_url)}
+              />
+              <DocImage
+                label="Verso (ID)"
+                signedUrl={submission.doc_back_signed_url}
+                onZoom={() => submission.doc_back_signed_url && setZoomImg(submission.doc_back_signed_url)}
+              />
+              <DocImage
+                label="Selfie"
+                signedUrl={submission.selfie_signed_url}
+                onZoom={() => submission.selfie_signed_url && setZoomImg(submission.selfie_signed_url)}
+              />
             </div>
 
             <div className="flex gap-3">
@@ -245,6 +263,44 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
           </div>
         </div>
       </div>
+
+      {zoomImg && <ZoomModal src={zoomImg} onClose={() => setZoomImg(null)} />}
+    </div>
+  );
+}
+
+function DocImage({ label, signedUrl, onZoom }: { label: string; signedUrl: string | null; onZoom: () => void }) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-800/40">
+      {signedUrl ? (
+        <button onClick={onZoom} className="group relative block w-full" aria-label={`Agrandir ${label}`}>
+          <img src={signedUrl} alt={label} className="h-48 w-full object-cover transition group-hover:brightness-95" />
+          <span className="absolute bottom-2 right-2 rounded-lg bg-black/60 px-2 py-1 text-xs font-medium text-white opacity-0 transition group-hover:opacity-100">
+            <Eye size={12} className="mr-1 inline" /> Agrandir
+          </span>
+        </button>
+      ) : (
+        <div className="flex h-48 items-center justify-center text-sm text-gray-400">{label} indisponible</div>
+      )}
+      <div className="border-t border-gray-100 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:border-gray-800 dark:text-gray-400">
+        {label}
+      </div>
+    </div>
+  );
+}
+
+function ZoomModal({ src, onClose }: { src: string; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={onClose}>
+      <button className="absolute right-4 top-4 rounded-lg bg-white/10 p-2 text-white transition hover:bg-white/20" aria-label="Fermer">
+        <X size={20} />
+      </button>
+      <img
+        src={src}
+        alt="Document agrandi"
+        className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      />
     </div>
   );
 }
