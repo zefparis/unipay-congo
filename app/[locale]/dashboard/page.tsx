@@ -1,8 +1,8 @@
 import { cookies } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
-import { getBalance, getTransactions, type Transaction } from '@/lib/api';
+import { getSettlementBalance, getTransactions, type Transaction, type CurrencyBalance } from '@/lib/api';
 import { Link } from '@/i18n/navigation';
-import { RefreshCw, TrendingUp, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
+import { RefreshCw, TrendingUp, ArrowUpRight, ArrowDownLeft, Wallet } from 'lucide-react';
 import clsx from 'clsx';
 
 const STATUS_STYLES: Record<string, string> = {
@@ -27,15 +27,18 @@ export default async function DashboardPage() {
   const t = await getTranslations();
   const token = cookies().get('auth_token')?.value;
 
-  let balance = null;
+  let settlementBalance: { balances: CurrencyBalance[]; mode: string } | null = null;
   let transactions: Transaction[] = [];
 
   if (token) {
     const [balanceRes, txnsRes] = await Promise.allSettled([
-      getBalance(token),
+      getSettlementBalance(token),
       getTransactions(token, { page: 1, limit: 10 }),
     ]);
-    if (balanceRes.status === 'fulfilled') balance = balanceRes.value;
+    if (balanceRes.status === 'fulfilled') {
+      const b = balanceRes.value;
+      settlementBalance = { balances: b.balances ?? [], mode: b.mode };
+    }
     if (txnsRes.status === 'fulfilled') transactions = txnsRes.value.data;
   }
 
@@ -58,21 +61,47 @@ export default async function DashboardPage() {
         </form>
       </div>
 
-      {/* Balance card */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-signal to-[#0f6b4f] p-6 text-white shadow-lg shadow-signal/20">
-        <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full" />
-        <div className="absolute -bottom-8 -right-2 w-24 h-24 bg-white/5 rounded-full" />
-        <div className="relative">
-          <div className="flex items-center gap-2 mb-3">
-            <TrendingUp size={16} className="text-white/70" />
-            <span className="text-sm font-medium text-white/70">{t('dashboard.overview.balance_title')}</span>
-          </div>
-          <div className="text-4xl font-heading font-bold tracking-tight">
-            {balance !== null ? fmt(balance.balance) : '—'}
-          </div>
-          <div className="text-sm text-white/60 mt-1">{balance?.currency ?? 'CDF'}</div>
+      {/* Balance cards — one per currency (CDF green, USD blue) */}
+      {settlementBalance && settlementBalance.balances.length > 0 ? (
+        <div className={clsx('grid gap-4', settlementBalance.balances.length > 1 ? 'sm:grid-cols-2' : 'grid-cols-1')}>
+          {settlementBalance.balances.map((cur) => (
+            <div
+              key={cur.currency}
+              className={clsx(
+                'relative overflow-hidden rounded-2xl p-6 text-white shadow-lg',
+                cur.currency === 'CDF'
+                  ? 'bg-gradient-to-br from-signal to-[#0f6b4f] shadow-signal/20'
+                  : 'bg-gradient-to-br from-blue-600 to-blue-800 shadow-blue-600/20',
+              )}
+            >
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full" />
+              <div className="absolute -bottom-8 -right-2 w-24 h-24 bg-white/5 rounded-full" />
+              <div className="relative">
+                <div className="flex items-center gap-2 mb-3">
+                  <Wallet size={16} className="text-white/70" />
+                  <span className="text-sm font-medium text-white/70">
+                    {t('dashboard.overview.balance_title')} {cur.currency === 'USD' ? '(USD)' : ''}
+                  </span>
+                </div>
+                <div className="text-4xl font-heading font-bold tracking-tight">
+                  {fmt(cur.balance)} <span className="text-lg text-white/60">{cur.currency}</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
+      ) : (
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-signal to-[#0f6b4f] p-6 text-white shadow-lg shadow-signal/20">
+          <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full" />
+          <div className="relative">
+            <div className="flex items-center gap-2 mb-3">
+              <TrendingUp size={16} className="text-white/70" />
+              <span className="text-sm font-medium text-white/70">{t('dashboard.overview.balance_title')}</span>
+            </div>
+            <div className="text-4xl font-heading font-bold tracking-tight">—</div>
+          </div>
+        </div>
+      )}
 
       {/* Recent transactions */}
       <div>
@@ -119,9 +148,9 @@ export default async function DashboardPage() {
                           {t(`dashboard.transactions.${tx.direction}` as Parameters<typeof t>[0])}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.amount)}</td>
-                      <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmt(tx.fee)}</td>
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.net_amount)}</td>
+                      <td className="px-4 py-3 text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                      <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmt(tx.fee)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
                       <td className="px-4 py-3">
                         <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status])}>
                           {t(`dashboard.status.${tx.status}` as Parameters<typeof t>[0])}

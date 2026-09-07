@@ -27,6 +27,21 @@ export interface BalanceResponse {
   mode: string;
 }
 
+export interface CurrencyBalance {
+  currency: string;
+  balance: number;
+  total_credits: number;
+  total_settlements: number;
+}
+
+export interface SettlementBalanceResponse {
+  balance: number;  // deprecated — sum of all currencies
+  balances: CurrencyBalance[];
+  settlement_phone: string | null;
+  kyc_status: string;
+  mode: string;
+}
+
 export interface ApiKeyResponse {
   api_key: string;
   key_prefix: string;
@@ -65,6 +80,10 @@ async function apiPost<T>(path: string, token: string, body?: object): Promise<T
 
 export function getBalance(token: string): Promise<BalanceResponse> {
   return apiGet<BalanceResponse>('/v1/merchant/balance', token);
+}
+
+export function getSettlementBalance(token: string): Promise<SettlementBalanceResponse> {
+  return apiGet<SettlementBalanceResponse>('/v1/merchant/settlement/balance', token);
 }
 
 export function getTransactions(token: string, params: TransactionParams = {}): Promise<TransactionsResponse> {
