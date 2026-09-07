@@ -21,7 +21,7 @@ interface Particle {
 }
 
 const CONNECT_DISTANCE = 200; // px — max distance for line between particles
-const PARTICLE_RADIUS = 2;    // px
+const PARTICLE_RADIUS = 3.5;  // px
 
 export default function HeroCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -62,8 +62,8 @@ export default function HeroCanvas() {
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.6, // ~0.3 px/frame at 60fps ≈ 18px/s
-          vy: (Math.random() - 0.5) * 0.6,
+          vx: (Math.random() - 0.5) * 0.9, // ~0.45 px/frame at 60fps ≈ 27px/s
+          vy: (Math.random() - 0.5) * 0.9,
         });
       }
     };
@@ -99,12 +99,12 @@ export default function HeroCanvas() {
       ctx.clearRect(0, 0, width, height);
 
       // Theme colors
-      // Dark: #F59E0B (amber/orange) points — warm, vivid, visible on navy
-      // Light: #0A1930 (navy) points — visible on light bg
-      const pointColor = isDark ? 'rgba(245,158,11,' : 'rgba(10,25,48,';  // #F59E0B or #0A1930
-      const pointAlpha = isDark ? 0.60 : 0.38;   // +50% from 0.40/0.25
+      // Points: #F59E0B (amber/orange) in BOTH modes — vivid on navy, warm on light gray
+      // Lines: green in dark, blue-gray in light (unchanged per mode)
+      const pointColor = 'rgba(245,158,11,';  // #F59E0B — same orange in both modes
+      const pointAlpha = isDark ? 0.60 : 0.55;   // dark 0.60, light 0.55 (slightly lower on light bg to avoid garishness)
       const lineColor = isDark ? 'rgba(15,110,86,' : 'rgba(124,147,172,';  // #0F6E56 or #7C93AC
-      const lineMaxAlpha = isDark ? 0.38 : 0.23; // +50% from 0.25/0.15
+      const lineMaxAlpha = isDark ? 0.38 : 0.23;
 
       // ── Update particle positions (if animating) ──────────────
       if (!isReducedMotion) {
