@@ -133,7 +133,7 @@ export default function AdminOverviewPage() {
 
       {/* Avada Pay caisse card */}
       <div className={clsx(
-        'relative overflow-hidden rounded-2xl p-5 border shadow-sm flex items-center justify-between gap-4',
+        'relative overflow-hidden rounded-2xl p-5 border shadow-sm flex flex-wrap items-center justify-between gap-4',
         'bg-gradient-to-r from-signal/10 to-emerald-500/5 border-signal/30 dark:border-signal/20',
       )}>
         <div className="flex items-center gap-4">

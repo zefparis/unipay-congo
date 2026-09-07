@@ -378,7 +378,7 @@ export default function SettlementPage() {
           )}
 
           {showConfirm ? (
-            <div className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 w-full">
+            <div className="flex flex-wrap items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 w-full">
               <div className="flex-1">
                 <p className="text-sm font-medium text-gray-900 dark:text-white">
                   Confirmer le règlement de{' '}

@@ -193,7 +193,7 @@ export default function AdjustmentsPage() {
               <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
                 Montant CDF <span className="text-gray-400 font-normal normal-case">(positif = crédit, négatif = débit)</span>
               </label>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => setAmount((prev) => { const n = prev.replace(/^-/, ''); return n; })}

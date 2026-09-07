@@ -254,7 +254,7 @@ export default function MerchantsListPage() {
                       <div className="flex items-center gap-1.5">
                         <Link
                           href={`/dashboard/admin/merchants/${m.id}`}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                          className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                         >
                           <Eye size={12} /> Voir
                         </Link>
@@ -262,7 +262,7 @@ export default function MerchantsListPage() {
                           <button
                             onClick={() => void handleToggleMode(m)}
                             disabled={acting === m.id + ':mode'}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
+                            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
                           >
                             {m.mode === 'live' ? '→ Sandbox' : '→ Live'}
                           </button>
@@ -271,7 +271,7 @@ export default function MerchantsListPage() {
                           <button
                             onClick={() => void handleSuspend(m)}
                             disabled={acting === m.id + ':suspend'}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-red-200 dark:border-red-800/50 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
+                            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-red-200 dark:border-red-800/50 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
                           >
                             <Ban size={12} /> Suspendre
                           </button>
@@ -279,7 +279,7 @@ export default function MerchantsListPage() {
                           <button
                             onClick={() => void handleReactivate(m)}
                             disabled={acting === m.id + ':reactivate'}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-green-200 dark:border-green-800/50 text-xs font-medium text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors disabled:opacity-50"
+                            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-green-200 dark:border-green-800/50 text-sm font-medium text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors disabled:opacity-50"
                           >
                             <CheckCircle2 size={12} /> Réactiver
                           </button>

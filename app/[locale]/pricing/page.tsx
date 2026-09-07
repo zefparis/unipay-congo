@@ -112,7 +112,7 @@ export default function PricingPage() {
 
                 {/* Rate */}
                 <div className="flex items-baseline gap-2 mb-1">
-                  <span className="text-7xl font-heading font-bold text-gray-900 dark:text-white tracking-tight">
+                  <span className="text-5xl sm:text-7xl font-heading font-bold text-gray-900 dark:text-white tracking-tight">
                     {t('rate')}
                   </span>
                 </div>
