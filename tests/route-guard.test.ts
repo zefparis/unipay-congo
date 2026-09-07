@@ -18,7 +18,7 @@ function findRouteFiles(dir: string): string[] {
 }
 
 const PROTECTED_MARKERS = ['requireAdminSession', 'adminProxyFetch'];
-const SKIP_DIRS = ['auth', 'legacy-auth'];
+const SKIP_DIRS = ['auth'];
 
 describe('project-wide admin route protection guard', () => {
   const routeFiles = findRouteFiles(ADMIN_API_DIR);
