@@ -16,8 +16,8 @@ const ENTITY_ICONS: Record<string, React.ReactNode> = {
   other: <Users className="w-3.5 h-3.5" />,
 };
 
-const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-300';
-const labelCls = 'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1';
+const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-purple-300';
+const labelCls = 'block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1';
 
 type SubTab = 'suppliers' | 'entities';
 
@@ -26,14 +26,14 @@ export default function SupplierList() {
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-1 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex gap-1 border-b border-gray-200 dark:border-text-secondary/20">
         <button
           onClick={() => setSubTab('suppliers')}
           className={clsx(
             'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
             subTab === 'suppliers'
               ? 'border-purple-600 text-purple-700 dark:text-purple-400'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400',
+              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-text-secondary',
           )}
         >
           Fournisseurs
@@ -44,7 +44,7 @@ export default function SupplierList() {
             'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
             subTab === 'entities'
               ? 'border-purple-600 text-purple-700 dark:text-purple-400'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400',
+              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-text-secondary',
           )}
         >
           Entités financières
@@ -142,9 +142,9 @@ function SuppliersTab() {
       </div>
 
       {showForm && (
-        <form onSubmit={save} className="bg-white dark:bg-gray-900 rounded-xl border border-purple-200 dark:border-purple-800 p-5 space-y-4">
+        <form onSubmit={save} className="bg-white dark:bg-navy-panel rounded-xl border border-purple-200 dark:border-purple-800 p-5 space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="font-medium text-gray-900 dark:text-white">
+            <h3 className="font-medium text-gray-900 dark:text-text-primary">
               {editing ? `Modifier : ${editing.name}` : 'Nouveau fournisseur'}
             </h3>
             <button type="button" onClick={() => setShowForm(false)}>
@@ -187,7 +187,7 @@ function SuppliersTab() {
             </div>
           </div>
           <div className="flex gap-2 justify-end">
-            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50">Annuler</button>
+            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-600 hover:bg-gray-50">Annuler</button>
             <button type="submit" disabled={saving} className="px-4 py-2 text-sm rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-medium flex items-center gap-2 disabled:opacity-50">
               {saving && <Loader2 className="w-4 h-4 animate-spin" />}
               {editing ? 'Mettre à jour' : 'Créer'}
@@ -196,19 +196,19 @@ function SuppliersTab() {
         </form>
       )}
 
-      <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="divide-y divide-gray-100 dark:divide-text-secondary/15 rounded-xl border border-gray-200 dark:border-text-secondary/20 overflow-hidden">
         {active.map((c) => (
-          <div key={c.id} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-900">
+          <div key={c.id} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-navy-panel">
             <span className="text-gray-400">{ENTITY_ICONS[c.entity_type] ?? <Users className="w-3.5 h-3.5" />}</span>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">{c.name}</p>
+              <p className="text-sm font-medium text-gray-900 dark:text-text-primary">{c.name}</p>
               <p className="text-xs text-gray-500 flex gap-2 flex-wrap">
                 {c.default_category && <span>{c.default_category}</span>}
                 {c.payment_method && <span>· {PAYMENT_METHOD_LABELS[c.payment_method] ?? c.payment_method}</span>}
                 {c.contact_email && <span>· {c.contact_email}</span>}
               </p>
             </div>
-            <button onClick={() => openEdit(c)} className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-700">
+            <button onClick={() => openEdit(c)} className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-navy-panel text-gray-400 hover:text-gray-700">
               <Pencil className="w-3.5 h-3.5" />
             </button>
           </div>

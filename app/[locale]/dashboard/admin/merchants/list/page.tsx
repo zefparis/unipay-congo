@@ -20,7 +20,7 @@ const KYC_LABELS: Record<string, string> = {
   rejected: 'Rejeté',
 };
 const KYC_STYLES: Record<string, string> = {
-  pending: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+  pending: 'bg-gray-100 text-gray-500 dark:bg-navy-panel dark:text-text-secondary',
   submitted: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   approved: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   rejected: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
@@ -127,14 +127,14 @@ export default function MerchantsListPage() {
 
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <Building2 className="text-signal" size={22} />
+        <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary flex items-center gap-2">
+          <Building2 className="text-green-deep" size={22} />
           Marchands
         </h1>
         <button
           onClick={load}
           disabled={loading}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all disabled:opacity-50"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-all disabled:opacity-50"
         >
           <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
           Actualiser
@@ -150,27 +150,27 @@ export default function MerchantsListPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Recherche nom, email, entreprise…"
-            className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/30"
+            className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/30"
           />
         </div>
-        <select value={filterMode} onChange={(e) => setFilterMode(e.target.value)} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white">
+        <select value={filterMode} onChange={(e) => setFilterMode(e.target.value)} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary">
           <option value="">Tous modes</option>
           <option value="sandbox">Sandbox</option>
           <option value="live">Live</option>
         </select>
-        <select value={filterKyc} onChange={(e) => setFilterKyc(e.target.value)} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white">
+        <select value={filterKyc} onChange={(e) => setFilterKyc(e.target.value)} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary">
           <option value="">Tous KYC</option>
           <option value="pending">Non soumis</option>
           <option value="submitted">En attente</option>
           <option value="approved">Approuvé</option>
           <option value="rejected">Rejeté</option>
         </select>
-        <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white">
+        <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary">
           <option value="">Tous statuts</option>
           <option value="active">Actif</option>
           <option value="suspended">Suspendu</option>
         </select>
-        <button type="submit" className="px-4 py-2 rounded-lg bg-signal text-white text-sm font-medium hover:bg-signal/85 transition-colors">
+        <button type="submit" className="px-4 py-2 rounded-lg bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-colors">
           Filtrer
         </button>
       </form>
@@ -182,30 +182,30 @@ export default function MerchantsListPage() {
       )}
 
       {/* Table */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden shadow-sm">
         {loading && merchants.length === 0 ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 size={24} className="animate-spin text-signal" />
+            <Loader2 size={24} className="animate-spin text-green-deep" />
           </div>
         ) : merchants.length === 0 ? (
-          <div className="text-center py-12 text-sm text-gray-400 dark:text-gray-600">Aucun marchand trouvé.</div>
+          <div className="text-center py-12 text-sm text-gray-400 dark:text-text-secondary/50">Aucun marchand trouvé.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1100px] text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                   {['Email', 'Entreprise', 'KYC', 'Mode', 'Statut', 'Clé API', 'Volume', 'Dernière tx', 'Actions'].map((h) => (
-                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+              <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                 {merchants.map((m) => (
-                  <tr key={m.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{m.email}</td>
-                    <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{m.company_name ?? m.name ?? '—'}</td>
+                  <tr key={m.id} className="hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors">
+                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary whitespace-nowrap">{m.email}</td>
+                    <td className="px-4 py-3 text-gray-500 dark:text-text-secondary whitespace-nowrap">{m.company_name ?? m.name ?? '—'}</td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', KYC_STYLES[m.kyc_status] ?? 'bg-gray-100 text-gray-600')}>
@@ -246,15 +246,15 @@ export default function MerchantsListPage() {
                         {m.api_key_status === 'active' ? 'Active' : m.api_key_status === 'inactive' ? 'Inactive' : 'Aucune'}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                    <td className="px-4 py-3 text-gray-700 dark:text-text-primary whitespace-nowrap">
                       {m.transaction_count != null && m.transaction_count > 0 ? fmt(m.total_volume ?? 0) : '—'}
                     </td>
-                    <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap text-xs">{fmtDate(m.last_transaction_at)}</td>
+                    <td className="px-4 py-3 text-gray-500 dark:text-text-secondary whitespace-nowrap text-xs">{fmtDate(m.last_transaction_at)}</td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <Link
                           href={`/dashboard/admin/merchants/${m.id}`}
-                          className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                          className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm font-medium text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
                         >
                           <Eye size={12} /> Voir
                         </Link>
@@ -262,7 +262,7 @@ export default function MerchantsListPage() {
                           <button
                             onClick={() => void handleToggleMode(m)}
                             disabled={acting === m.id + ':mode'}
-                            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
+                            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm font-medium text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors disabled:opacity-50"
                           >
                             {m.mode === 'live' ? '→ Sandbox' : '→ Live'}
                           </button>
@@ -296,20 +296,20 @@ export default function MerchantsListPage() {
 
       {/* Pagination */}
       {pagination.pages > 1 && (
-        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-text-secondary">
           <span>{pagination.total} marchands — page {pagination.page}/{pagination.pages}</span>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1 || loading}
-              className="p-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50"
+              className="p-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 hover:bg-gray-100 dark:hover:bg-navy-panel disabled:opacity-50"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={() => setPage((p) => Math.min(pagination.pages, p + 1))}
               disabled={page >= pagination.pages || loading}
-              className="p-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50"
+              className="p-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 hover:bg-gray-100 dark:hover:bg-navy-panel disabled:opacity-50"
             >
               <ChevronRight size={16} />
             </button>

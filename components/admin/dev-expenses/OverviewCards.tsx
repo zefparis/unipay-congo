@@ -50,7 +50,7 @@ export default function OverviewCards() {
   }
 
   const cards = [
-    { label: 'Total engagé', amounts: stats.total_engaged, color: 'text-gray-900 dark:text-white' },
+    { label: 'Total engagé', amounts: stats.total_engaged, color: 'text-gray-900 dark:text-text-primary' },
     { label: 'En attente de validation', amounts: stats.awaiting_validation, color: 'text-blue-600 dark:text-blue-400' },
     { label: 'Validé à payer', amounts: stats.approved_to_pay, color: 'text-emerald-600 dark:text-emerald-400' },
     { label: 'Paiement programmé', amounts: stats.payment_scheduled, color: 'text-amber-600 dark:text-amber-400' },
@@ -85,9 +85,9 @@ export default function OverviewCards() {
           return (
             <div
               key={card.label}
-              className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4"
+              className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-4"
             >
-              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">{card.label}</p>
+              <p className="text-xs font-medium text-gray-500 dark:text-text-secondary mb-2">{card.label}</p>
               {amounts.length === 0 ? (
                 <p className={`text-lg font-semibold ${card.color}`}>—</p>
               ) : (
@@ -122,16 +122,16 @@ export default function OverviewCards() {
 
       {/* Actions required */}
       {actions.length > 0 && (
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Actions requises</h3>
+        <div className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-4">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary mb-3">Actions requises</h3>
           <div className="space-y-2">
             {actions.map((action, i) => (
               <button
                 key={i}
                 onClick={() => router.push(action.href + '?' + new URLSearchParams(action.params).toString())}
-                className="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+                className="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-navy-panel transition-colors text-left"
               >
-                <span className="text-sm text-gray-700 dark:text-gray-300">
+                <span className="text-sm text-gray-700 dark:text-text-primary">
                   <span className="font-medium">{action.count}</span> {action.label}
                 </span>
                 <ArrowRight className="w-4 h-4 text-gray-400" />
@@ -142,12 +142,12 @@ export default function OverviewCards() {
       )}
 
       {/* Recent activity note */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+      <div className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-4">
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary mb-2 flex items-center gap-2">
           <Activity className="w-4 h-4 text-gray-400" />
           Activité récente
         </h3>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-gray-500 dark:text-text-secondary">
           Consultez les factures récentes pour voir l&apos;historique des actions.
         </p>
       </div>

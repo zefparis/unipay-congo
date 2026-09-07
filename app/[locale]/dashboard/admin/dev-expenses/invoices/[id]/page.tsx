@@ -98,7 +98,7 @@ export default function InvoiceDetailPage() {
       <ExpenseDetailHeader expense={detail.expense} locale={locale} />
 
       {/* Actions */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+      <div className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-4">
         <ExpenseActions
           detail={detail}
           onUpdated={(message) => {
@@ -144,7 +144,7 @@ export default function InvoiceDetailPage() {
               setRefreshing(false);
             }}
             disabled={refreshing}
-            className="flex items-center gap-1.5 px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-600 dark:text-text-secondary hover:bg-gray-50 dark:hover:bg-navy-panel font-medium disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
             Actualiser le snapshot destinataire

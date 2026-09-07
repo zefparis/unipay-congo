@@ -21,7 +21,7 @@ export default function DevExpensesOverviewPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Receipt className="w-6 h-6 text-purple-600" />
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">Factures &amp; Remboursements</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-text-primary">Factures &amp; Remboursements</h1>
         </div>
         <div className="flex items-center gap-2">
           <button

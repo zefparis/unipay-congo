@@ -1,26 +1,25 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { ArrowRight, BookOpen, ShieldCheck } from 'lucide-react';
+import { ArrowRight, BookOpen, ShieldCheck, Check } from 'lucide-react';
 import ConvergenceLattice from './ConvergenceLattice';
-import ConvergenceDiagram from './ConvergenceDiagram';
 
 export default function Hero() {
   const t = useTranslations('hero');
 
   return (
     <section
-      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-ink"
+      className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-navy"
     >
       {/* Convergence Lattice — atmospheric background */}
-      <div className="absolute inset-0 text-bone pointer-events-none">
-        <ConvergenceLattice variant="hero" opacity={0.07} className="w-full h-full" />
+      <div className="absolute inset-0 text-text-primary pointer-events-none">
+        <ConvergenceLattice variant="hero" opacity={0.04} className="w-full h-full" />
       </div>
 
       {/* Subtle radial glow from center */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(28,158,122,0.08) 0%, transparent 60%)',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(15,110,86,0.10) 0%, transparent 60%)',
         }}
       />
 
@@ -28,19 +27,19 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Text */}
           <div>
-            {/* Badge with ConvergenceDiagram */}
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-bone/10 border border-bone/30 text-bone/90 text-sm font-medium mb-8">
-              <ConvergenceDiagram size={20} className="text-signal" />
+            {/* Institutional badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-navy-panel/60 border border-gold/40 text-text-primary text-sm font-medium mb-8 backdrop-blur-sm">
+              <ShieldCheck size={16} className="text-gold" />
               <span>{t('badge')}</span>
             </div>
 
-            {/* Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-bone leading-[1.1] tracking-tight mb-6">
+            {/* Heading — serif */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-text-primary leading-[1.1] tracking-tight mb-6">
               {t('title')}
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-bone/70 leading-relaxed mb-10 max-w-lg">
+            <p className="text-lg sm:text-xl text-text-secondary leading-relaxed mb-10 max-w-lg">
               {t('subtitle')}
             </p>
 
@@ -48,14 +47,14 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/register"
-                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-rust text-bone font-semibold text-base hover:bg-rust/85 transition-all duration-200 shadow-lg shadow-rust/20"
+                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-green-deep text-white font-semibold text-base hover:bg-green-deep/85 transition-all duration-200 shadow-lg shadow-green-deep/20"
               >
                 {t('cta_primary')}
                 <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <a
                 href="#api"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border-2 border-bone/30 text-bone font-semibold text-base hover:border-bone/60 hover:bg-bone/5 transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border-2 border-text-secondary/30 text-text-primary font-semibold text-base hover:border-text-secondary/60 hover:bg-navy-panel/30 transition-all duration-200"
               >
                 <BookOpen size={18} />
                 {t('cta_secondary')}
@@ -63,55 +62,64 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right: API mockup card + ConvergenceDiagram */}
+          {/* Right: Trust panel — official document style */}
           <div className="hidden lg:block">
-            <div className="relative">
-              {/* Convergence diagram behind card */}
-              <div className="absolute -top-8 -right-8 text-signal/30 pointer-events-none">
-                <ConvergenceDiagram size={140} />
+            <div className="relative rounded-xl border border-text-secondary/15 bg-navy-panel shadow-2xl shadow-black/40 overflow-hidden">
+              {/* Panel header */}
+              <div className="px-6 py-4 border-b border-text-secondary/10 bg-navy/50">
+                <div className="flex items-center gap-2.5">
+                  <ShieldCheck size={18} className="text-gold" />
+                  <span className="text-sm font-serif font-semibold text-text-primary tracking-wide">
+                    Licence ARPTC
+                  </span>
+                </div>
               </div>
 
-              <div className="relative rounded-2xl border border-bone/15 bg-ink/80 backdrop-blur-sm shadow-2xl shadow-black/40 overflow-hidden">
-                {/* Card header bar */}
-                <div className="flex items-center gap-2 px-5 py-3.5 border-b border-bone/10 bg-bone/5">
-                  <div className="w-3 h-3 rounded-full bg-danger/70" />
-                  <div className="w-3 h-3 rounded-full bg-rust/70" />
-                  <div className="w-3 h-3 rounded-full bg-signal/70" />
-                  <span className="ml-3 text-xs text-bone/40 font-mono">POST /v1/payment/initiate</span>
+              {/* Panel body */}
+              <div className="p-6 space-y-5">
+                {/* License number */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-text-secondary mb-1.5">
+                    Numéro de licence
+                  </p>
+                  <p className="text-base font-mono text-text-primary leading-relaxed">
+                    ASVA-ARPTC n°0573/008/Mars/2023
+                  </p>
                 </div>
-                {/* Code content */}
-                <div className="p-5 font-mono text-sm leading-relaxed">
-                  <pre className="text-bone/80 whitespace-pre-wrap">
-                    <span className="text-rust">{'{'}</span>
-                    {'\n'}
-                    {'  '}<span className="text-signal">&quot;operator&quot;</span>
-                    <span className="text-bone/50">: </span>
-                    <span className="text-rust">&quot;orange&quot;</span>,{'\n'}
-                    {'  '}<span className="text-signal">&quot;phone&quot;</span>
-                    <span className="text-bone/50">: </span>
-                    <span className="text-rust">&quot;+243810000000&quot;</span>,{'\n'}
-                    {'  '}<span className="text-signal">&quot;amount&quot;</span>
-                    <span className="text-bone/50">: </span>
-                    <span className="text-bone">5000</span>,{'\n'}
-                    {'  '}<span className="text-signal">&quot;direction&quot;</span>
-                    <span className="text-bone/50">: </span>
-                    <span className="text-rust">&quot;collect&quot;</span>{'\n'}
-                    <span className="text-rust">{'}'}</span>
-                  </pre>
-                  <div className="mt-4 pt-4 border-t border-bone/10">
-                    <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-signal/15 text-signal text-xs font-semibold">
-                        200 OK
-                      </span>
-                      <span className="text-xs text-bone/40 font-mono">transaction_id: UP-83921</span>
-                    </div>
-                  </div>
+
+                {/* Divider */}
+                <div className="border-t border-text-secondary/10" />
+
+                {/* Connected networks */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-text-secondary mb-3">
+                    Réseaux connectés
+                  </p>
+                  <ul className="space-y-2.5">
+                    {['Orange Money', 'Airtel Money', 'Afrimoney'].map((network) => (
+                      <li key={network} className="flex items-center gap-3">
+                        <span className="flex items-center justify-center w-5 h-5 rounded-full bg-green-deep/15">
+                          <Check size={12} className="text-green-deep" />
+                        </span>
+                        <span className="text-sm text-text-primary font-medium">{network}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </div>
-              {/* Floating badge — convergence diagram replaces text badge */}
-              <div className="absolute -bottom-4 -left-4 bg-ink border border-bone/15 rounded-xl px-4 py-2.5 shadow-lg flex items-center gap-2.5">
-                <ConvergenceDiagram size={16} className="text-signal" />
-                <span className="text-xs font-semibold text-bone/80">3 réseaux connectés</span>
+
+                {/* Divider */}
+                <div className="border-t border-text-secondary/10" />
+
+                {/* Platform status */}
+                <div className="flex items-center gap-3">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-green-deep opacity-60" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-deep" />
+                  </span>
+                  <span className="text-sm text-text-secondary font-medium">
+                    Plateforme opérationnelle
+                  </span>
+                </div>
               </div>
             </div>
           </div>

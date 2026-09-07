@@ -15,14 +15,14 @@ export default function Features() {
   ];
 
   return (
-    <section id="solutions" className="py-24 bg-white dark:bg-ink">
+    <section id="solutions" className="py-24 bg-white dark:bg-navy">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-heading font-bold text-gray-900 dark:text-white mb-4 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 dark:text-text-primary mb-4 tracking-tight">
             {t('title')}
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-gray-600 dark:text-text-secondary max-w-2xl mx-auto leading-relaxed">
             {t('subtitle')}
           </p>
         </div>
@@ -32,15 +32,15 @@ export default function Features() {
           {features.map(({ icon: Icon, title, desc }, i) => (
             <div
               key={i}
-              className="group p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-ink/60 hover:border-signal/40 dark:hover:border-signal/40 hover:shadow-lg hover:shadow-signal/5 hover:-translate-y-0.5 transition-all duration-300"
+              className="group p-6 rounded-2xl border border-gray-100 dark:border-text-secondary/15 bg-gray-50/50 dark:bg-navy-panel/40 hover:border-green-deep/40 dark:hover:border-green-deep/40 hover:shadow-lg hover:shadow-green-deep/5 hover:-translate-y-0.5 transition-all duration-300"
             >
-              <div className="w-11 h-11 rounded-xl bg-signal/10 flex items-center justify-center mb-4 group-hover:bg-signal/20 transition-colors duration-300">
-                <Icon size={22} className="text-signal" />
+              <div className="w-11 h-11 rounded-xl bg-green-deep/10 flex items-center justify-center mb-4 group-hover:bg-green-deep/20 transition-colors duration-300">
+                <Icon size={22} className="text-green-deep" />
               </div>
-              <h3 className="text-base font-heading font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-base font-serif font-semibold text-gray-900 dark:text-text-primary mb-2">
                 {title}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+              <p className="text-sm text-gray-600 dark:text-text-secondary leading-relaxed">
                 {desc}
               </p>
             </div>

@@ -7,8 +7,8 @@ import { ENTITY_TYPE_LABELS } from '@/lib/dev-expenses/labels';
 import { toEntityCode } from '@/lib/dev-expenses/utils';
 import type { ExpenseEntity } from '@/lib/dev-expenses/types';
 
-const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-300';
-const labelCls = 'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1';
+const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-purple-300';
+const labelCls = 'block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1';
 
 export default function EntityList() {
   const [entities, setEntities] = useState<ExpenseEntity[]>([]);
@@ -184,9 +184,9 @@ export default function EntityList() {
       </div>
 
       {showForm && (
-        <form onSubmit={save} className="bg-white dark:bg-gray-900 rounded-xl border border-purple-200 dark:border-purple-800 p-5 space-y-4">
+        <form onSubmit={save} className="bg-white dark:bg-navy-panel rounded-xl border border-purple-200 dark:border-purple-800 p-5 space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="font-medium text-gray-900 dark:text-white">
+            <h3 className="font-medium text-gray-900 dark:text-text-primary">
               {editing ? `Modifier : ${editing.display_name}` : 'Nouvelle entité'}
             </h3>
             <button type="button" onClick={() => setShowForm(false)}>
@@ -296,42 +296,42 @@ export default function EntityList() {
             </div>
 
             {/* Rôles */}
-            <div className="sm:col-span-2 border-t border-gray-100 dark:border-gray-800 pt-3 mt-1">
-              <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Rôles</p>
+            <div className="sm:col-span-2 border-t border-gray-100 dark:border-text-secondary/15 pt-3 mt-1">
+              <p className="text-xs font-semibold text-gray-700 dark:text-text-primary mb-2">Rôles</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <label className="flex items-center gap-2">
                   <input type="checkbox" checked={form.can_incur_expenses} onChange={set('can_incur_expenses')} className="rounded border-gray-300 text-purple-600 focus:ring-purple-300" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Peut engager des d&eacute;penses</span>
+                  <span className="text-sm text-gray-600 dark:text-text-secondary">Peut engager des d&eacute;penses</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input type="checkbox" checked={form.can_receive_invoices} onChange={set('can_receive_invoices')} className="rounded border-gray-300 text-purple-600 focus:ring-purple-300" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Peut recevoir des factures</span>
+                  <span className="text-sm text-gray-600 dark:text-text-secondary">Peut recevoir des factures</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input type="checkbox" checked={form.can_pay_expenses} onChange={set('can_pay_expenses')} className="rounded border-gray-300 text-purple-600 focus:ring-purple-300" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Peut payer des dépenses</span>
+                  <span className="text-sm text-gray-600 dark:text-text-secondary">Peut payer des dépenses</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input type="checkbox" checked={form.can_cover_expenses} onChange={set('can_cover_expenses')} className="rounded border-gray-300 text-purple-600 focus:ring-purple-300" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Peut prendre en charge une dépense</span>
+                  <span className="text-sm text-gray-600 dark:text-text-secondary">Peut prendre en charge une dépense</span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input type="checkbox" checked={form.can_receive_reimbursements} onChange={set('can_receive_reimbursements')} className="rounded border-gray-300 text-purple-600 focus:ring-purple-300" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Peut recevoir des remboursements</span>
+                  <span className="text-sm text-gray-600 dark:text-text-secondary">Peut recevoir des remboursements</span>
                 </label>
               </div>
             </div>
 
             {/* Actif */}
-            <div className="sm:col-span-2 border-t border-gray-100 dark:border-gray-800 pt-3">
+            <div className="sm:col-span-2 border-t border-gray-100 dark:border-text-secondary/15 pt-3">
               <label className="flex items-center gap-2">
                 <input type="checkbox" checked={form.active} onChange={set('active')} className="rounded border-gray-300 text-purple-600 focus:ring-purple-300" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">Entité active</span>
+                <span className="text-sm text-gray-600 dark:text-text-secondary">Entité active</span>
               </label>
             </div>
           </div>
           <div className="flex gap-2 justify-end">
-            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50">Annuler</button>
+            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-600 hover:bg-gray-50">Annuler</button>
             <button type="submit" disabled={saving} className="px-4 py-2 text-sm rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-medium flex items-center gap-2 disabled:opacity-50">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
               {saving ? (editing ? 'Mise à jour…' : 'Création…') : (editing ? 'Mettre à jour' : 'Créer')}
@@ -340,12 +340,12 @@ export default function EntityList() {
         </form>
       )}
 
-      <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="divide-y divide-gray-100 dark:divide-text-secondary/15 rounded-xl border border-gray-200 dark:border-text-secondary/20 overflow-hidden">
         {entities.map((e) => (
-          <div key={e.id} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-900">
+          <div key={e.id} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-navy-panel">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <p className="text-sm font-medium text-gray-900 dark:text-white">{e.display_name}</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-text-primary">{e.display_name}</p>
                 <span className="text-xs text-gray-400 font-mono">{e.code}</span>
                 {!e.active && <span className="text-xs text-gray-400">(inactif)</span>}
               </div>
@@ -377,7 +377,7 @@ export default function EntityList() {
                 {e.can_receive_reimbursements && <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400">Remboursement</span>}
               </div>
             </div>
-            <button onClick={() => openEdit(e)} className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-700">
+            <button onClick={() => openEdit(e)} className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-navy-panel text-gray-400 hover:text-gray-700">
               <Pencil className="w-3.5 h-3.5" />
             </button>
           </div>

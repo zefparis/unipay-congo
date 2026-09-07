@@ -113,17 +113,17 @@ export default function AdjustmentsPage() {
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <SlidersHorizontal className="text-signal" size={22} />
+        <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary flex items-center gap-2">
+          <SlidersHorizontal className="text-green-deep" size={22} />
           Ajustements manuels
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Recherchez un utilisateur wallet et ajustez son solde manuellement.</p>
+        <p className="text-sm text-gray-500 dark:text-text-secondary mt-0.5">Recherchez un utilisateur wallet et ajustez son solde manuellement.</p>
       </div>
 
       {/* Search form */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-          <Search size={15} className="text-signal" />
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-4">
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary flex items-center gap-2">
+          <Search size={15} className="text-green-deep" />
           Recherche par téléphone
         </h2>
         <form onSubmit={handleSearch} className="flex gap-3">
@@ -132,12 +132,12 @@ export default function AdjustmentsPage() {
             value={phoneSearch}
             onChange={(e) => setPhoneSearch(e.target.value)}
             placeholder="ex : +243812345678"
-            className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
+            className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/40 focus:border-green-deep transition-colors"
           />
           <button
             type="submit"
             disabled={searching || !phoneSearch.trim()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-green-deep hover:bg-green-deep/85 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all"
           >
             {searching ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
             Rechercher
@@ -151,7 +151,7 @@ export default function AdjustmentsPage() {
         {/* Multiple results */}
         {foundUsers.length > 1 && (
           <div className="space-y-2">
-            <p className="text-xs text-gray-500 dark:text-gray-400">{foundUsers.length} résultats — sélectionnez un utilisateur :</p>
+            <p className="text-xs text-gray-500 dark:text-text-secondary">{foundUsers.length} résultats — sélectionnez un utilisateur :</p>
             {foundUsers.map((u) => (
               <button
                 key={u.id}
@@ -159,8 +159,8 @@ export default function AdjustmentsPage() {
                 className={clsx(
                   'w-full text-left px-4 py-2.5 rounded-xl border text-sm transition-all',
                   selectedUser?.id === u.id
-                    ? 'border-signal bg-signal/5 text-gray-900 dark:text-white'
-                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300',
+                    ? 'border-green-deep bg-green-deep/5 text-gray-900 dark:text-text-primary'
+                    : 'border-gray-200 dark:border-text-secondary/20 hover:border-gray-300 dark:hover:border-gray-600 text-gray-700 dark:text-text-primary',
                 )}
               >
                 <span className="font-mono">{u.phone}</span>
@@ -174,23 +174,23 @@ export default function AdjustmentsPage() {
 
       {/* Selected user + adjustment form */}
       {selectedUser && (
-        <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm space-y-5">
+        <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-5">
           {/* User info */}
-          <div className="flex items-center gap-4 pb-4 border-b border-gray-100 dark:border-gray-800">
+          <div className="flex items-center gap-4 pb-4 border-b border-gray-100 dark:border-text-secondary/15">
             <div>
-              <p className="font-semibold text-gray-900 dark:text-white">{selectedUser.full_name ?? 'Nom inconnu'}</p>
-              <p className="text-sm font-mono text-gray-500 dark:text-gray-400">{selectedUser.phone}</p>
+              <p className="font-semibold text-gray-900 dark:text-text-primary">{selectedUser.full_name ?? 'Nom inconnu'}</p>
+              <p className="text-sm font-mono text-gray-500 dark:text-text-secondary">{selectedUser.phone}</p>
             </div>
             <div className="ml-auto text-right">
               <p className="text-xs text-gray-400 uppercase tracking-wider">Solde actuel</p>
-              <p className="text-xl font-heading font-bold text-gray-900 dark:text-white">{fmt(selectedUser.balance_cdf)} CDF</p>
+              <p className="text-xl font-serif font-bold text-gray-900 dark:text-text-primary">{fmt(selectedUser.balance_cdf)} CDF</p>
             </div>
           </div>
 
           {/* Adjustment inputs */}
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">
                 Montant CDF <span className="text-gray-400 font-normal normal-case">(positif = crédit, négatif = débit)</span>
               </label>
               <div className="flex flex-wrap gap-2">
@@ -213,7 +213,7 @@ export default function AdjustmentsPage() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="Montant (CDF)"
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/40 focus:border-green-deep transition-colors"
                 />
               </div>
               {amount && Number.isFinite(parseFloat(amount)) && (
@@ -227,20 +227,20 @@ export default function AdjustmentsPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Motif</label>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">Motif</label>
               <input
                 type="text"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 placeholder="Motif de l'ajustement (ex : remboursement, bonus, correction…)"
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/40 focus:border-green-deep transition-colors"
               />
             </div>
 
             <button
               onClick={handleAdjust}
               disabled={applying || !amount || !reason || !Number.isFinite(parseFloat(amount)) || parseFloat(amount) === 0}
-              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm"
+              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-green-deep hover:bg-green-deep/85 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm"
             >
               {applying ? <Loader2 size={15} className="animate-spin" /> : <SlidersHorizontal size={15} />}
               {applying ? 'Application en cours…' : 'Appliquer l\'ajustement'}
@@ -251,32 +251,32 @@ export default function AdjustmentsPage() {
 
       {/* History */}
       {history.length > 0 && (
-        <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
-          <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Ajustements de cette session</h2>
+        <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden shadow-sm">
+          <div className="px-5 py-4 border-b border-gray-100 dark:border-text-secondary/15">
+            <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary">Ajustements de cette session</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                   {['Date', 'Téléphone', 'Direction', 'Montant', 'Motif'].map((h) => (
                     <th key={h} className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+              <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                 {history.map((l) => (
-                  <tr key={l.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+                  <tr key={l.id} className="hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors">
                     <td className="px-4 py-2.5 text-xs text-gray-500">{fmtDate(l.created_at)}</td>
-                    <td className="px-4 py-2.5 font-mono text-xs text-gray-700 dark:text-gray-300">{l.phone ?? '—'}</td>
+                    <td className="px-4 py-2.5 font-mono text-xs text-gray-700 dark:text-text-primary">{l.phone ?? '—'}</td>
                     <td className="px-4 py-2.5">
                       <span className={clsx('inline-flex items-center gap-1 text-xs font-semibold', l.direction === 'credit' ? 'text-emerald-600' : 'text-red-500')}>
                         {l.direction === 'credit' ? <ArrowDownLeft size={12} /> : <ArrowUpRight size={12} />}
                         {l.direction}
                       </span>
                     </td>
-                    <td className="px-4 py-2.5 font-medium text-gray-900 dark:text-white">{fmt(l.amount)}</td>
-                    <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400">{l.reason}</td>
+                    <td className="px-4 py-2.5 font-medium text-gray-900 dark:text-text-primary">{fmt(l.amount)}</td>
+                    <td className="px-4 py-2.5 text-gray-500 dark:text-text-secondary">{l.reason}</td>
                   </tr>
                 ))}
               </tbody>
@@ -286,7 +286,7 @@ export default function AdjustmentsPage() {
       )}
 
       {history.length === 0 && !histLoading && (
-        <div className="text-center py-6 text-sm text-gray-400 dark:text-gray-600">
+        <div className="text-center py-6 text-sm text-gray-400 dark:text-text-secondary/50">
           Aucun ajustement effectué dans cette session.
         </div>
       )}

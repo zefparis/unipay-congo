@@ -62,14 +62,14 @@ export default function ReportsPage() {
     }
   }
 
-  const inputCls = 'px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-300';
+  const inputCls = 'px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-purple-300';
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <BarChart3 className="w-6 h-6 text-purple-600" />
-          <h1 className="text-lg font-bold text-gray-900 dark:text-white">Rapports</h1>
+          <h1 className="text-lg font-bold text-gray-900 dark:text-text-primary">Rapports</h1>
         </div>
         <button onClick={loadHistory} className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1">
           <RefreshCw className="w-3.5 h-3.5" /> Actualiser
@@ -88,11 +88,11 @@ export default function ReportsPage() {
       )}
 
       {/* Generate */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 space-y-4">
-        <h2 className="font-semibold text-gray-900 dark:text-white">Générer un rapport</h2>
+      <div className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-5 space-y-4">
+        <h2 className="font-semibold text-gray-900 dark:text-text-primary">Générer un rapport</h2>
         <div className="flex gap-3 items-end flex-wrap">
           <div>
-            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Mois</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Mois</label>
             <input type="month" value={genMonth} onChange={(e) => setGenMonth(e.target.value)} className={inputCls} />
           </div>
           <button
@@ -130,15 +130,15 @@ export default function ReportsPage() {
 
       {/* History */}
       <div className="space-y-2">
-        <h3 className="font-medium text-gray-900 dark:text-white text-sm">Historique</h3>
+        <h3 className="font-medium text-gray-900 dark:text-text-primary text-sm">Historique</h3>
         {loading ? (
           <div className="flex justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-purple-600" /></div>
         ) : (
-          <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="divide-y divide-gray-100 dark:divide-text-secondary/15 rounded-xl border border-gray-200 dark:border-text-secondary/20 overflow-hidden">
             {history.map((m) => (
-              <div key={m.billing_month} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-900">
+              <div key={m.billing_month} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-navy-panel">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white capitalize">{formatMonth(m.billing_month, locale)}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-text-primary capitalize">{formatMonth(m.billing_month, locale)}</p>
                   <p className="text-xs text-gray-500">
                     {m.invoice_count} facture(s) · {m.creditor_count} fournisseur(s)
                     {m.generated_at && ` · rapport ${formatDate(m.generated_at, locale)}`}
@@ -155,7 +155,7 @@ export default function ReportsPage() {
                 {m.share_url && m.share_token && (
                   <button
                     onClick={() => copyShare(m.share_url!, m.share_token!)}
-                    className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-700"
+                    className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-navy-panel text-gray-400 hover:text-gray-700"
                     title="Copier le lien public"
                   >
                     {copied === m.share_token ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}

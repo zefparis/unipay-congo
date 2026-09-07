@@ -41,7 +41,7 @@ export default function ContactForm() {
   };
 
   const inputBase =
-    'w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-ink/60 px-4 py-3 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-signal/50 focus:border-signal dark:focus:border-signal transition-colors duration-200';
+    'w-full rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy/60 px-4 py-3 text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 dark:placeholder:text-text-secondary/70 focus:outline-none focus:ring-2 focus:ring-green-deep/50 focus:border-green-deep dark:focus:border-green-deep transition-colors duration-200';
 
   return (
     <>
@@ -49,8 +49,8 @@ export default function ContactForm() {
         {/* Row 1: Name + Company */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5 uppercase tracking-wider">
-              {t('form_name')} <span className="text-signal">*</span>
+            <label className="block text-xs font-semibold text-gray-700 dark:text-text-primary mb-1.5 uppercase tracking-wider">
+              {t('form_name')} <span className="text-green-deep">*</span>
             </label>
             <input
               type="text"
@@ -63,7 +63,7 @@ export default function ContactForm() {
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5 uppercase tracking-wider">
+            <label className="block text-xs font-semibold text-gray-700 dark:text-text-primary mb-1.5 uppercase tracking-wider">
               {t('form_company')}
             </label>
             <input
@@ -80,8 +80,8 @@ export default function ContactForm() {
         {/* Row 2: Email + Phone */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5 uppercase tracking-wider">
-              {t('form_email')} <span className="text-signal">*</span>
+            <label className="block text-xs font-semibold text-gray-700 dark:text-text-primary mb-1.5 uppercase tracking-wider">
+              {t('form_email')} <span className="text-green-deep">*</span>
             </label>
             <input
               type="email"
@@ -94,7 +94,7 @@ export default function ContactForm() {
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5 uppercase tracking-wider">
+            <label className="block text-xs font-semibold text-gray-700 dark:text-text-primary mb-1.5 uppercase tracking-wider">
               {t('form_phone')}
             </label>
             <input
@@ -110,8 +110,8 @@ export default function ContactForm() {
 
         {/* Message */}
         <div>
-          <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5 uppercase tracking-wider">
-            {t('form_message')} <span className="text-signal">*</span>
+          <label className="block text-xs font-semibold text-gray-700 dark:text-text-primary mb-1.5 uppercase tracking-wider">
+            {t('form_message')} <span className="text-green-deep">*</span>
           </label>
           <textarea
             name="message"
@@ -128,7 +128,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="group w-full inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-signal text-white font-semibold text-base hover:bg-signal/85 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-signal/25 hover:shadow-signal/40 hover:-translate-y-0.5"
+          className="group w-full inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-green-deep text-white font-semibold text-base hover:bg-green-deep/85 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-signal/25 hover:shadow-green-deep/40 hover:-translate-y-0.5"
         >
           {submitting ? (
             <>
@@ -146,7 +146,7 @@ export default function ContactForm() {
 
       {/* Success toast */}
       <div
-        className={`fixed bottom-6 inset-x-4 sm:inset-x-auto sm:right-6 sm:max-w-sm z-[100] flex items-center gap-3 px-5 py-4 rounded-2xl bg-signal text-white shadow-2xl shadow-signal/30 transition-all duration-500 ${
+        className={`fixed bottom-6 inset-x-4 sm:inset-x-auto sm:right-6 sm:max-w-sm z-[100] flex items-center gap-3 px-5 py-4 rounded-2xl bg-green-deep text-white shadow-2xl shadow-green-deep/30 transition-all duration-500 ${
           showToast ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
         role="status"

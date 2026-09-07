@@ -28,7 +28,7 @@ interface Pagination {
 const STATUS_STYLES: Record<ConvStatus, string> = {
   open: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
   escalated: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  resolved: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+  resolved: 'bg-gray-100 text-gray-500 dark:bg-navy-panel dark:text-text-secondary',
 };
 
 const STATUS_LABELS: Record<ConvStatus, string> = {
@@ -73,18 +73,18 @@ export default function WalletSupportListPage() {
     <div className="mx-auto max-w-7xl space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="flex items-center gap-2 text-2xl font-heading font-bold text-gray-900 dark:text-white">
-            <Headset className="text-signal" size={22} />
+          <h1 className="flex items-center gap-2 text-2xl font-serif font-bold text-gray-900 dark:text-text-primary">
+            <Headset className="text-green-deep" size={22} />
             Support Wallet
           </h1>
-          <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-0.5 text-sm text-gray-500 dark:text-text-secondary">
             Conversations support des utilisateurs wallet (chat bot + escalades).
           </p>
         </div>
         <button
           onClick={load}
           disabled={loading}
-          className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-600 transition hover:bg-gray-100 disabled:opacity-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800"
+          className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-600 transition hover:bg-gray-100 disabled:opacity-50 dark:border-text-secondary/20 dark:text-text-secondary dark:hover:bg-navy-panel"
         >
           <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
           Actualiser
@@ -95,7 +95,7 @@ export default function WalletSupportListPage() {
         <select
           value={status}
           onChange={(e) => { setStatus(e.target.value as ConvStatus | ''); }}
-          className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-signal/40 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+          className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-green-deep/40 dark:border-text-secondary/20 dark:bg-navy-panel dark:text-text-primary"
         >
           <option value="">Tous les statuts</option>
           <option value="open">Ouvertes</option>
@@ -110,42 +110,42 @@ export default function WalletSupportListPage() {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/60">
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-text-secondary/15 dark:bg-navy-panel/60">
         {loading && rows.length === 0 ? (
           <div className="flex justify-center py-16">
-            <Loader2 size={24} className="animate-spin text-signal" />
+            <Loader2 size={24} className="animate-spin text-green-deep" />
           </div>
         ) : rows.length === 0 ? (
-          <div className="py-12 text-center text-sm text-gray-400 dark:text-gray-600">
+          <div className="py-12 text-center text-sm text-gray-400 dark:text-text-secondary/50">
             Aucune conversation wallet.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px] text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                   {['Utilisateur', 'Téléphone', 'Statut', 'Dernière MAJ', ''].map((col) => (
-                    <th key={col} className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">
+                    <th key={col} className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-text-secondary/70">
                       {col}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+              <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                 {rows.map((row) => (
                   <tr
                     key={row.id}
                     onClick={() => router.push(`/dashboard/admin/wallet-support/${row.id}`)}
-                    className="cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-800/30"
+                    className="cursor-pointer transition hover:bg-gray-50 dark:hover:bg-navy-panel/30"
                   >
-                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{row.owner_name}</td>
-                    <td className="px-4 py-3 font-mono text-gray-600 dark:text-gray-400">{row.owner_phone ?? '—'}</td>
+                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary">{row.owner_name}</td>
+                    <td className="px-4 py-3 font-mono text-gray-600 dark:text-text-secondary">{row.owner_phone ?? '—'}</td>
                     <td className="px-4 py-3">
                       <span className={clsx('inline-flex rounded-full px-2 py-0.5 text-xs font-semibold', STATUS_STYLES[row.status])}>
                         {STATUS_LABELS[row.status]}
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-gray-500 dark:text-gray-400">{fmtDate(row.updated_at)}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-gray-500 dark:text-text-secondary">{fmtDate(row.updated_at)}</td>
                     <td className="px-4 py-3 text-gray-400">→</td>
                   </tr>
                 ))}
@@ -156,7 +156,7 @@ export default function WalletSupportListPage() {
       </div>
 
       {pagination.pages > 1 && (
-        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-text-secondary">
           <span>{pagination.total} conversations — page {pagination.page}/{pagination.pages}</span>
         </div>
       )}

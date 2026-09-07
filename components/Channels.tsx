@@ -6,14 +6,14 @@ export default function Channels() {
   const t = useTranslations('channels');
 
   return (
-    <section id="api" className="py-24 bg-gray-50 dark:bg-ink/60">
+    <section id="api" className="py-24 bg-gray-50 dark:bg-navy-panel/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-heading font-bold text-gray-900 dark:text-white mb-4 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 dark:text-text-primary mb-4 tracking-tight">
             {t('title')}
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-gray-600 dark:text-text-secondary max-w-2xl mx-auto leading-relaxed">
             {t('subtitle')}
           </p>
         </div>
@@ -23,7 +23,7 @@ export default function Channels() {
           {channels.map((channel) => (
             <div
               key={channel.id}
-              className="relative flex flex-col items-center p-4 sm:p-7 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-ink overflow-hidden group hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-xl transition-all duration-300"
+              className="relative flex flex-col items-center p-4 sm:p-7 rounded-2xl border border-gray-200 dark:border-text-secondary/15 bg-white dark:bg-navy overflow-hidden group hover:border-gray-300 dark:hover:border-text-secondary/30 hover:shadow-xl transition-all duration-300"
             >
               {/* Top color stripe */}
               <div
@@ -33,7 +33,7 @@ export default function Channels() {
 
               {/* Logo avatar */}
               <div
-                className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-5 text-lg sm:text-2xl font-heading font-bold text-white shadow-lg mt-1 sm:mt-2"
+                className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-5 text-lg sm:text-2xl font-serif font-bold text-white shadow-lg mt-1 sm:mt-2"
                 style={{
                   backgroundColor: channel.color,
                   boxShadow: `0 8px 24px ${channel.color}40`,
@@ -43,15 +43,15 @@ export default function Channels() {
               </div>
 
               {/* Name + description */}
-              <h3 className="text-base font-heading font-bold text-gray-900 dark:text-white mb-1 text-center">
+              <h3 className="text-base font-serif font-bold text-gray-900 dark:text-text-primary mb-1 text-center">
                 {channel.name}
               </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-5 text-center">
+              <p className="text-xs text-gray-500 dark:text-text-secondary mb-5 text-center">
                 {channel.description}
               </p>
 
               {/* Status badge */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-green-deep/15 text-emerald-700 dark:text-green-deep">
                 <CheckCircle2 size={12} />
                 {t('status_active')}
               </div>

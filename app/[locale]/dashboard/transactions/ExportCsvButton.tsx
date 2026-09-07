@@ -43,7 +43,7 @@ export default function ExportCsvButton({ transactions }: Props) {
     <button
       onClick={handleExport}
       disabled={transactions.length === 0}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+      className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-50 dark:hover:bg-navy-panel disabled:opacity-40 disabled:cursor-not-allowed transition-all"
     >
       <Download size={14} />
       {t('export_csv')}

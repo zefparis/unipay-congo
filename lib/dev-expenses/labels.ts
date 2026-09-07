@@ -40,7 +40,7 @@ export const STATUS_MAP: Record<DevExpenseStatusV4, VisualStatus> = {
 export const VISUAL_STATUS_CONFIG: Record<VisualStatus, StatusConfig> = {
   draft: {
     label: 'Brouillon',
-    cls: 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700',
+    cls: 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-navy-panel dark:text-text-secondary dark:border-text-secondary/20',
     dot: 'bg-gray-400',
   },
   to_validate: {
@@ -75,12 +75,12 @@ export const VISUAL_STATUS_CONFIG: Record<VisualStatus, StatusConfig> = {
   },
   cancelled: {
     label: 'Annulée',
-    cls: 'bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-500 dark:border-gray-700',
+    cls: 'bg-gray-100 text-gray-500 border-gray-200 dark:bg-navy-panel dark:text-text-secondary/70 dark:border-text-secondary/20',
     dot: 'bg-gray-400',
   },
   archived: {
     label: 'Archivée',
-    cls: 'bg-gray-100 text-gray-400 border-gray-200 dark:bg-gray-800 dark:text-gray-500 dark:border-gray-700',
+    cls: 'bg-gray-100 text-gray-400 border-gray-200 dark:bg-navy-panel dark:text-text-secondary/70 dark:border-text-secondary/20',
     dot: 'bg-gray-300',
   },
 };
@@ -155,7 +155,7 @@ export const SETTLEMENT_STATUS_CONFIG: Record<SettlementStatus, StatusConfig> = 
   },
   cancelled: {
     label: 'Annulé',
-    cls: 'bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-500 dark:border-gray-700',
+    cls: 'bg-gray-100 text-gray-500 border-gray-200 dark:bg-navy-panel dark:text-text-secondary/70 dark:border-text-secondary/20',
     dot: 'bg-gray-400',
   },
 };
@@ -201,7 +201,7 @@ export const ENTITY_TYPE_LABELS: Record<string, string> = {
 export const QUOTE_STATUS_CONFIG: Record<string, StatusConfig> = {
   draft: {
     label: 'Brouillon',
-    cls: 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700',
+    cls: 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-navy-panel dark:text-text-secondary dark:border-text-secondary/20',
     dot: 'bg-gray-400',
   },
   sent: {

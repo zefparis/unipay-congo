@@ -20,21 +20,21 @@ const OPERATORS = [
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-gray-200 dark:border-gray-800 last:border-0">
+    <div className="border-b border-gray-200 dark:border-text-secondary/15 last:border-0">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between gap-4 py-5 text-left group"
       >
-        <span className="text-sm sm:text-base font-medium text-gray-900 dark:text-white group-hover:text-signal transition-colors">
+        <span className="text-sm sm:text-base font-medium text-gray-900 dark:text-text-primary group-hover:text-green-deep transition-colors">
           {q}
         </span>
         <ChevronDown
           size={18}
-          className={`flex-shrink-0 text-gray-400 transition-transform duration-200 ${open ? 'rotate-180 text-signal' : ''}`}
+          className={`flex-shrink-0 text-gray-400 transition-transform duration-200 ${open ? 'rotate-180 text-green-deep' : ''}`}
         />
       </button>
       {open && (
-        <p className="pb-5 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+        <p className="pb-5 text-sm text-gray-600 dark:text-text-secondary leading-relaxed">
           {a}
         </p>
       )}
@@ -65,12 +65,12 @@ export default function PricingPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-white dark:bg-ink pt-16 overflow-x-hidden">
+      <main className="min-h-screen bg-white dark:bg-navy pt-16 overflow-x-hidden">
 
         {/* ── Hero ──────────────────────────────────────────────── */}
         <section className="relative overflow-hidden py-20 lg:py-28">
-          <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/40 to-white dark:from-ink dark:via-ink/80 dark:to-ink" />
-          <div className="absolute top-0 right-[-5%] w-[500px] h-[500px] bg-signal/6 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/40 to-white dark:from-navy dark:via-navy/80 dark:to-navy" />
+          <div className="absolute top-0 right-[-5%] w-[500px] h-[500px] bg-green-deep/6 rounded-full blur-3xl pointer-events-none" />
           <div
             className="absolute inset-0 opacity-[0.025] dark:opacity-[0.035]"
             style={{
@@ -80,14 +80,14 @@ export default function PricingPage() {
           />
 
           <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-signal/10 border border-signal/25 text-signal text-sm font-medium mb-7">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-deep/10 border border-green-deep/25 text-green-deep text-sm font-medium mb-7">
               <Code2 size={14} />
               {t('badge')}
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-gray-900 dark:text-white leading-[1.1] tracking-tight mb-5">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-gray-900 dark:text-text-primary leading-[1.1] tracking-tight mb-5">
               {t('title')}
             </h1>
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-text-secondary leading-relaxed max-w-2xl mx-auto">
               {t('subtitle')}
             </p>
           </div>
@@ -97,37 +97,37 @@ export default function PricingPage() {
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
           <div className="max-w-lg mx-auto">
             {/* Card */}
-            <div className="relative rounded-3xl border-2 border-signal/40 bg-white dark:bg-ink/60 shadow-2xl shadow-signal/10 overflow-hidden">
+            <div className="relative rounded-3xl border-2 border-green-deep/40 bg-white dark:bg-navy/60 shadow-2xl shadow-green-deep/10 overflow-hidden">
               {/* Top accent bar */}
               <div className="h-1.5 bg-gradient-to-r from-signal via-signal to-signal/70" />
 
               {/* Plan header */}
-              <div className="px-5 sm:px-8 pt-7 sm:pt-8 pb-6 border-b border-gray-100 dark:border-gray-800">
+              <div className="px-5 sm:px-8 pt-7 sm:pt-8 pb-6 border-b border-gray-100 dark:border-text-secondary/15">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-bold text-signal uppercase tracking-widest">{t('plan_name')}</span>
-                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-signal/10 text-signal border border-signal/20">
+                  <span className="text-sm font-bold text-green-deep uppercase tracking-widest">{t('plan_name')}</span>
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-deep/10 text-green-deep border border-green-deep/20">
                     RDC
                   </span>
                 </div>
 
                 {/* Rate */}
                 <div className="flex items-baseline gap-2 mb-1">
-                  <span className="text-5xl sm:text-7xl font-heading font-bold text-gray-900 dark:text-white tracking-tight">
+                  <span className="text-5xl sm:text-7xl font-serif font-bold text-gray-900 dark:text-text-primary tracking-tight">
                     {t('rate')}
                   </span>
                 </div>
-                <p className="text-base text-gray-500 dark:text-gray-400 font-medium mb-1">{t('rate_label')}</p>
-                <p className="text-xs text-signal font-semibold">{t('rate_note')}</p>
+                <p className="text-base text-gray-500 dark:text-text-secondary font-medium mb-1">{t('rate_label')}</p>
+                <p className="text-xs text-green-deep font-semibold">{t('rate_note')}</p>
               </div>
 
               {/* Features list */}
               <div className="px-5 sm:px-8 py-6">
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-6">{t('plan_desc')}</p>
+                <p className="text-sm text-gray-600 dark:text-text-secondary leading-relaxed mb-6">{t('plan_desc')}</p>
                 <ul className="space-y-3">
                   {features.map((f) => (
                     <li key={f} className="flex items-center gap-3">
-                      <CheckCircle2 size={17} className="text-signal flex-shrink-0" />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">{f}</span>
+                      <CheckCircle2 size={17} className="text-green-deep flex-shrink-0" />
+                      <span className="text-sm text-gray-700 dark:text-text-primary">{f}</span>
                     </li>
                   ))}
                 </ul>
@@ -137,7 +137,7 @@ export default function PricingPage() {
               <div className="px-5 sm:px-8 pb-7 sm:pb-8">
                 <Link
                   href="/register"
-                  className="group w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-signal text-white font-semibold text-base hover:bg-signal/85 transition-all duration-200 shadow-lg shadow-signal/25 hover:shadow-signal/40 hover:-translate-y-0.5"
+                  className="group w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-green-deep text-white font-semibold text-base hover:bg-green-deep/85 transition-all duration-200 shadow-lg shadow-signal/25 hover:shadow-green-deep/40 hover:-translate-y-0.5"
                 >
                   {t('cta')}
                   <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
@@ -146,7 +146,7 @@ export default function PricingPage() {
             </div>
 
             {/* Trust note */}
-            <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-4">
+            <p className="text-center text-xs text-gray-400 dark:text-text-secondary/70 mt-4">
               🔒 {t('f3')} · {t('f2')}
             </p>
           </div>
@@ -155,23 +155,23 @@ export default function PricingPage() {
           <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl mx-auto">
             {highlights.map(({ icon: Icon, label }) => (
               <div key={label} className="flex flex-col items-center text-center gap-2">
-                <div className="w-11 h-11 rounded-xl bg-signal/10 flex items-center justify-center">
-                  <Icon size={20} className="text-signal" />
+                <div className="w-11 h-11 rounded-xl bg-green-deep/10 flex items-center justify-center">
+                  <Icon size={20} className="text-green-deep" />
                 </div>
-                <span className="text-xs font-medium text-gray-600 dark:text-gray-400 leading-snug">{label}</span>
+                <span className="text-xs font-medium text-gray-600 dark:text-text-secondary leading-snug">{label}</span>
               </div>
             ))}
           </div>
         </section>
 
         {/* ── Operators ─────────────────────────────────────────── */}
-        <section className="bg-gray-50 dark:bg-ink/60 border-y border-gray-200 dark:border-gray-800 py-20">
+        <section className="bg-gray-50 dark:bg-navy/60 border-y border-gray-200 dark:border-text-secondary/15 py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-2xl sm:text-3xl font-heading font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 dark:text-text-primary mb-3 tracking-tight">
                 {t('ops_title')}
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 max-w-xl mx-auto text-sm sm:text-base">
+              <p className="text-gray-600 dark:text-text-secondary max-w-xl mx-auto text-sm sm:text-base">
                 {t('ops_subtitle')}
               </p>
             </div>
@@ -180,20 +180,20 @@ export default function PricingPage() {
               {OPERATORS.map((op) => (
                 <div
                   key={op.code}
-                  className="relative flex flex-col items-center p-4 sm:p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-ink overflow-hidden"
+                  className="relative flex flex-col items-center p-4 sm:p-6 rounded-2xl border border-gray-200 dark:border-text-secondary/15 bg-white dark:bg-navy overflow-hidden"
                 >
                   <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style={{ backgroundColor: op.color }} />
                   <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-heading font-bold text-white shadow-md mt-1 mb-3"
+                    className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-serif font-bold text-white shadow-md mt-1 mb-3"
                     style={{ backgroundColor: op.color, boxShadow: `0 6px 20px ${op.color}40` }}
                   >
                     {op.name.slice(0, 2).toUpperCase()}
                   </div>
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white text-center mb-2">{op.name}</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-text-primary text-center mb-2">{op.name}</p>
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
                     op.status
                       ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
+                      : 'bg-gray-100 dark:bg-navy-panel text-gray-500 dark:text-text-secondary'
                   }`}>
                     {op.status ? '✅ Actif' : '🔜 Bientôt'}
                   </span>
@@ -206,10 +206,10 @@ export default function PricingPage() {
         {/* ── FAQ ───────────────────────────────────────────────── */}
         <section className="py-20">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl sm:text-3xl font-heading font-bold text-gray-900 dark:text-white mb-10 text-center tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 dark:text-text-primary mb-10 text-center tracking-tight">
               {t('faq_title')}
             </h2>
-            <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-ink/60 px-6 sm:px-8 divide-y divide-gray-200 dark:divide-gray-800">
+            <div className="rounded-2xl border border-gray-200 dark:border-text-secondary/15 bg-white dark:bg-navy/60 px-6 sm:px-8 divide-y divide-gray-200 dark:divide-text-secondary/15">
               {faqs.map(({ q, a }) => (
                 <FaqItem key={q} q={q} a={a} />
               ))}
@@ -218,28 +218,28 @@ export default function PricingPage() {
         </section>
 
         {/* ── CTA banner ────────────────────────────────────────── */}
-        <section className="py-20 bg-gradient-to-br from-signal/8 via-transparent to-signal/8 dark:from-signal/10 dark:via-ink dark:to-signal/10 border-y border-signal/15 dark:border-signal/20">
+        <section className="py-20 bg-gradient-to-br from-green-deep/8 via-transparent to-green-deep/8 dark:from-green-deep/10 dark:via-navy dark:to-green-deep/10 border-y border-green-deep/15 dark:border-green-deep/20">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="w-14 h-14 rounded-2xl bg-signal flex items-center justify-center shadow-lg shadow-signal/30 mx-auto mb-6">
+            <div className="w-14 h-14 rounded-2xl bg-green-deep flex items-center justify-center shadow-lg shadow-green-deep/30 mx-auto mb-6">
               <Zap size={24} className="text-white" />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-heading font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 dark:text-text-primary mb-3 tracking-tight">
               {t('cta_title')}
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-8 text-sm sm:text-base">
+            <p className="text-gray-600 dark:text-text-secondary mb-8 text-sm sm:text-base">
               {t('cta_subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/register"
-                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-signal text-white font-semibold text-base hover:bg-signal/85 transition-all duration-200 shadow-lg shadow-signal/25 hover:shadow-signal/40 hover:-translate-y-0.5"
+                className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-green-deep text-white font-semibold text-base hover:bg-green-deep/85 transition-all duration-200 shadow-lg shadow-signal/25 hover:shadow-green-deep/40 hover:-translate-y-0.5"
               >
                 {t('cta')}
                 <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
                 href="/api"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-semibold text-base hover:border-signal hover:text-signal dark:hover:border-signal dark:hover:text-signal transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border-2 border-gray-200 dark:border-text-secondary/20 text-gray-700 dark:text-text-primary font-semibold text-base hover:border-green-deep hover:text-green-deep dark:hover:border-green-deep dark:hover:text-green-deep transition-all duration-200"
               >
                 <Code2 size={17} />
                 Documentation API

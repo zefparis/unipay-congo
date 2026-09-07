@@ -41,7 +41,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5">
+      <label className="block text-xs font-semibold text-gray-700 dark:text-text-primary uppercase tracking-wider mb-1.5">
         {label}{required && <span className="text-red-500 ml-0.5">*</span>}
       </label>
       <input
@@ -49,7 +49,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
+        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/40 focus:border-green-deep transition-colors"
       />
       {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
     </div>
@@ -107,7 +107,7 @@ export default function KycPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-48">
-        <Loader2 size={24} className="animate-spin text-signal" />
+        <Loader2 size={24} className="animate-spin text-green-deep" />
       </div>
     );
   }
@@ -122,12 +122,12 @@ export default function KycPage() {
       {/* ── Header ────────────────────────────────────────────── */}
       <div>
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded-xl bg-signal/10 dark:bg-signal/15">
-            <ShieldCheck className="text-signal" size={20} />
+          <div className="p-2 rounded-xl bg-green-deep/10 dark:bg-green-deep/15">
+            <ShieldCheck className="text-green-deep" size={20} />
           </div>
-          <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary">{t('title')}</h1>
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 ml-12">{t('subtitle')}</p>
+        <p className="text-sm text-gray-500 dark:text-text-secondary ml-12">{t('subtitle')}</p>
       </div>
 
       {/* ── Status card ───────────────────────────────────────── */}
@@ -148,10 +148,10 @@ export default function KycPage() {
                 {t(`badge_${status}` as Parameters<typeof t>[0])}
               </span>
               {data?.kyc_submitted_at && (
-                <span className="text-xs text-gray-500 dark:text-gray-400">{t('submitted_at')}: {fmt(data.kyc_submitted_at)}</span>
+                <span className="text-xs text-gray-500 dark:text-text-secondary">{t('submitted_at')}: {fmt(data.kyc_submitted_at)}</span>
               )}
               {data?.kyc_reviewed_at && (
-                <span className="text-xs text-gray-500 dark:text-gray-400">{t('reviewed_at')}: {fmt(data.kyc_reviewed_at)}</span>
+                <span className="text-xs text-gray-500 dark:text-text-secondary">{t('reviewed_at')}: {fmt(data.kyc_reviewed_at)}</span>
               )}
             </div>
             <p className={`text-sm font-medium ${
@@ -163,7 +163,7 @@ export default function KycPage() {
             </p>
             {/* Rejection reason */}
             {status === 'rejected' && data?.kyc_notes && (
-              <div className="mt-3 bg-white dark:bg-gray-900/60 border border-red-200 dark:border-red-800/40 rounded-xl px-4 py-3">
+              <div className="mt-3 bg-white dark:bg-navy-panel/60 border border-red-200 dark:border-red-800/40 rounded-xl px-4 py-3">
                 <p className="text-xs font-semibold text-red-700 dark:text-red-400 mb-1">{t('rejection_reason')}</p>
                 <p className="text-sm text-red-800 dark:text-red-300">{data.kyc_notes}</p>
               </div>
@@ -174,8 +174,8 @@ export default function KycPage() {
 
       {/* ── KYC form ──────────────────────────────────────────── */}
       {status !== 'approved' && (
-        <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 space-y-5">
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">{t('form_title')}</h2>
+        <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-5 space-y-5">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary">{t('form_title')}</h2>
 
           <Field
             label={t('company_name')}
@@ -213,7 +213,7 @@ export default function KycPage() {
           <button
             onClick={handleSubmit}
             disabled={submitting || !companyName.trim()}
-            className="flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm shadow-signal/20"
+            className="flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-green-deep hover:bg-green-deep/85 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm shadow-green-deep/20"
           >
             {submitting ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
             {submitting ? t('submitting') : (data?.kyc_submitted_at ? t('resubmit') : t('submit'))}
@@ -222,12 +222,12 @@ export default function KycPage() {
       )}
 
       {/* ── What is KYC ───────────────────────────────────────── */}
-      <div className="bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
+      <div className="bg-gray-50 dark:bg-navy-panel/40 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-5">
         <div className="flex items-center gap-2 mb-2">
           <AlertTriangle size={15} className="text-amber-500 flex-shrink-0" />
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{t('what_is_title')}</h3>
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary">{t('what_is_title')}</h3>
         </div>
-        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{t('what_is_body')}</p>
+        <p className="text-sm text-gray-600 dark:text-text-secondary leading-relaxed">{t('what_is_body')}</p>
       </div>
 
     </div>

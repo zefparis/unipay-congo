@@ -102,7 +102,7 @@ function Feedback({ res }: { res: { ok: boolean; msg: string } | null }) {
 }
 
 /* ── Input / select helpers ──────────────────────────────────────────── */
-const inputCls = 'w-full px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500';
+const inputCls = 'w-full px-3 py-2 rounded-xl bg-gray-50 dark:bg-navy-panel border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-900 dark:text-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500';
 const selCls   = inputCls;
 
 /* ── Create form state ───────────────────────────────────────────────── */
@@ -392,13 +392,13 @@ export default function CryptoReceiptsSection() {
 
       {/* ── Header ─────────────────────────────────────────────────── */}
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest flex items-center gap-2">
+        <h2 className="text-sm font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-widest flex items-center gap-2">
           <FileText size={14} className="text-purple-400" />
           Reçus crypto — factures
         </h2>
         <div className="flex items-center gap-2">
           <button onClick={() => void loadReceipts()}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-500 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition">
             <RefreshCw size={12} className={clsx(loading && 'animate-spin')} /> Actualiser
           </button>
           <button onClick={() => { setShowCreate((v) => !v); setCreateRes(null); }}
@@ -411,9 +411,9 @@ export default function CryptoReceiptsSection() {
 
       {/* ── Create form ────────────────────────────────────────────── */}
       {showCreate && (
-        <div className="bg-white dark:bg-[#0e1428] border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
+        <div className="bg-white dark:bg-[#0e1428] border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Créer un reçu en attente</h3>
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-text-primary">Créer un reçu en attente</h3>
             <button
               type="button"
               onClick={() => setCForm({ ...EMPTY_CREATE, ...EXAMPLE_RECEIPT } as CreateForm)}
@@ -426,7 +426,7 @@ export default function CryptoReceiptsSection() {
           <form onSubmit={(e) => { void handleCreate(e); }} className="space-y-4">
             {/* Receipt kind selector */}
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Type d&apos;entrée *</label>
+              <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">Type d&apos;entrée *</label>
               <select value={cForm.receipt_kind} onChange={(e) => setCForm(f => ({ ...f, receipt_kind: e.target.value }))} className={selCls}>
                 <option value="invoice_payment">Paiement facture</option>
                 <option value="test_payment">Paiement test</option>
@@ -449,7 +449,7 @@ export default function CryptoReceiptsSection() {
             {/* Wallet selector */}
             {treasuryWallets.length > 0 && (
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">
                   Wallet treasury (optionnel — auto-remplit adresse/asset/réseau)
                 </label>
                 <select
@@ -472,12 +472,12 @@ export default function CryptoReceiptsSection() {
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Référence facture *</label>
+                <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">Référence facture *</label>
                 <input type="text" required value={cForm.invoice_reference} onChange={(e) => setCForm(f => ({ ...f, invoice_reference: e.target.value }))}
                   placeholder="FAC-2026-001" className={inputCls} />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Payeur *</label>
+                <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">Payeur *</label>
                 <input type="text" required value={cForm.payer_name} onChange={(e) => setCForm(f => ({ ...f, payer_name: e.target.value }))}
                   placeholder="ADI Foundation" className={inputCls} />
               </div>
@@ -485,19 +485,19 @@ export default function CryptoReceiptsSection() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Asset *</label>
+                <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">Asset *</label>
                 <select value={cForm.asset} onChange={(e) => setCForm(f => ({ ...f, asset: e.target.value }))} className={selCls}>
                   {ASSET_OPTS.map(a => <option key={a} value={a}>{a}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Réseau *</label>
+                <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">Réseau *</label>
                 <select value={cForm.network} onChange={(e) => setCForm(f => ({ ...f, network: e.target.value }))} className={selCls}>
                   {NETWORK_OPTS.map(n => <option key={n} value={n}>{n}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{cForm.receipt_kind === 'internal_regularization' ? 'Montant à régulariser *' : 'Montant attendu *'}</label>
+                <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">{cForm.receipt_kind === 'internal_regularization' ? 'Montant à régulariser *' : 'Montant attendu *'}</label>
                 <input type="number" required min="0.01" step="0.01" value={cForm.expected_amount}
                   onChange={(e) => setCForm(f => ({ ...f, expected_amount: e.target.value }))}
                   placeholder="116000" className={inputCls} />
@@ -505,13 +505,13 @@ export default function CryptoReceiptsSection() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Adresse de réception * <span className="text-gray-400 font-normal">(votre adresse treasury)</span></label>
+              <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">Adresse de réception * <span className="text-gray-400 font-normal">(votre adresse treasury)</span></label>
               <input type="text" required value={cForm.receiving_address} onChange={(e) => setCForm(f => ({ ...f, receiving_address: e.target.value }))}
                 placeholder="0x... (EVM) ou Txxx... (TRC20)" className={clsx(inputCls, 'font-mono')} />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Notes</label>
+              <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">Notes</label>
               <textarea rows={2} value={cForm.notes} onChange={(e) => setCForm(f => ({ ...f, notes: e.target.value }))}
                 placeholder={cForm.receipt_kind === 'internal_regularization'
                   ? 'Motif de régularisation (obligatoire, min. 20 caractères)…'
@@ -540,25 +540,25 @@ export default function CryptoReceiptsSection() {
       {/* ── Filters ──────────────────────────────────────────────────── */}
       <div className="flex flex-wrap gap-2 items-center">
         <select value={fAsset}   onChange={(e) => setFAsset(e.target.value)}
-          className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-purple-500">
+          className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-navy-panel border border-gray-200 dark:border-text-secondary/20 text-xs text-gray-700 dark:text-text-primary focus:outline-none focus:ring-1 focus:ring-purple-500">
           <option value="">Tous les assets</option>
           {ASSET_OPTS.map(a => <option key={a} value={a}>{a}</option>)}
         </select>
         <select value={fNetwork} onChange={(e) => setFNetwork(e.target.value)}
-          className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-purple-500">
+          className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-navy-panel border border-gray-200 dark:border-text-secondary/20 text-xs text-gray-700 dark:text-text-primary focus:outline-none focus:ring-1 focus:ring-purple-500">
           <option value="">Tous les réseaux</option>
           {NETWORK_OPTS.map(n => <option key={n} value={n}>{n}</option>)}
         </select>
         <select value={fStatus}  onChange={(e) => setFStatus(e.target.value)}
-          className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-purple-500">
+          className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-navy-panel border border-gray-200 dark:border-text-secondary/20 text-xs text-gray-700 dark:text-text-primary focus:outline-none focus:ring-1 focus:ring-purple-500">
           <option value="">Tous les statuts</option>
           {Object.entries(STATUS_CFG).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
         </select>
         <input value={fPayer} onChange={(e) => setFPayer(e.target.value)} placeholder="Payeur…"
-          className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-purple-500 w-36" />
+          className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-navy-panel border border-gray-200 dark:border-text-secondary/20 text-xs text-gray-700 dark:text-text-primary focus:outline-none focus:ring-1 focus:ring-purple-500 w-36" />
         <input value={fRef}   onChange={(e) => setFRef(e.target.value)}   placeholder="Référence…"
-          className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-purple-500 w-36" />
-        <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 cursor-pointer select-none">
+          className="px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-navy-panel border border-gray-200 dark:border-text-secondary/20 text-xs text-gray-700 dark:text-text-primary focus:outline-none focus:ring-1 focus:ring-purple-500 w-36" />
+        <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-text-secondary cursor-pointer select-none">
           <input type="checkbox" checked={includeArchived} onChange={(e) => setIncludeArchived(e.target.checked)}
             className="rounded border-gray-600 bg-gray-700 text-purple-500 focus:ring-purple-500" />
           Afficher les reçus archivés
@@ -569,7 +569,7 @@ export default function CryptoReceiptsSection() {
       </div>
 
       {/* ── Table ────────────────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-[#0e1428] border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden">
+      <div className="bg-white dark:bg-[#0e1428] border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden">
         {loading ? (
           <div className="flex items-center gap-2 text-gray-400 text-sm p-5"><Loader2 size={14} className="animate-spin" /> Chargement…</div>
         ) : listError ? (
@@ -580,9 +580,9 @@ export default function CryptoReceiptsSection() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                   {['', 'Date', 'Référence / Payeur', 'Asset', 'Attendu', 'Reçu', 'Adresse réception', 'Tx Hash', 'Statut'].map((h) => (
-                    <th key={h} className="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide whitespace-nowrap">{h}</th>
+                    <th key={h} className="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wide whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -596,16 +596,16 @@ export default function CryptoReceiptsSection() {
                       <tr key={row.id}
                         onClick={() => expand(row)}
                         className={clsx(
-                          'border-b border-gray-50 dark:border-gray-800/60 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition cursor-pointer',
+                          'border-b border-gray-50 dark:border-text-secondary/15/60 hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition cursor-pointer',
                           row.is_archived && 'opacity-50',
                         )}>
                         <td className="pl-3 pr-1 py-3 text-gray-400">
                           {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                         </td>
-                        <td className="px-3 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap text-xs">{fmtDate(row.created_at)}</td>
+                        <td className="px-3 py-3 text-gray-500 dark:text-text-secondary whitespace-nowrap text-xs">{fmtDate(row.created_at)}</td>
                         <td className="px-3 py-3 whitespace-nowrap">
-                          <p className="font-medium text-gray-800 dark:text-gray-200">{row.invoice_reference ?? '—'}</p>
-                          <p className="text-xs text-gray-400 dark:text-gray-500">{row.payer_name ?? '—'}</p>
+                          <p className="font-medium text-gray-800 dark:text-text-primary">{row.invoice_reference ?? '—'}</p>
+                          <p className="text-xs text-gray-400 dark:text-text-secondary/70">{row.payer_name ?? '—'}</p>
                           {row.receipt_kind === 'internal_regularization' && (
                             <span className="inline-block mt-0.5 px-1.5 py-0.5 rounded bg-indigo-900/40 border border-indigo-700/40 text-indigo-300 text-[10px] font-semibold">
                               Régularisation
@@ -626,21 +626,21 @@ export default function CryptoReceiptsSection() {
                             {row.asset} <span className="font-normal opacity-70">{row.network}</span>
                           </span>
                         </td>
-                        <td className="px-3 py-3 font-semibold text-gray-900 dark:text-white whitespace-nowrap">
+                        <td className="px-3 py-3 font-semibold text-gray-900 dark:text-text-primary whitespace-nowrap">
                           {isNaN(expected) ? '—' : expected.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </td>
-                        <td className="px-3 py-3 whitespace-nowrap text-gray-700 dark:text-gray-300">
+                        <td className="px-3 py-3 whitespace-nowrap text-gray-700 dark:text-text-primary">
                           {fmtAmt(row.received_amount)}
                         </td>
-                        <td className="px-3 py-3 font-mono text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                        <td className="px-3 py-3 font-mono text-xs text-gray-500 dark:text-text-secondary whitespace-nowrap">
                           {row.receiving_address
                             ? <span title={row.receiving_address}>{truncate(row.receiving_address)}</span>
-                            : <span className="text-gray-300 dark:text-gray-600">—</span>}
+                            : <span className="text-gray-300 dark:text-text-secondary/50">—</span>}
                         </td>
-                        <td className="px-3 py-3 font-mono text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                        <td className="px-3 py-3 font-mono text-xs text-gray-500 dark:text-text-secondary whitespace-nowrap">
                           {row.tx_hash
                             ? <span title={row.tx_hash}>{truncate(row.tx_hash)}</span>
-                            : <span className="text-gray-300 dark:text-gray-600 italic">en attente</span>}
+                            : <span className="text-gray-300 dark:text-text-secondary/50 italic">en attente</span>}
                         </td>
                         <td className="px-3 py-3 whitespace-nowrap">
                           <span className={clsx('text-xs font-semibold px-2 py-0.5 rounded-full border', s.bg, s.color)}>
@@ -651,21 +651,21 @@ export default function CryptoReceiptsSection() {
 
                       {/* ── Edit panel ───────────────────────────────── */}
                       {isOpen && (
-                        <tr key={`${row.id}-edit`} className="bg-gray-50/70 dark:bg-gray-900/40 border-b border-purple-200 dark:border-purple-800/50">
+                        <tr key={`${row.id}-edit`} className="bg-gray-50/70 dark:bg-navy-panel/40 border-b border-purple-200 dark:border-purple-800/50">
                           <td colSpan={9} className="px-4 py-4">
                             <div className="space-y-4">
 
                               {/* Info row */}
-                              <div className="flex flex-wrap gap-4 text-xs text-gray-500 dark:text-gray-400">
+                              <div className="flex flex-wrap gap-4 text-xs text-gray-500 dark:text-text-secondary">
                                 {row.receiving_address && (
                                   <span className="flex items-center gap-1 font-mono">
-                                    Adresse : <span className="text-gray-700 dark:text-gray-200">{row.receiving_address}</span>
+                                    Adresse : <span className="text-gray-700 dark:text-text-primary">{row.receiving_address}</span>
                                     <CopyBtn text={row.receiving_address} />
                                   </span>
                                 )}
                                 {row.tx_hash && (
                                   <span className="flex items-center gap-1 font-mono">
-                                    Tx : <span className="text-gray-700 dark:text-gray-200">{row.tx_hash}</span>
+                                    Tx : <span className="text-gray-700 dark:text-text-primary">{row.tx_hash}</span>
                                     <CopyBtn text={row.tx_hash} />
                                   </span>
                                 )}
@@ -677,18 +677,18 @@ export default function CryptoReceiptsSection() {
                                 <div className="flex flex-wrap gap-3 items-end">
                                   {row.receipt_kind !== 'internal_regularization' && (
                                     <div className="flex-1 min-w-48">
-                                      <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Tx Hash</label>
+                                      <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">Tx Hash</label>
                                       <input type="text" value={editTxHash} onChange={(e) => setEditTxHash(e.target.value)}
                                         placeholder="0x… (66 chars)" className={clsx(inputCls, 'font-mono text-xs')} />
                                     </div>
                                   )}
                                   <div className="w-40">
-                                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Montant reçu</label>
+                                    <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">Montant reçu</label>
                                     <input type="number" min="0" step="0.01" value={editRecvAmt} onChange={(e) => setEditRecvAmt(e.target.value)}
                                       placeholder={fmtAmt(row.expected_amount)} className={inputCls} />
                                   </div>
                                   <button onClick={() => void handleSaveEdit(row)} disabled={actionBusy}
-                                    className="px-3 py-2 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-xs font-semibold text-gray-700 dark:text-gray-200 transition disabled:opacity-50">
+                                    className="px-3 py-2 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-xs font-semibold text-gray-700 dark:text-text-primary transition disabled:opacity-50">
                                     {actionBusy ? <Loader2 size={12} className="animate-spin" /> : 'Sauvegarder'}
                                   </button>
                                 </div>
@@ -818,28 +818,28 @@ export default function CryptoReceiptsSection() {
       {/* ── Archive / Delete confirmation modal ─────────────────────── */}
       {actionModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+          <div className="bg-white dark:bg-navy-panel border border-gray-200 dark:border-text-secondary/20 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
             {actionModal.mode === 'archive' ? (
               <>
-                <h3 className="font-semibold text-gray-800 dark:text-white flex items-center gap-2">
+                <h3 className="font-semibold text-gray-800 dark:text-text-primary flex items-center gap-2">
                   <Archive size={16} className="text-amber-400" />Archiver ce reçu
                 </h3>
                 <div className="flex gap-2 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs">
                   <AlertCircle size={13} className="shrink-0 mt-0.5" />
                   <span>Cette action masque le reçu de la vue opérationnelle mais conserve l&apos;historique et l&apos;audit.</span>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Reçu : <strong className="text-gray-700 dark:text-gray-200">{actionModal.row.invoice_reference ?? actionModal.row.id}</strong>
+                <p className="text-xs text-gray-500 dark:text-text-secondary">
+                  Reçu : <strong className="text-gray-700 dark:text-text-primary">{actionModal.row.invoice_reference ?? actionModal.row.id}</strong>
                 </p>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Motif (obligatoire, min. 5 caractères)</label>
+                  <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">Motif (obligatoire, min. 5 caractères)</label>
                   <input type="text" value={actionModalReason} onChange={(e) => setActionModalReason(e.target.value)}
                     placeholder="Ex : Doublon, test, reçu remplacé…" className={inputCls} autoFocus />
                 </div>
                 <Feedback res={actionModalRes} />
                 <div className="flex gap-2 justify-end">
                   <button onClick={() => { setActionModal(null); setActionModalReason(''); }}
-                    className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-200 transition">
+                    className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm font-semibold text-gray-700 dark:text-text-primary transition">
                     Annuler
                   </button>
                   <button onClick={() => void handleArchive(actionModal.row, actionModalReason)}
@@ -858,14 +858,14 @@ export default function CryptoReceiptsSection() {
                   <AlertCircle size={13} className="shrink-0 mt-0.5" />
                   <span>Suppression définitive autorisée uniquement pour les tests / brouillons sans preuve de paiement.</span>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Reçu : <strong className="text-gray-700 dark:text-gray-200">{actionModal.row.invoice_reference ?? actionModal.row.id}</strong>
+                <p className="text-xs text-gray-500 dark:text-text-secondary">
+                  Reçu : <strong className="text-gray-700 dark:text-text-primary">{actionModal.row.invoice_reference ?? actionModal.row.id}</strong>
                   {' '}· Statut : <strong>{actionModal.row.status}</strong>
                 </p>
                 <Feedback res={actionModalRes} />
                 <div className="flex gap-2 justify-end">
                   <button onClick={() => setActionModal(null)}
-                    className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-200 transition">
+                    className="px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm font-semibold text-gray-700 dark:text-text-primary transition">
                     Annuler
                   </button>
                   <button onClick={() => void handleDelete(actionModal.row)} disabled={actionModalBusy}

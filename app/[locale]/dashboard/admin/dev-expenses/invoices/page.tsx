@@ -118,7 +118,7 @@ export default function InvoicesPage() {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-bold text-gray-900 dark:text-white">Factures</h1>
+        <h1 className="text-lg font-bold text-gray-900 dark:text-text-primary">Factures</h1>
         <div className="flex items-center gap-2">
           <button
             onClick={() => router.refresh()}
@@ -203,16 +203,16 @@ export default function InvoicesPage() {
               <button
                 onClick={() => updateUrl({ page: Math.max(1, page - 1) })}
                 disabled={page <= 1}
-                className="p-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-30"
+                className="p-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-500 hover:bg-gray-50 dark:hover:bg-navy-panel disabled:opacity-30"
                 aria-label="Page précédente"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <span className="text-sm text-gray-600 dark:text-gray-400 px-2">{page} / {pages}</span>
+              <span className="text-sm text-gray-600 dark:text-text-secondary px-2">{page} / {pages}</span>
               <button
                 onClick={() => updateUrl({ page: Math.min(pages, page + 1) })}
                 disabled={page >= pages}
-                className="p-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-30"
+                className="p-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-500 hover:bg-gray-50 dark:hover:bg-navy-panel disabled:opacity-30"
                 aria-label="Page suivante"
               >
                 <ChevronRight className="w-4 h-4" />

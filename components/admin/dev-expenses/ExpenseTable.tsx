@@ -25,10 +25,10 @@ export default function ExpenseTable({ expenses, suppliers, entities, locale }: 
   };
 
   return (
-    <div className="hidden md:block overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
+    <div className="hidden md:block overflow-x-auto rounded-xl border border-gray-200 dark:border-text-secondary/20">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-gray-50 dark:bg-gray-800/50 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+          <tr className="bg-gray-50 dark:bg-navy-panel/50 text-left text-xs font-medium text-gray-500 dark:text-text-secondary uppercase tracking-wide">
             <th className="px-4 py-3">Facture / Objet</th>
             <th className="px-4 py-3">Fournisseur</th>
             <th className="px-4 py-3">Destinataire</th>
@@ -43,19 +43,19 @@ export default function ExpenseTable({ expenses, suppliers, entities, locale }: 
             <th className="px-4 py-3">Action</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+        <tbody className="divide-y divide-gray-100 dark:divide-text-secondary/15">
           {expenses.map((e) => {
             const remaining = getRemainingAmount(e);
             const overdue = isOverdue(e);
             return (
               <tr
                 key={e.id}
-                className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                className="bg-white dark:bg-navy-panel hover:bg-gray-50 dark:hover:bg-navy-panel/50 transition-colors"
               >
                 <td className="px-4 py-3">
                   <Link
                     href={`/dashboard/admin/dev-expenses/invoices/${e.id}`}
-                    className="font-medium text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400"
+                    className="font-medium text-gray-900 dark:text-text-primary hover:text-purple-600 dark:hover:text-purple-400"
                   >
                     {e.title || e.category}
                   </Link>
@@ -63,34 +63,34 @@ export default function ExpenseTable({ expenses, suppliers, entities, locale }: 
                     <span className="block text-xs text-gray-400">{e.invoice_number}</span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
+                <td className="px-4 py-3 text-gray-600 dark:text-text-secondary">
                   {supplierName(e.creditor_id)}
                 </td>
-                <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
+                <td className="px-4 py-3 text-gray-600 dark:text-text-secondary">
                   {entityName(e.billing_recipient_entity_id)}
                 </td>
-                <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
+                <td className="px-4 py-3 text-gray-600 dark:text-text-secondary">
                   {e.project_ref || e.project_code}
                 </td>
-                <td className="px-4 py-3 text-right font-mono text-gray-900 dark:text-white">
+                <td className="px-4 py-3 text-right font-mono text-gray-900 dark:text-text-primary">
                   {formatMoney(e.invoice_amount ?? e.amount_usd, e.invoice_currency, locale)}
                 </td>
-                <td className="px-4 py-3 text-right font-mono text-gray-600 dark:text-gray-400">
+                <td className="px-4 py-3 text-right font-mono text-gray-600 dark:text-text-secondary">
                   {e.requested_amount != null ? formatMoney(e.requested_amount, e.invoice_currency, locale) : '—'}
                 </td>
-                <td className="px-4 py-3 text-right font-mono text-gray-600 dark:text-gray-400">
+                <td className="px-4 py-3 text-right font-mono text-gray-600 dark:text-text-secondary">
                   {e.approved_amount != null ? formatMoney(e.approved_amount, e.invoice_currency, locale) : '—'}
                 </td>
-                <td className="px-4 py-3 text-right font-mono text-gray-600 dark:text-gray-400">
+                <td className="px-4 py-3 text-right font-mono text-gray-600 dark:text-text-secondary">
                   {formatMoney(e.settled_amount, e.invoice_currency, locale)}
                 </td>
-                <td className="px-4 py-3 text-right font-mono font-semibold text-gray-900 dark:text-white">
+                <td className="px-4 py-3 text-right font-mono font-semibold text-gray-900 dark:text-text-primary">
                   {formatMoney(remaining, e.invoice_currency, locale)}
                 </td>
                 <td className="px-4 py-3">
                   <ExpenseStatusBadge status={e.status_v4} />
                 </td>
-                <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
+                <td className="px-4 py-3 text-gray-600 dark:text-text-secondary">
                   {formatDate(e.due_date, locale)}
                   {overdue && (
                     <span className="block text-xs text-red-600 dark:text-red-400 font-medium">En retard</span>

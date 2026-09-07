@@ -277,7 +277,7 @@ export default function DevExpensesPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Receipt className="w-6 h-6 text-purple-600" />
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">Dev Expenses</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-text-primary">Dev Expenses</h1>
         </div>
         <button
           onClick={() => { loadUpcoming(); loadCreditors(); }}
@@ -299,7 +299,7 @@ export default function DevExpensesPage() {
       )}
 
       {/* Tab bar */}
-      <div className="flex gap-1 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex gap-1 border-b border-gray-200 dark:border-text-secondary/20">
         {tabs.map(t => (
           <button
             key={t.id}
@@ -308,7 +308,7 @@ export default function DevExpensesPage() {
               'flex items-center gap-1.5 px-4 py-2 text-sm font-medium border-b-2 transition-colors',
               tab === t.id
                 ? 'border-purple-600 text-purple-700 dark:text-purple-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400',
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-text-secondary',
             )}
           >
             {t.icon}{t.label}
@@ -380,9 +380,9 @@ export default function DevExpensesPage() {
       {/* Mark-paid modal */}
       {payTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl w-full max-w-md p-6 space-y-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white">Marquer comme payé</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+          <div className="bg-white dark:bg-navy-panel rounded-xl shadow-2xl w-full max-w-md p-6 space-y-4">
+            <h3 className="font-semibold text-gray-900 dark:text-text-primary">Marquer comme payé</h3>
+            <p className="text-sm text-gray-600 dark:text-text-secondary">
               {payTarget.creditor_name ?? payTarget.category}
               {payTarget.project_ref && <span className="ml-1 text-gray-400">— {payTarget.project_ref}</span>}
               &ensp;
@@ -392,12 +392,12 @@ export default function DevExpensesPage() {
               value={payRef}
               onChange={e => setPayRef(e.target.value)}
               placeholder="Référence de paiement (optionnel)"
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-purple-300"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm focus:outline-none focus:ring-2 focus:ring-purple-300"
             />
             <div className="flex gap-2 justify-end">
               <button
                 onClick={() => setPayTarget(null)}
-                className="px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50"
+                className="px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-600 hover:bg-gray-50"
               >
                 Annuler
               </button>
@@ -469,7 +469,7 @@ function UpcomingTab({
             Payées récemment ({upcoming.paid_recent.length})
           </button>
           {showPaid && (
-            <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="divide-y divide-gray-100 dark:divide-text-secondary/15 rounded-xl border border-gray-200 dark:border-text-secondary/20 overflow-hidden">
               {upcoming.paid_recent.map(e => (
                 <PaidRow key={e.id} expense={e} onArchive={onArchive} />
               ))}
@@ -487,10 +487,10 @@ function PaidRow({
   expense: DevExpense; onArchive: (id: string) => void;
 }) {
   return (
-    <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+    <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-navy-panel hover:bg-gray-50 dark:hover:bg-navy-panel/50 transition-colors">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-medium text-sm text-gray-900 dark:text-white truncate">
+          <span className="font-medium text-sm text-gray-900 dark:text-text-primary truncate">
             {e.creditor_name ?? e.category}
           </span>
           {e.project_ref && (
@@ -501,7 +501,7 @@ function PaidRow({
           {e.category} · payé {e.paid_at ? fmtDate(e.paid_at.slice(0, 10)) : '—'}
         </div>
       </div>
-      <span className="font-mono text-sm font-semibold text-gray-900 dark:text-white">
+      <span className="font-mono text-sm font-semibold text-gray-900 dark:text-text-primary">
         ${Number(e.amount_usd).toFixed(2)}
       </span>
       <span className="text-xs px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 font-medium">
@@ -509,7 +509,7 @@ function PaidRow({
       </span>
       <button
         onClick={() => onArchive(e.id)}
-        className="text-xs px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-colors flex items-center gap-1"
+        className="text-xs px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-500 hover:bg-gray-50 dark:hover:bg-navy-panel font-medium transition-colors flex items-center gap-1"
         title="Archiver"
       >
         <Archive className="w-3.5 h-3.5" />
@@ -527,7 +527,7 @@ function Section({
     <div>
       <h3 className={clsx('text-xs font-semibold uppercase tracking-wide mb-2',
         color === 'red' ? 'text-red-600' : 'text-amber-600')}>{title}</h3>
-      <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="divide-y divide-gray-100 dark:divide-text-secondary/15 rounded-xl border border-gray-200 dark:border-text-secondary/20 overflow-hidden">
         {children}
       </div>
     </div>
@@ -541,10 +541,10 @@ function ExpenseRow({
 }) {
   const badge = urgencyBadge(e);
   return (
-    <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+    <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-navy-panel hover:bg-gray-50 dark:hover:bg-navy-panel/50 transition-colors">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-medium text-sm text-gray-900 dark:text-white truncate">
+          <span className="font-medium text-sm text-gray-900 dark:text-text-primary truncate">
             {e.creditor_name ?? e.category}
           </span>
           {e.project_ref && (
@@ -562,7 +562,7 @@ function ExpenseRow({
           {e.invoice_number && <span>· {e.invoice_number}</span>}
         </div>
       </div>
-      <span className="font-mono text-sm font-semibold text-gray-900 dark:text-white">
+      <span className="font-mono text-sm font-semibold text-gray-900 dark:text-text-primary">
         ${Number(e.amount_usd).toFixed(2)}
       </span>
       {e.status !== 'paid' && (
@@ -653,15 +653,15 @@ function EntryTab({
     new Set(creditors.map(c => c.default_category).filter((s): s is string => Boolean(s)))
   );
 
-  const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300';
-  const labelCls = 'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1';
+  const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300';
+  const labelCls = 'block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1';
 
   return (
     <form
       onSubmit={submit}
-      className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 space-y-5"
+      className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-6 space-y-5"
     >
-      <h2 className="font-semibold text-gray-900 dark:text-white">Nouvelle facture</h2>
+      <h2 className="font-semibold text-gray-900 dark:text-text-primary">Nouvelle facture</h2>
 
       {/* Creditor selector */}
       <div>
@@ -770,7 +770,7 @@ function EntryTab({
 
       <div>
         <label className={labelCls}>Pièce jointe (PDF / PNG / JPEG, max 10 Mo)</label>
-        <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+        <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 hover:bg-gray-50 dark:hover:bg-navy-panel transition-colors">
           <Upload className="w-4 h-4 text-gray-400" />
           <span className="text-sm text-gray-500">{file ? file.name : 'Choisir un fichier…'}</span>
           <input
@@ -811,8 +811,8 @@ function CreditorsTab({
   });
   const [saving, setSaving]     = useState(false);
 
-  const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300';
-  const labelCls = 'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1';
+  const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300';
+  const labelCls = 'block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1';
 
   function openEdit(c: Creditor) {
     setEditing(c);
@@ -898,10 +898,10 @@ function CreditorsTab({
       {showForm && (
         <form
           onSubmit={save}
-          className="bg-white dark:bg-gray-900 rounded-xl border border-purple-200 dark:border-purple-800 p-5 space-y-4"
+          className="bg-white dark:bg-navy-panel rounded-xl border border-purple-200 dark:border-purple-800 p-5 space-y-4"
         >
           <div className="flex justify-between items-center">
-            <h3 className="font-medium text-gray-900 dark:text-white">
+            <h3 className="font-medium text-gray-900 dark:text-text-primary">
               {editing ? `Modifier : ${editing.name}` : 'Nouveau créancier'}
             </h3>
             <button type="button" onClick={() => setShowForm(false)}>
@@ -947,7 +947,7 @@ function CreditorsTab({
             </div>
           </div>
           <div className="flex gap-2 justify-end">
-            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50">
+            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-600 hover:bg-gray-50">
               Annuler
             </button>
             <button type="submit" disabled={saving} className="px-4 py-2 text-sm rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-medium flex items-center gap-2 disabled:opacity-50">
@@ -958,12 +958,12 @@ function CreditorsTab({
         </form>
       )}
 
-      <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="divide-y divide-gray-100 dark:divide-text-secondary/15 rounded-xl border border-gray-200 dark:border-text-secondary/20 overflow-hidden">
         {active.map(c => (
-          <div key={c.id} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-900">
+          <div key={c.id} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-navy-panel">
             <span className="text-gray-400">{ENTITY_ICONS[c.entity_type]}</span>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">{c.name}</p>
+              <p className="text-sm font-medium text-gray-900 dark:text-text-primary">{c.name}</p>
               <p className="text-xs text-gray-500 flex gap-2 flex-wrap">
                 {c.default_category && <span>{c.default_category}</span>}
                 {c.payment_method   && <span>· {c.payment_method.replace('_', ' ')}</span>}
@@ -971,7 +971,7 @@ function CreditorsTab({
               </p>
             </div>
             <div className="flex gap-1">
-              <button onClick={() => openEdit(c)} className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-700">
+              <button onClick={() => openEdit(c)} className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-navy-panel text-gray-400 hover:text-gray-700">
                 <Pencil className="w-3.5 h-3.5" />
               </button>
               <button onClick={() => softDelete(c)} className="p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-400 hover:text-red-600">
@@ -1029,18 +1029,18 @@ function ReportsTab({
     setGenL(false);
   }
 
-  const inputCls = 'px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-300';
+  const inputCls = 'px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-purple-300';
 
   if (loading) return <Spinner />;
 
   return (
     <div className="space-y-5">
       {/* Generate */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 space-y-4">
-        <h2 className="font-semibold text-gray-900 dark:text-white">Générer un rapport</h2>
+      <div className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-5 space-y-4">
+        <h2 className="font-semibold text-gray-900 dark:text-text-primary">Générer un rapport</h2>
         <div className="flex gap-3 items-end flex-wrap">
           <div>
-            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Mois</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Mois</label>
             <input type="month" value={genMonth} onChange={e => setGenMonth(e.target.value)} className={inputCls} />
           </div>
           <button
@@ -1076,16 +1076,16 @@ function ReportsTab({
       {/* History */}
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <h3 className="font-medium text-gray-900 dark:text-white text-sm">Historique</h3>
+          <h3 className="font-medium text-gray-900 dark:text-text-primary text-sm">Historique</h3>
           <button onClick={onRefresh} className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1">
             <RefreshCw className="w-3 h-3" /> Actualiser
           </button>
         </div>
-        <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="divide-y divide-gray-100 dark:divide-text-secondary/15 rounded-xl border border-gray-200 dark:border-text-secondary/20 overflow-hidden">
           {history.map(m => (
-            <div key={m.billing_month} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-900">
+            <div key={m.billing_month} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-navy-panel">
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900 dark:text-white capitalize">{fmtMonth(m.billing_month)}</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-text-primary capitalize">{fmtMonth(m.billing_month)}</p>
                 <p className="text-xs text-gray-500">
                   {m.invoice_count} facture(s) · {m.creditor_count} créancier(s)
                   {m.generated_at ? ` · rapport ${new Date(m.generated_at).toLocaleDateString('fr-FR')}` : ''}
@@ -1101,7 +1101,7 @@ function ReportsTab({
               {m.share_url && m.share_token && (
                 <button
                   onClick={() => onCopy(m.share_url!, m.share_token!)}
-                  className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-700"
+                  className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-navy-panel text-gray-400 hover:text-gray-700"
                   title="Copier le lien public"
                 >
                   {copied === m.share_token ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
@@ -1150,8 +1150,8 @@ function QuotesTab({
   const [submitting, setSub] = useState(false);
   const [showNew, setShowNew] = useState(false);
 
-  const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300';
-  const labelCls = 'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1';
+  const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300';
+  const labelCls = 'block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1';
 
   const activeCreditors = creditors.filter(c => c.active);
 
@@ -1256,7 +1256,7 @@ function QuotesTab({
           <select
             value={filterStatus}
             onChange={e => setFS(e.target.value)}
-            className="text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-600"
+            className="text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-gray-600"
           >
             <option value="">Tous statuts</option>
             <option value="draft">Brouillon</option>
@@ -1278,10 +1278,10 @@ function QuotesTab({
       {showForm && (
         <form
           onSubmit={submit}
-          className="bg-white dark:bg-gray-900 rounded-xl border border-purple-200 dark:border-purple-800 p-5 space-y-4"
+          className="bg-white dark:bg-navy-panel rounded-xl border border-purple-200 dark:border-purple-800 p-5 space-y-4"
         >
           <div className="flex justify-between items-center">
-            <h3 className="font-medium text-gray-900 dark:text-white">Nouveau devis</h3>
+            <h3 className="font-medium text-gray-900 dark:text-text-primary">Nouveau devis</h3>
             <button type="button" onClick={() => setShowForm(false)}>
               <X className="w-4 h-4 text-gray-400" />
             </button>
@@ -1339,7 +1339,7 @@ function QuotesTab({
           </div>
           <div>
             <label className={labelCls}>Devis PDF (optionnel)</label>
-            <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 hover:bg-gray-50 dark:hover:bg-navy-panel transition-colors">
               <Upload className="w-4 h-4 text-gray-400" />
               <span className="text-sm text-gray-500">{file ? file.name : 'Choisir un fichier…'}</span>
               <input ref={fileRef} type="file" accept=".pdf,.png,.jpg,.jpeg" className="hidden" onChange={e => setFile(e.target.files?.[0] ?? null)} />
@@ -1352,17 +1352,17 @@ function QuotesTab({
         </form>
       )}
 
-      <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="divide-y divide-gray-100 dark:divide-text-secondary/15 rounded-xl border border-gray-200 dark:border-text-secondary/20 overflow-hidden">
         {filtered.map(q => {
           const st = displayStatus(q);
           const cfg = QUOTE_STATUS_CFG[st] ?? QUOTE_STATUS_CFG.draft;
           const cname = q.creditors?.name ?? q.creditor_name ?? '—';
           return (
-            <div key={q.id} className="px-4 py-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+            <div key={q.id} className="px-4 py-3 bg-white dark:bg-navy-panel hover:bg-gray-50 dark:hover:bg-navy-panel/50 transition-colors">
               <div className="flex items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-medium text-sm text-gray-900 dark:text-white truncate">{q.project_ref}</span>
+                    <span className="font-medium text-sm text-gray-900 dark:text-text-primary truncate">{q.project_ref}</span>
                     <span className={clsx('text-xs px-1.5 py-0.5 rounded border font-medium', cfg.cls)}>{cfg.label}</span>
                     {st === 'sent' && q.valid_until && q.valid_until >= todayStr && (
                       <span className="text-xs text-gray-400">valide jusqu&apos;au {fmtDate(q.valid_until)}</span>
@@ -1373,7 +1373,7 @@ function QuotesTab({
                     {q.description && <span className="ml-1 truncate">· {q.description}</span>}
                   </div>
                 </div>
-                <span className="font-mono text-sm font-semibold text-gray-900 dark:text-white">
+                <span className="font-mono text-sm font-semibold text-gray-900 dark:text-text-primary">
                   ${Number(q.amount_usd).toFixed(2)}
                 </span>
               </div>
@@ -1413,9 +1413,9 @@ function QuotesTab({
       {/* Accept modal */}
       {acceptTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl w-full max-w-md p-6 space-y-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white">Accepter le devis</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+          <div className="bg-white dark:bg-navy-panel rounded-xl shadow-2xl w-full max-w-md p-6 space-y-4">
+            <h3 className="font-semibold text-gray-900 dark:text-text-primary">Accepter le devis</h3>
+            <p className="text-sm text-gray-600 dark:text-text-secondary">
               {acceptTarget.project_ref} — <span className="font-mono font-bold">${Number(acceptTarget.amount_usd).toFixed(2)}</span>
             </p>
             <div>
@@ -1423,7 +1423,7 @@ function QuotesTab({
               <input type="date" value={acceptDue} onChange={e => setAcceptDue(e.target.value)} required className={inputCls} />
             </div>
             <div className="flex gap-2 justify-end">
-              <button onClick={() => setAccept(null)} className="px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50">
+              <button onClick={() => setAccept(null)} className="px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-600 hover:bg-gray-50">
                 Annuler
               </button>
               <button
@@ -1475,7 +1475,7 @@ function ArchivesTab({
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Rechercher par créancier, projet, mois…"
-            className="flex-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300"
+            className="flex-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300"
           />
         </div>
         <button onClick={onRefresh} className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1">
@@ -1483,12 +1483,12 @@ function ArchivesTab({
         </button>
       </div>
 
-      <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="divide-y divide-gray-100 dark:divide-text-secondary/15 rounded-xl border border-gray-200 dark:border-text-secondary/20 overflow-hidden">
         {filtered.map(e => (
-          <div key={e.id} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-900">
+          <div key={e.id} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-navy-panel">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-medium text-sm text-gray-700 dark:text-gray-300 truncate">
+                <span className="font-medium text-sm text-gray-700 dark:text-text-primary truncate">
                   {e.creditor_name ?? e.category}
                 </span>
                 {e.project_ref && <span className="text-xs text-gray-400 truncate">{e.project_ref}</span>}
@@ -1501,7 +1501,7 @@ function ArchivesTab({
             <span className="font-mono text-sm text-gray-500">${Number(e.amount_usd).toFixed(2)}</span>
             <button
               onClick={() => onUnarchive(e.id)}
-              className="text-xs px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium transition-colors flex items-center gap-1"
+              className="text-xs px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-500 hover:bg-gray-50 dark:hover:bg-navy-panel font-medium transition-colors flex items-center gap-1"
               title="Désarchiver"
             >
               <ArchiveRestore className="w-3.5 h-3.5" />

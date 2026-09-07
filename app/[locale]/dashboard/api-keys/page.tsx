@@ -45,22 +45,22 @@ export default function ApiKeysPage() {
       {/* Header */}
       <div>
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded-xl bg-signal/10 dark:bg-signal/15">
-            <Key className="text-signal" size={20} />
+          <div className="p-2 rounded-xl bg-green-deep/10 dark:bg-green-deep/15">
+            <Key className="text-green-deep" size={20} />
           </div>
-          <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary">{t('title')}</h1>
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 ml-12">{t('subtitle')}</p>
+        <p className="text-sm text-gray-500 dark:text-text-secondary ml-12">{t('subtitle')}</p>
       </div>
 
       {/* Current key indicator */}
       {!newKey && keyPrefix && (
-        <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
-          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">{t('label')}</p>
-          <div className="font-mono text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+        <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-5">
+          <p className="text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-2">{t('label')}</p>
+          <div className="font-mono text-sm text-gray-700 dark:text-text-primary bg-gray-50 dark:bg-navy-panel rounded-lg px-4 py-3">
             {t('prefix_hint', { prefix: keyPrefix })}
           </div>
-          <p className="text-xs text-gray-400 dark:text-gray-600 mt-2">{t('masked')}</p>
+          <p className="text-xs text-gray-400 dark:text-text-secondary/50 mt-2">{t('masked')}</p>
         </div>
       )}
 
@@ -72,7 +72,7 @@ export default function ApiKeysPage() {
             <p className="text-xs text-green-700 dark:text-green-400">{t('new_key_note')}</p>
           </div>
           <div className="relative">
-            <div className="font-mono text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900 border border-green-200 dark:border-green-800/50 rounded-xl px-4 py-3 pr-24 break-all select-all">
+            <div className="font-mono text-sm text-gray-800 dark:text-text-primary bg-white dark:bg-navy-panel border border-green-200 dark:border-green-800/50 rounded-xl px-4 py-3 pr-24 break-all select-all">
               {showKey ? newKey : `${newKey.slice(0, 12)}${'•'.repeat(newKey.length - 12)}`}
             </div>
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -85,7 +85,7 @@ export default function ApiKeysPage() {
               </button>
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1 px-2.5 py-2 min-h-[36px] rounded-lg bg-signal hover:bg-signal/85 text-white text-xs font-semibold transition-all"
+                className="flex items-center gap-1 px-2.5 py-2 min-h-[36px] rounded-lg bg-green-deep hover:bg-green-deep/85 text-white text-xs font-semibold transition-all"
               >
                 {copied ? <Check size={13} /> : <Copy size={13} />}
                 {copied ? t('copied') : t('copy')}
@@ -97,7 +97,7 @@ export default function ApiKeysPage() {
               type="checkbox"
               checked={confirmed}
               onChange={(e) => setConfirmed(e.target.checked)}
-              className="w-4 h-4 rounded border-gray-300 text-signal accent-signal"
+              className="w-4 h-4 rounded border-gray-300 text-green-deep accent-signal"
             />
             <span className="text-xs text-green-700 dark:text-green-400">
               J&apos;ai copié ma clé API et je comprends qu&apos;elle ne sera plus affichée.
@@ -126,7 +126,7 @@ export default function ApiKeysPage() {
       <button
         onClick={handleGenerate}
         disabled={loading || (!!newKey && !confirmed)}
-        className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all duration-200 shadow-sm shadow-signal/25"
+        className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-green-deep hover:bg-green-deep/85 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all duration-200 shadow-sm shadow-signal/25"
       >
         {loading ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
         {loading ? t('loading') : t('generate')}

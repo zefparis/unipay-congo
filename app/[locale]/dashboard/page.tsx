@@ -10,7 +10,7 @@ const STATUS_STYLES: Record<string, string> = {
   processing: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   success: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   failed: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  cancelled: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+  cancelled: 'bg-gray-100 text-gray-600 dark:bg-navy-panel dark:text-text-secondary',
 };
 
 function fmt(n: number | undefined | null) {
@@ -46,14 +46,14 @@ export default async function DashboardPage() {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">
+        <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary">
           {t('dashboard.overview.title')}
         </h1>
         <form action="">
           <button
             formAction={undefined}
             type="submit"
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-all"
           >
             <RefreshCw size={14} />
             {t('dashboard.overview.refresh')}
@@ -70,7 +70,7 @@ export default async function DashboardPage() {
               className={clsx(
                 'relative overflow-hidden rounded-2xl p-6 text-white shadow-lg',
                 cur.currency === 'CDF'
-                  ? 'bg-gradient-to-br from-signal to-[#0f6b4f] shadow-signal/20'
+                  ? 'bg-gradient-to-br from-signal to-[#0f6b4f] shadow-green-deep/20'
                   : 'bg-gradient-to-br from-blue-600 to-blue-800 shadow-blue-600/20',
               )}
             >
@@ -83,7 +83,7 @@ export default async function DashboardPage() {
                     {t('dashboard.overview.balance_title')} {cur.currency === 'USD' ? '(USD)' : ''}
                   </span>
                 </div>
-                <div className="text-4xl font-heading font-bold tracking-tight">
+                <div className="text-4xl font-serif font-bold tracking-tight">
                   {fmt(cur.balance)} <span className="text-lg text-white/60">{cur.currency}</span>
                 </div>
               </div>
@@ -91,14 +91,14 @@ export default async function DashboardPage() {
           ))}
         </div>
       ) : (
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-signal to-[#0f6b4f] p-6 text-white shadow-lg shadow-signal/20">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-signal to-[#0f6b4f] p-6 text-white shadow-lg shadow-green-deep/20">
           <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full" />
           <div className="relative">
             <div className="flex items-center gap-2 mb-3">
               <TrendingUp size={16} className="text-white/70" />
               <span className="text-sm font-medium text-white/70">{t('dashboard.overview.balance_title')}</span>
             </div>
-            <div className="text-4xl font-heading font-bold tracking-tight">—</div>
+            <div className="text-4xl font-serif font-bold tracking-tight">—</div>
           </div>
         </div>
       )}
@@ -106,30 +106,30 @@ export default async function DashboardPage() {
       {/* Recent transactions */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-heading font-semibold text-gray-900 dark:text-white">
+          <h2 className="text-lg font-serif font-semibold text-gray-900 dark:text-text-primary">
             {t('dashboard.overview.recent_title')}
           </h2>
           <Link
             href="/dashboard/transactions"
-            className="text-sm text-signal-dark hover:text-signal font-medium"
+            className="text-sm text-green-deep-dark hover:text-green-deep font-medium"
           >
             {t('dashboard.overview.view_all')} →
           </Link>
         </div>
 
-        <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden shadow-sm">
           {transactions.length === 0 ? (
-            <div className="text-center py-12 text-sm text-gray-400 dark:text-gray-600">
+            <div className="text-center py-12 text-sm text-gray-400 dark:text-text-secondary/50">
               {t('dashboard.overview.no_transactions')}
             </div>
           ) : (
             <>
               {/* Mobile: cards */}
-              <div className="md:hidden divide-y divide-gray-100 dark:divide-gray-800">
+              <div className="md:hidden divide-y divide-gray-100 dark:divide-text-secondary/15">
                 {transactions.map((tx) => (
                   <div key={tx.id} className="px-4 py-3 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-gray-900 dark:text-white capitalize">{tx.operator}</span>
+                      <span className="font-medium text-gray-900 dark:text-text-primary capitalize">{tx.operator}</span>
                       <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status])}>
                         {t(`dashboard.status.${tx.status}` as Parameters<typeof t>[0])}
                       </span>
@@ -143,12 +143,12 @@ export default async function DashboardPage() {
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <div>
-                        <span className="text-gray-500 dark:text-gray-400">Montant: </span>
-                        <span className="font-medium text-gray-900 dark:text-white">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></span>
+                        <span className="text-gray-500 dark:text-text-secondary">Montant: </span>
+                        <span className="font-medium text-gray-900 dark:text-text-primary">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></span>
                       </div>
                       <div className="text-right">
-                        <span className="text-gray-500 dark:text-gray-400">Net: </span>
-                        <span className="font-medium text-gray-900 dark:text-white">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></span>
+                        <span className="text-gray-500 dark:text-text-secondary">Net: </span>
+                        <span className="font-medium text-gray-900 dark:text-text-primary">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></span>
                       </div>
                     </div>
                     <div className="text-xs text-gray-400">
@@ -162,31 +162,31 @@ export default async function DashboardPage() {
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-100 dark:border-gray-800">
+                    <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                       {['date', 'operator', 'direction', 'amount', 'fee', 'net', 'status'].map((col) => (
                         <th
                           key={col}
-                          className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                          className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider whitespace-nowrap"
                         >
                           {t(`dashboard.transactions.${col}` as Parameters<typeof t>[0])}
                         </th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+                  <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                     {transactions.map((tx) => (
-                      <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                        <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmtDate(tx.created_at)}</td>
-                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-white capitalize">{tx.operator}</td>
+                      <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors">
+                        <td className="px-4 py-3 text-gray-500 dark:text-text-secondary whitespace-nowrap">{fmtDate(tx.created_at)}</td>
+                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary capitalize">{tx.operator}</td>
                         <td className="px-4 py-3 whitespace-nowrap">
                           <span className={clsx('inline-flex items-center gap-1', tx.direction === 'collect' ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400')}>
                             {tx.direction === 'collect' ? <ArrowDownLeft size={14} /> : <ArrowUpRight size={14} />}
                             {t(`dashboard.transactions.${tx.direction}` as Parameters<typeof t>[0])}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
-                        <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmt(tx.fee)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
-                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                        <td className="px-4 py-3 text-gray-900 dark:text-text-primary whitespace-nowrap">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                        <td className="px-4 py-3 text-gray-500 dark:text-text-secondary whitespace-nowrap">{fmt(tx.fee)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary whitespace-nowrap">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
                         <td className="px-4 py-3">
                           <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status])}>
                             {t(`dashboard.status.${tx.status}` as Parameters<typeof t>[0])}

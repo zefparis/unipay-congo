@@ -11,7 +11,7 @@ import clsx from 'clsx';
 
 function KycBadge({ level }: { level: number }) {
   const cfg: Record<number, { label: string; cls: string }> = {
-    0: { label: 'Non vérifié', cls: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400' },
+    0: { label: 'Non vérifié', cls: 'bg-gray-100 text-gray-600 dark:bg-navy-panel dark:text-text-secondary' },
     1: { label: 'KYC 1', cls: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' },
     2: { label: 'KYC 2', cls: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' },
     3: { label: 'KYC 3', cls: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' },
@@ -73,14 +73,14 @@ export default function WalletUsersPage() {
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <Users className="text-signal" size={22} />
+        <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary flex items-center gap-2">
+          <Users className="text-green-deep" size={22} />
           Wallet Users
         </h1>
         <button
           onClick={load}
           disabled={loading}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all disabled:opacity-50"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-all disabled:opacity-50"
         >
           <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
           Actualiser
@@ -96,13 +96,13 @@ export default function WalletUsersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Recherche par téléphone…"
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
+            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/40 focus:border-green-deep transition-colors"
           />
         </div>
         <select
           value={filterKyc}
           onChange={(e) => { setFilterKyc(e.target.value); setPage(1); }}
-          className="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
+          className="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-700 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/40"
         >
           <option value="">Tous KYC</option>
           <option value="0">Non vérifié</option>
@@ -113,7 +113,7 @@ export default function WalletUsersPage() {
         <select
           value={filterActive}
           onChange={(e) => { setFilterActive(e.target.value); setPage(1); }}
-          className="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
+          className="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-700 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/40"
         >
           <option value="">Tous statuts</option>
           <option value="true">Actif</option>
@@ -121,7 +121,7 @@ export default function WalletUsersPage() {
         </select>
         <button
           type="submit"
-          className="px-4 py-2.5 rounded-xl bg-signal hover:bg-signal/85 text-white text-sm font-semibold transition-all"
+          className="px-4 py-2.5 rounded-xl bg-green-deep hover:bg-green-deep/85 text-white text-sm font-semibold transition-all"
         >
           Filtrer
         </button>
@@ -134,31 +134,31 @@ export default function WalletUsersPage() {
       )}
 
       {/* Table */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden shadow-sm">
         {loading && users.length === 0 ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 size={24} className="animate-spin text-signal" />
+            <Loader2 size={24} className="animate-spin text-green-deep" />
           </div>
         ) : users.length === 0 ? (
-          <div className="text-center py-12 text-sm text-gray-400 dark:text-gray-600">Aucun utilisateur trouvé.</div>
+          <div className="text-center py-12 text-sm text-gray-400 dark:text-text-secondary/50">Aucun utilisateur trouvé.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px] text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                   {['Téléphone', 'Nom complet', 'Solde (CDF)', 'KYC', 'Statut', 'Inscription', 'Actions'].map((col) => (
-                    <th key={col} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                    <th key={col} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider whitespace-nowrap">
                       {col}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+              <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                 {users.map((u) => (
-                  <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                    <td className="px-4 py-3 font-mono text-sm text-gray-900 dark:text-white">{u.phone}</td>
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{u.full_name ?? <span className="text-gray-400">—</span>}</td>
-                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{fmt(u.balance_cdf)}</td>
+                  <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors">
+                    <td className="px-4 py-3 font-mono text-sm text-gray-900 dark:text-text-primary">{u.phone}</td>
+                    <td className="px-4 py-3 text-gray-700 dark:text-text-primary">{u.full_name ?? <span className="text-gray-400">—</span>}</td>
+                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary">{fmt(u.balance_cdf)}</td>
                     <td className="px-4 py-3"><KycBadge level={u.kyc_level} /></td>
                     <td className="px-4 py-3">
                       {u.is_active ? (
@@ -171,12 +171,12 @@ export default function WalletUsersPage() {
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmtDate(u.created_at)}</td>
+                    <td className="px-4 py-3 text-gray-500 dark:text-text-secondary whitespace-nowrap">{fmtDate(u.created_at)}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Link
                           href={`/dashboard/admin/wallet-users/${u.id}`}
-                          className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                          className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm font-medium text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
                         >
                           <Eye size={12} /> Voir
                         </Link>
@@ -192,20 +192,20 @@ export default function WalletUsersPage() {
 
       {/* Pagination */}
       {pagination.pages > 1 && (
-        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-text-secondary">
           <span>{pagination.total} utilisateurs — page {pagination.page}/{pagination.pages}</span>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1 || loading}
-              className="p-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 transition-all"
+              className="p-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 hover:bg-gray-100 dark:hover:bg-navy-panel disabled:opacity-40 transition-all"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={() => setPage((p) => Math.min(pagination.pages, p + 1))}
               disabled={page >= pagination.pages || loading}
-              className="p-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 transition-all"
+              className="p-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 hover:bg-gray-100 dark:hover:bg-navy-panel disabled:opacity-40 transition-all"
             >
               <ChevronRight size={16} />
             </button>
@@ -214,7 +214,7 @@ export default function WalletUsersPage() {
       )}
 
       {/* Stat line */}
-      <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-600">
+      <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-text-secondary/50">
         <ShieldCheck size={13} /> Données en temps réel — actualisez pour voir les dernières modifications.
         <ShieldOff size={13} className="ml-2" /> Les utilisateurs bloqués ne peuvent pas effectuer de transactions.
       </div>

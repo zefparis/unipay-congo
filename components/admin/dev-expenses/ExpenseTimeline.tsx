@@ -36,16 +36,16 @@ function formatMetadata(eventType: string, metadata: Record<string, unknown>): s
 export default function ExpenseTimeline({ events, locale }: Props) {
   if (events.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Historique</h3>
+      <div className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-5">
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary mb-4">Historique</h3>
         <p className="text-sm text-gray-400 text-center py-6">Aucun événement enregistré</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-      <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Historique</h3>
+    <div className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-5">
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary mb-4">Historique</h3>
       <div className="space-y-4">
         {events.map((event, i) => {
           const label = EVENT_LABELS[event.event_type] ?? event.event_type;
@@ -62,7 +62,7 @@ export default function ExpenseTimeline({ events, locale }: Props) {
               {/* Content */}
               <div className="flex-1 pb-4">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">{label}</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-text-primary">{label}</span>
                   {event.previous_status && event.new_status && (
                     <span className="text-xs text-gray-500">
                       {getTechnicalStatusLabel(event.previous_status as never)} → {getTechnicalStatusLabel(event.new_status as never)}

@@ -99,28 +99,28 @@ export default function ExpenseSummary({ expense, entities, suppliers, locale }:
   const diff = getBillingSnapshotDifference(snapshot, currentEntity);
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-      <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Résumé</h3>
+    <div className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-5">
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary mb-4">Résumé</h3>
       <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
         {rows.map((row) => (
           <div key={row.label}>
-            <dt className="text-xs text-gray-500 dark:text-gray-400">{row.label}</dt>
-            <dd className="text-sm text-gray-900 dark:text-white">{row.value}</dd>
+            <dt className="text-xs text-gray-500 dark:text-text-secondary">{row.label}</dt>
+            <dd className="text-sm text-gray-900 dark:text-text-primary">{row.value}</dd>
           </div>
         ))}
       </dl>
 
       {/* Facturation block */}
-      <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-        <h4 className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-3">Facturation</h4>
+      <div className="mt-4 pt-4 border-t border-gray-100 dark:border-text-secondary/15">
+        <h4 className="text-xs font-semibold text-gray-700 dark:text-text-primary mb-3">Facturation</h4>
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
           <div>
-            <dt className="text-xs text-gray-500 dark:text-gray-400">Émetteur</dt>
-            <dd className="text-sm text-gray-900 dark:text-white">{supplierName(expense.creditor_id)}</dd>
+            <dt className="text-xs text-gray-500 dark:text-text-secondary">Émetteur</dt>
+            <dd className="text-sm text-gray-900 dark:text-text-primary">{supplierName(expense.creditor_id)}</dd>
           </div>
           <div>
-            <dt className="text-xs text-gray-500 dark:text-gray-400">Destinataire</dt>
-            <dd className="text-sm text-gray-900 dark:text-white">
+            <dt className="text-xs text-gray-500 dark:text-text-secondary">Destinataire</dt>
+            <dd className="text-sm text-gray-900 dark:text-text-primary">
               {billingRecipientName(expense.billing_recipient_entity_id)}
               {expense.billing_recipient_reviewed && (
                 <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
@@ -131,8 +131,8 @@ export default function ExpenseSummary({ expense, entities, suppliers, locale }:
           </div>
           {snapshotDate && (
             <div>
-              <dt className="text-xs text-gray-500 dark:text-gray-400">Snapshot</dt>
-              <dd className="text-sm text-gray-600 dark:text-gray-400">
+              <dt className="text-xs text-gray-500 dark:text-text-secondary">Snapshot</dt>
+              <dd className="text-sm text-gray-600 dark:text-text-secondary">
                 {formatDate(snapshotDate, locale)}
                 {diff.differs && (
                   <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">

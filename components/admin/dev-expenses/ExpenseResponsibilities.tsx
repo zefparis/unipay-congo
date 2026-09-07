@@ -35,13 +35,13 @@ export default function ExpenseResponsibilities({ expense, entities }: Props) {
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-      <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Responsabilités</h3>
+    <div className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-5">
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary mb-4">Responsabilités</h3>
       <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
         {rows.map((row) => (
           <div key={row.label}>
-            <dt className="text-xs text-gray-500 dark:text-gray-400">{row.label}</dt>
-            <dd className="text-sm text-gray-900 dark:text-white">{row.value}</dd>
+            <dt className="text-xs text-gray-500 dark:text-text-secondary">{row.label}</dt>
+            <dd className="text-sm text-gray-900 dark:text-text-primary">{row.value}</dd>
           </div>
         ))}
       </dl>

@@ -250,16 +250,16 @@ export default function CryptoAssetsSection() {
   };
 
   /* ── Input styles ────────────────────────────────────────────────── */
-  const inputCls = 'w-full px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/40';
+  const inputCls = 'w-full px-3 py-2 rounded-xl bg-gray-50 dark:bg-navy-panel/50 border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-900 dark:text-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/40';
 
   /* ── Render ──────────────────────────────────────────────────────── */
   return (
-    <section className="bg-white dark:bg-[#0e1428] border border-gray-200 dark:border-gray-800 rounded-2xl p-6 space-y-5">
+    <section className="bg-white dark:bg-[#0e1428] border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 space-y-5">
 
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-base font-bold text-gray-800 dark:text-white">Actifs Crypto Treasury</h2>
+          <h2 className="text-base font-bold text-gray-800 dark:text-text-primary">Actifs Crypto Treasury</h2>
           {lastCheck && (
             <p className="text-xs text-gray-400 mt-0.5">Vérifié à {fmtTime(lastCheck)}</p>
           )}
@@ -267,7 +267,7 @@ export default function CryptoAssetsSection() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => { setShowManage((p) => !p); }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-300 dark:border-gray-700 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-300 dark:border-text-secondary/20 text-xs font-medium text-gray-600 dark:text-text-primary hover:bg-gray-100 dark:hover:bg-navy-panel transition"
           >
             {showManage ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
             Gérer les wallets
@@ -319,7 +319,7 @@ export default function CryptoAssetsSection() {
               {/* Card header */}
               <div className="flex items-start justify-between gap-2">
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold text-gray-800 dark:text-white">{a.label}</p>
+                  <p className="text-sm font-semibold text-gray-800 dark:text-text-primary">{a.label}</p>
                   <div className="flex items-center gap-1.5">
                     <AssetBadge asset={a.asset} />
                     <NetworkBadge network={a.network} />
@@ -329,7 +329,7 @@ export default function CryptoAssetsSection() {
               </div>
 
               {/* Address */}
-              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-text-secondary">
                 <span className="font-mono">{truncateAddr(a.address)}</span>
                 <button onClick={() => copyToClipboard(a.address)} title="Copier l'adresse"
                   className="text-gray-400 hover:text-white transition"><Copy size={11} /></button>
@@ -381,9 +381,9 @@ export default function CryptoAssetsSection() {
 
       {/* ── Wallet management panel ────────────────────────────────── */}
       {showManage && (
-        <div className="border-t border-gray-200 dark:border-gray-700/50 pt-5 space-y-4">
+        <div className="border-t border-gray-200 dark:border-text-secondary/20/50 pt-5 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-text-primary">
               Portefeuilles treasury enregistrés
             </h3>
             <button
@@ -398,17 +398,17 @@ export default function CryptoAssetsSection() {
           {/* Add wallet form */}
           {showAddForm && (
             <form onSubmit={(e) => void handleAddWallet(e)}
-              className="p-4 rounded-2xl bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700/50 space-y-3">
+              className="p-4 rounded-2xl bg-gray-50 dark:bg-navy-panel/40 border border-gray-200 dark:border-text-secondary/20/50 space-y-3">
               <div className="grid sm:grid-cols-2 gap-3">
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Libellé *</label>
+                  <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Libellé *</label>
                   <input required value={wForm.label}
                     onChange={(e) => setWForm((p) => ({ ...p, label: e.target.value }))}
                     placeholder="Ex : BSC Hot Wallet Treasury"
                     className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Asset *</label>
+                  <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Asset *</label>
                   <select required value={wForm.asset}
                     onChange={(e) => setWForm((p) => ({ ...p, asset: e.target.value }))}
                     className={inputCls}>
@@ -416,7 +416,7 @@ export default function CryptoAssetsSection() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Réseau *</label>
+                  <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Réseau *</label>
                   <select required value={wForm.network}
                     onChange={(e) => setWForm((p) => ({ ...p, network: e.target.value }))}
                     className={inputCls}>
@@ -424,7 +424,7 @@ export default function CryptoAssetsSection() {
                   </select>
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                  <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">
                     Adresse *
                   </label>
                   <input required value={wForm.address}
@@ -433,7 +433,7 @@ export default function CryptoAssetsSection() {
                     className={`${inputCls} font-mono`} />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Notes</label>
+                  <label className="block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1">Notes</label>
                   <input value={wForm.notes}
                     onChange={(e) => setWForm((p) => ({ ...p, notes: e.target.value }))}
                     placeholder="Remarques internes…"
@@ -468,10 +468,10 @@ export default function CryptoAssetsSection() {
 
           {/* Wallet list */}
           {wallets.filter((w) => showInactive || w.is_active).length > 0 && (
-            <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700/50">
+            <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-text-secondary/20/50">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-gray-800/40 text-gray-500 dark:text-gray-400 text-left">
+                  <tr className="bg-gray-50 dark:bg-navy-panel/40 text-gray-500 dark:text-text-secondary text-left">
                     <th className="px-3 py-2 font-medium">Libellé</th>
                     <th className="px-3 py-2 font-medium">Asset / Réseau</th>
                     <th className="px-3 py-2 font-medium hidden sm:table-cell">Adresse</th>
@@ -482,10 +482,10 @@ export default function CryptoAssetsSection() {
                 <tbody>
                   {wallets.filter((w) => showInactive || w.is_active).map((w) => (
                     <tr key={w.id} className={clsx(
-                      'border-t border-gray-100 dark:border-gray-700/40',
+                      'border-t border-gray-100 dark:border-text-secondary/20/40',
                       !w.is_active && 'opacity-50',
                     )}>
-                      <td className="px-3 py-2.5 font-medium text-gray-800 dark:text-white">{w.label}</td>
+                      <td className="px-3 py-2.5 font-medium text-gray-800 dark:text-text-primary">{w.label}</td>
                       <td className="px-3 py-2.5">
                         <div className="flex gap-1">
                           <AssetBadge asset={w.asset} />
@@ -541,12 +541,12 @@ export default function CryptoAssetsSection() {
       {confirmTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="bg-white dark:bg-[#0e1428] border border-gray-700 rounded-2xl p-6 max-w-sm w-full mx-4 space-y-4 shadow-2xl">
-            <h3 className="text-sm font-bold text-gray-800 dark:text-white flex items-center gap-2">
+            <h3 className="text-sm font-bold text-gray-800 dark:text-text-primary flex items-center gap-2">
               <Trash2 size={14} className="text-red-400" />
               Retirer ce portefeuille ?
             </h3>
 
-            <p className="text-xs text-gray-600 dark:text-gray-400">
+            <p className="text-xs text-gray-600 dark:text-text-secondary">
               <span className="font-semibold text-white">{confirmTarget.label}</span>
               {' '}({confirmTarget.asset} / {confirmTarget.network})
             </p>
@@ -561,7 +561,7 @@ export default function CryptoAssetsSection() {
               </div>
             )}
 
-            <p className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800/50 rounded-xl p-3">
+            <p className="text-xs text-gray-500 dark:text-text-secondary bg-gray-100 dark:bg-navy-panel/50 rounded-xl p-3">
               Cette action ne déplace aucun fonds on-chain. Elle retire seulement cette adresse du tableau UniPay.
               Si des reçus lui sont liés, le wallet sera désactivé (pas supprimé).
             </p>

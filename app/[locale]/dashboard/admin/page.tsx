@@ -22,7 +22,7 @@ function ChartBar({ value, max, label, color }: { value: number; max: number; la
   const pct = max === 0 ? 0 : Math.round((value / max) * 100);
   return (
     <div className="flex flex-col items-center gap-1" style={{ flex: 1 }}>
-      <span className="text-xs text-gray-500 dark:text-gray-400">{value}</span>
+      <span className="text-xs text-gray-500 dark:text-text-secondary">{value}</span>
       <div className="w-full flex items-end" style={{ height: 80 }}>
         <div
           className={clsx('w-full rounded-t-sm transition-all duration-500', color)}
@@ -71,7 +71,7 @@ export default function AdminOverviewPage() {
     { label: 'Volume déposé (CDF)', value: fmt(stats.total_deposited_cdf), icon: ArrowDownLeft, color: 'text-green-500', bg: 'bg-green-500/10' },
     { label: 'Volume retiré (CDF)', value: fmt(stats.total_withdrawn_cdf), icon: ArrowUpRight, color: 'text-orange-500', bg: 'bg-orange-500/10' },
     { label: 'Volume P2P (CDF)', value: fmt(stats.total_p2p_cdf), icon: ArrowLeftRight, color: 'text-purple-500', bg: 'bg-purple-500/10' },
-    { label: "Transactions aujourd'hui", value: fmt(stats.transactions_today), icon: CalendarDays, color: 'text-signal-dark', bg: 'bg-signal/10' },
+    { label: "Transactions aujourd'hui", value: fmt(stats.transactions_today), icon: CalendarDays, color: 'text-green-deep-dark', bg: 'bg-green-deep/10' },
   ] : [];
 
   const cgltKpis = [
@@ -109,16 +109,16 @@ export default function AdminOverviewPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <TrendingUp className="text-signal" size={22} />
+          <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary flex items-center gap-2">
+            <TrendingUp className="text-green-deep" size={22} />
             Vue d&apos;ensemble — Admin Wallet
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Métriques globales du service wallet UniPay Congo</p>
+          <p className="text-sm text-gray-500 dark:text-text-secondary mt-0.5">Métriques globales du service wallet UniPay Congo</p>
         </div>
         <button
           onClick={load}
           disabled={loading}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all disabled:opacity-50"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-all disabled:opacity-50"
         >
           <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
           Actualiser
@@ -134,14 +134,14 @@ export default function AdminOverviewPage() {
       {/* Avada Pay caisse card */}
       <div className={clsx(
         'relative overflow-hidden rounded-2xl p-5 border shadow-sm flex flex-wrap items-center justify-between gap-4',
-        'bg-gradient-to-r from-signal/10 to-emerald-500/5 border-signal/30 dark:border-signal/20',
+        'bg-gradient-to-r from-signal/10 to-emerald-500/5 border-green-deep/30 dark:border-green-deep/20',
       )}>
         <div className="flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-signal/15">
-            <Wallet size={22} className="text-signal" />
+          <div className="p-3 rounded-xl bg-green-deep/15">
+            <Wallet size={22} className="text-green-deep" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-signal-dark uppercase tracking-wider mb-0.5">Caisse wallet disponible</p>
+            <p className="text-xs font-semibold text-green-deep-dark uppercase tracking-wider mb-0.5">Caisse wallet disponible</p>
             {loading ? (
               <div className="h-7 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             ) : avadaErr ? (
@@ -150,19 +150,19 @@ export default function AdminOverviewPage() {
                 <span>{avadaErr}</span>
               </div>
             ) : (
-              <p className="text-2xl font-heading font-bold text-gray-900 dark:text-white">
+              <p className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary">
                 {avadaBal === null ? '—' : fmt(avadaBal)}
-                {avadaBal !== null && <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ml-2">CDF</span>}
+                {avadaBal !== null && <span className="text-sm font-normal text-gray-500 dark:text-text-secondary ml-2">CDF</span>}
               </p>
             )}
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+            <p className="text-xs text-gray-500 dark:text-text-secondary mt-0.5">
               Solde calculé depuis les dépôts, retraits et ajustements admin
             </p>
           </div>
         </div>
         <a
           href="/fr/dashboard/admin/adjustments"
-          className="flex-shrink-0 px-4 py-2 rounded-xl bg-signal text-white text-xs font-semibold hover:bg-signal/85 transition-colors"
+          className="flex-shrink-0 px-4 py-2 rounded-xl bg-green-deep text-white text-xs font-semibold hover:bg-green-deep/85 transition-colors"
         >
           Créditer un wallet
         </a>
@@ -172,19 +172,19 @@ export default function AdminOverviewPage() {
       {loading && !stats ? (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 animate-pulse h-24" />
+            <div key={i} className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-5 animate-pulse h-24" />
           ))}
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {kpis.map(({ label, value, icon: Icon, color, bg }) => (
-            <div key={label} className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 space-y-3 shadow-sm">
+            <div key={label} className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-5 space-y-3 shadow-sm">
               <div className={clsx('inline-flex p-2 rounded-xl', bg)}>
                 <Icon size={18} className={color} />
               </div>
               <div>
-                <div className="text-xl font-heading font-bold text-gray-900 dark:text-white">{value}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{label}</div>
+                <div className="text-xl font-serif font-bold text-gray-900 dark:text-text-primary">{value}</div>
+                <div className="text-xs text-gray-500 dark:text-text-secondary mt-0.5">{label}</div>
               </div>
             </div>
           ))}
@@ -193,22 +193,22 @@ export default function AdminOverviewPage() {
 
       {/* CGLT KPI cards */}
       <div>
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary mb-3 flex items-center gap-2">
           <Coins size={16} className="text-sky-500" />
           Blockchain CGLT
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {cgltKpis.map(({ label, value, unit, icon: Icon, color, bg }) => (
-            <div key={label} className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 space-y-3 shadow-sm">
+            <div key={label} className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-5 space-y-3 shadow-sm">
               <div className={clsx('inline-flex p-2 rounded-xl', bg)}>
                 <Icon size={18} className={color} />
               </div>
               <div>
-                <div className="text-xl font-heading font-bold text-gray-900 dark:text-white">
+                <div className="text-xl font-serif font-bold text-gray-900 dark:text-text-primary">
                   {value}
-                  {unit && value !== '—' && <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ml-1.5">{unit}</span>}
+                  {unit && value !== '—' && <span className="text-sm font-normal text-gray-500 dark:text-text-secondary ml-1.5">{unit}</span>}
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{label}</div>
+                <div className="text-xs text-gray-500 dark:text-text-secondary mt-0.5">{label}</div>
               </div>
             </div>
           ))}
@@ -216,8 +216,8 @@ export default function AdminOverviewPage() {
       </div>
 
       {/* Bar chart — 7 days */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">Transactions — 7 derniers jours</h2>
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm">
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary mb-1">Transactions — 7 derniers jours</h2>
         <div className="flex items-center gap-4 mb-4">
           {[
             { color: 'bg-green-500', label: 'Collect' },
@@ -226,12 +226,12 @@ export default function AdminOverviewPage() {
           ].map(({ color, label }) => (
             <div key={label} className="flex items-center gap-1.5">
               <span className={clsx('w-2.5 h-2.5 rounded-sm inline-block', color)} />
-              <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
+              <span className="text-xs text-gray-500 dark:text-text-secondary">{label}</span>
             </div>
           ))}
         </div>
         {loading && !stats ? (
-          <div className="h-24 animate-pulse bg-gray-100 dark:bg-gray-800 rounded-xl" />
+          <div className="h-24 animate-pulse bg-gray-100 dark:bg-navy-panel rounded-xl" />
         ) : (
           <div className="flex items-end gap-2">
             {chart.map((d) => (
@@ -248,11 +248,11 @@ export default function AdminOverviewPage() {
       {/* Marge & Revenus */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary flex items-center gap-2">
             <Banknote size={16} className="text-amber-500" />
             Marge &amp; Revenus
           </h2>
-          <div className="flex gap-0.5 bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5">
+          <div className="flex gap-0.5 bg-gray-100 dark:bg-navy-panel rounded-lg p-0.5">
             {(['today', 'month', 'all'] as const).map((p) => (
               <button
                 key={p}
@@ -260,8 +260,8 @@ export default function AdminOverviewPage() {
                 className={clsx(
                   'px-3 py-1 rounded-md text-xs font-medium transition-all',
                   revPeriod === p
-                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200',
+                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-text-primary shadow-sm'
+                    : 'text-gray-500 dark:text-text-secondary hover:text-gray-700 dark:hover:text-gray-200',
                 )}
               >
                 {p === 'today' ? "Aujourd'hui" : p === 'month' ? 'Ce mois' : 'Total'}
@@ -273,7 +273,7 @@ export default function AdminOverviewPage() {
         {revLoading ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 animate-pulse h-28" />
+              <div key={i} className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-5 animate-pulse h-28" />
             ))}
           </div>
         ) : revData ? (
@@ -323,7 +323,7 @@ export default function AdminOverviewPage() {
               <div
                 key={label}
                 className={clsx(
-                  'bg-white dark:bg-gray-900/60 border rounded-2xl p-5 space-y-3 shadow-sm',
+                  'bg-white dark:bg-navy-panel/60 border rounded-2xl p-5 space-y-3 shadow-sm',
                   border,
                 )}
               >
@@ -331,19 +331,19 @@ export default function AdminOverviewPage() {
                   <Icon size={18} className={color} />
                 </div>
                 <div>
-                  <div className="text-xl font-heading font-bold text-gray-900 dark:text-white">
+                  <div className="text-xl font-serif font-bold text-gray-900 dark:text-text-primary">
                     {fmt(value)}
                     <span className="text-xs font-normal text-gray-400 ml-1">CDF</span>
                   </div>
-                  <div className="text-xs font-medium text-gray-700 dark:text-gray-300 mt-0.5">{label}</div>
-                  <div className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">{note}</div>
-                  <div className="text-[10px] text-gray-300 dark:text-gray-600">{sub}</div>
+                  <div className="text-xs font-medium text-gray-700 dark:text-text-primary mt-0.5">{label}</div>
+                  <div className="text-[10px] text-gray-400 dark:text-text-secondary/70 mt-0.5">{note}</div>
+                  <div className="text-[10px] text-gray-300 dark:text-text-secondary/50">{sub}</div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-sm text-gray-500 dark:text-gray-400 text-center py-6">
+          <div className="text-sm text-gray-500 dark:text-text-secondary text-center py-6">
             Données de revenus indisponibles
           </div>
         )}
@@ -360,7 +360,7 @@ export default function AdminOverviewPage() {
           <Link
             key={href}
             href={href}
-            className="flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-signal/50 hover:text-signal transition-all shadow-sm"
+            className="flex items-center gap-2 px-4 py-3 bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-xl text-sm font-medium text-gray-700 dark:text-text-primary hover:border-green-deep/50 hover:text-green-deep transition-all shadow-sm"
           >
             <Icon size={16} />
             {label}

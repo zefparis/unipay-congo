@@ -28,11 +28,11 @@ export default function ExpenseMobileCard({ expenses, suppliers, locale }: Props
           <Link
             key={e.id}
             href={`/dashboard/admin/dev-expenses/invoices/${e.id}`}
-            className="block bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+            className="block bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-4 hover:bg-gray-50 dark:hover:bg-navy-panel/50 transition-colors"
           >
             <div className="flex items-start justify-between gap-2 mb-2">
               <div className="min-w-0 flex-1">
-                <p className="font-medium text-sm text-gray-900 dark:text-white truncate">
+                <p className="font-medium text-sm text-gray-900 dark:text-text-primary truncate">
                   {e.title || e.category}
                 </p>
                 <p className="text-xs text-gray-500 truncate">
@@ -43,11 +43,11 @@ export default function ExpenseMobileCard({ expenses, suppliers, locale }: Props
             </div>
             <div className="flex items-center justify-between gap-2">
               <div>
-                <p className="font-mono text-sm font-semibold text-gray-900 dark:text-white">
+                <p className="font-mono text-sm font-semibold text-gray-900 dark:text-text-primary">
                   {formatMoney(e.invoice_amount ?? e.amount_usd, e.invoice_currency, locale)}
                 </p>
                 <p className="text-xs text-gray-500">
-                  Reste dû : <span className="font-medium text-gray-700 dark:text-gray-300">{formatMoney(remaining, e.invoice_currency, locale)}</span>
+                  Reste dû : <span className="font-medium text-gray-700 dark:text-text-primary">{formatMoney(remaining, e.invoice_currency, locale)}</span>
                 </p>
               </div>
               <div className="text-right">

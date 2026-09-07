@@ -16,8 +16,8 @@ interface Props {
   onUpdated: (message: string) => void;
 }
 
-const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-300';
-const labelCls = 'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1';
+const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-purple-300';
+const labelCls = 'block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1';
 
 export default function SettlementList({ expense, settlements, entities, locale, onUpdated }: Props) {
   const [showForm, setShowForm] = useState(false);
@@ -111,9 +111,9 @@ export default function SettlementList({ expense, settlements, entities, locale,
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+    <div className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-5">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Paiements et remboursements</h3>
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary">Paiements et remboursements</h3>
         {!showForm && (
           <button
             onClick={() => {
@@ -194,7 +194,7 @@ export default function SettlementList({ expense, settlements, entities, locale,
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="flex gap-2 justify-end">
-            <button onClick={() => setShowForm(false)} className="px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50">Annuler</button>
+            <button onClick={() => setShowForm(false)} className="px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-600 hover:bg-gray-50">Annuler</button>
             <button
               onClick={handleCreate}
               disabled={loading}
@@ -210,8 +210,8 @@ export default function SettlementList({ expense, settlements, entities, locale,
       {/* Confirm payment modal */}
       {confirmTarget && (
         <div className="mb-4 p-4 rounded-lg border border-emerald-200 dark:border-emerald-800 space-y-3">
-          <h4 className="text-sm font-semibold text-gray-900 dark:text-white">Confirmer le paiement</h4>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <h4 className="text-sm font-semibold text-gray-900 dark:text-text-primary">Confirmer le paiement</h4>
+          <p className="text-sm text-gray-600 dark:text-text-secondary">
             {SETTLEMENT_TYPE_LABELS[confirmTarget.settlement_type]} · {formatMoney(confirmTarget.amount, confirmTarget.currency, locale)}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -226,7 +226,7 @@ export default function SettlementList({ expense, settlements, entities, locale,
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="flex gap-2 justify-end">
-            <button onClick={() => setConfirmTarget(null)} className="px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50">Annuler</button>
+            <button onClick={() => setConfirmTarget(null)} className="px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-600 hover:bg-gray-50">Annuler</button>
             <button
               onClick={handleConfirm}
               disabled={loading}
@@ -249,11 +249,11 @@ export default function SettlementList({ expense, settlements, entities, locale,
           return (
             <div
               key={s.id}
-              className="flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/30"
+              className="flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-100 dark:border-text-secondary/15 bg-gray-50 dark:bg-navy-panel/30"
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  <span className="text-sm font-medium text-gray-900 dark:text-text-primary">
                     {SETTLEMENT_TYPE_LABELS[s.settlement_type] ?? s.settlement_type}
                   </span>
                   <span className={clsx('text-xs px-2 py-0.5 rounded-full border font-medium', cfg.cls)}>
@@ -267,7 +267,7 @@ export default function SettlementList({ expense, settlements, entities, locale,
                   {s.scheduled_at && <span>· {formatDate(s.scheduled_at, locale)}</span>}
                 </div>
               </div>
-              <span className="font-mono text-sm font-semibold text-gray-900 dark:text-white">
+              <span className="font-mono text-sm font-semibold text-gray-900 dark:text-text-primary">
                 {formatMoney(s.amount, s.currency, locale)}
               </span>
               {s.status === 'scheduled' && (

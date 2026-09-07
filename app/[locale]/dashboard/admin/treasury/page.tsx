@@ -72,8 +72,8 @@ function BalanceCard({
   loading: boolean;
 }) {
   return (
-    <div className="bg-white dark:bg-[#0e1428] border border-gray-200 dark:border-gray-800 rounded-2xl p-5">
-      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
+    <div className="bg-white dark:bg-[#0e1428] border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-5">
+      <h3 className="text-sm font-semibold text-gray-700 dark:text-text-primary mb-4 flex items-center gap-2">
         <Landmark size={15} className="text-purple-400" />
         {title}
       </h3>
@@ -93,11 +93,11 @@ function BalanceCard({
           {balances.map((b) => (
             <div
               key={b.asset}
-              className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800 last:border-0"
+              className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-text-secondary/15 last:border-0"
             >
-              <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{b.asset}</span>
+              <span className="text-sm font-medium text-gray-800 dark:text-text-primary">{b.asset}</span>
               <div className="text-right">
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                <p className="text-sm font-semibold text-gray-900 dark:text-text-primary">
                   {parseFloat(b.free).toFixed(6)}{' '}
                   <span className="text-xs text-gray-400">libre</span>
                 </p>
@@ -210,17 +210,17 @@ export default function TreasuryPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-text-primary flex items-center gap-2">
             <Landmark size={22} className="text-purple-400" />
             Trésorerie Binance
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-text-secondary mt-1">
             Gestion des soldes et retraits USDT
           </p>
         </div>
         <button
           onClick={refresh}
-          className="flex items-center gap-2 px-4 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          className="flex items-center gap-2 px-4 py-2 text-sm rounded-xl border border-gray-200 dark:border-text-secondary/20 text-gray-600 dark:text-text-primary hover:bg-gray-100 dark:hover:bg-navy-panel transition"
         >
           <RefreshCw size={14} className={clsx(balLoading && 'animate-spin')} />
           Actualiser
@@ -229,7 +229,7 @@ export default function TreasuryPage() {
 
       {/* ── 1. Soldes ──────────────────────────────────────────────── */}
       <section>
-        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">
+        <h2 className="text-sm font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-widest mb-3">
           Soldes
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -250,14 +250,14 @@ export default function TreasuryPage() {
 
       {/* ── 2. Formulaire retrait ───────────────────────────────────── */}
       <section>
-        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">
+        <h2 className="text-sm font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-widest mb-3">
           Retrait USDT
         </h2>
-        <div className="bg-white dark:bg-[#0e1428] border border-gray-200 dark:border-gray-800 rounded-2xl p-6 max-w-lg space-y-4">
+        <div className="bg-white dark:bg-[#0e1428] border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 max-w-lg space-y-4">
 
           {/* Montant */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+            <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">
               Montant (USDT)
             </label>
             <input
@@ -267,20 +267,20 @@ export default function TreasuryPage() {
               value={amount}
               onChange={(e) => { setAmount(e.target.value); setConfirm(false); setSendResult(null); }}
               placeholder="0.00"
-              className="w-full px-3 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2.5 rounded-xl bg-gray-50 dark:bg-navy-panel border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-900 dark:text-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
 
           {/* Réseau */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+            <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">
               Réseau
             </label>
             <div className="relative">
               <select
                 value={network}
                 onChange={(e) => { setNetwork(e.target.value as 'BSC' | 'TRC20' | 'ERC20'); setConfirm(false); setSendResult(null); }}
-                className="w-full appearance-none px-3 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full appearance-none px-3 py-2.5 rounded-xl bg-gray-50 dark:bg-navy-panel border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="BSC">BSC — Fee : 0.5 USDT</option>
                 <option value="TRC20">TRC20 — Fee : 1 USDT</option>
@@ -292,7 +292,7 @@ export default function TreasuryPage() {
 
           {/* Adresse */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+            <label className="block text-xs font-medium text-gray-500 dark:text-text-secondary mb-1">
               Adresse destination
             </label>
             <input
@@ -300,7 +300,7 @@ export default function TreasuryPage() {
               value={address}
               onChange={(e) => { setAddress(e.target.value); setConfirm(false); setSendResult(null); }}
               placeholder={network === 'TRC20' ? 'Txxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' : '0x...'}
-              className="w-full px-3 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm font-mono text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2.5 rounded-xl bg-gray-50 dark:bg-navy-panel border border-gray-200 dark:border-text-secondary/20 text-sm font-mono text-gray-900 dark:text-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
 
@@ -371,10 +371,10 @@ export default function TreasuryPage() {
 
       {/* ── 3. Historique retraits USDT ────────────────────────────── */}
       <section>
-        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">
+        <h2 className="text-sm font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-widest mb-3">
           Historique des retraits
         </h2>
-        <div className="bg-white dark:bg-[#0e1428] border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden">
+        <div className="bg-white dark:bg-[#0e1428] border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden">
           {histLoading ? (
             <div className="flex items-center gap-2 text-gray-400 text-sm p-5">
               <Loader2 size={14} className="animate-spin" /> Chargement…
@@ -389,9 +389,9 @@ export default function TreasuryPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100 dark:border-gray-800">
+                  <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                     {['Date', 'Montant', 'Réseau', 'Adresse', 'Statut', 'TxHash'].map((h) => (
-                      <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                      <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wide">
                         {h}
                       </th>
                     ))}
@@ -402,19 +402,19 @@ export default function TreasuryPage() {
                     const s = WITHDRAW_STATUS[row.status] ?? { label: `#${row.status}`, color: 'text-gray-400', icon: Clock };
                     const StatusIcon = s.icon;
                     return (
-                      <tr key={row.id} className="border-b border-gray-50 dark:border-gray-800/60 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition">
-                        <td className="px-4 py-3 text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                      <tr key={row.id} className="border-b border-gray-50 dark:border-text-secondary/15/60 hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition">
+                        <td className="px-4 py-3 text-gray-600 dark:text-text-secondary whitespace-nowrap">
                           {fmtDate(row.applyTime)}
                         </td>
-                        <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white whitespace-nowrap">
+                        <td className="px-4 py-3 font-semibold text-gray-900 dark:text-text-primary whitespace-nowrap">
                           {parseFloat(row.amount).toFixed(4)} {row.coin}
                         </td>
                         <td className="px-4 py-3">
-                          <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-800 text-xs font-mono text-gray-700 dark:text-gray-300">
+                          <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-navy-panel text-xs font-mono text-gray-700 dark:text-text-primary">
                             {row.network}
                           </span>
                         </td>
-                        <td className="px-4 py-3 font-mono text-xs text-gray-500 dark:text-gray-400">
+                        <td className="px-4 py-3 font-mono text-xs text-gray-500 dark:text-text-secondary">
                           {truncateAddr(row.address)}
                         </td>
                         <td className="px-4 py-3">
@@ -423,11 +423,11 @@ export default function TreasuryPage() {
                             {s.label}
                           </span>
                         </td>
-                        <td className="px-4 py-3 font-mono text-xs text-gray-500 dark:text-gray-400">
+                        <td className="px-4 py-3 font-mono text-xs text-gray-500 dark:text-text-secondary">
                           {row.txId ? (
                             <span title={row.txId}>{truncateAddr(row.txId)}</span>
                           ) : (
-                            <span className="text-gray-300 dark:text-gray-600">—</span>
+                            <span className="text-gray-300 dark:text-text-secondary/50">—</span>
                           )}
                         </td>
                       </tr>

@@ -83,8 +83,8 @@ const STATUS_CONFIG: Record<OperatorStatus, {
   coming_soon: {
     icon: Clock,
     dot: 'bg-gray-400',
-    badge: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700',
-    text: 'text-gray-500 dark:text-gray-400',
+    badge: 'bg-gray-100 dark:bg-navy-panel text-gray-600 dark:text-text-secondary border-gray-200 dark:border-text-secondary/20',
+    text: 'text-gray-500 dark:text-text-secondary',
   },
 };
 
@@ -114,7 +114,7 @@ function UptimeBar({ uptime }: { uptime: string }) {
           />
         ))}
       </div>
-      <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 w-12 flex-shrink-0">{uptime}</span>
+      <span className="text-xs font-semibold text-gray-700 dark:text-text-primary w-12 flex-shrink-0">{uptime}</span>
     </div>
   );
 }
@@ -125,7 +125,7 @@ function OperatorCard({ op, tLabel }: { op: Operator; tLabel: (k: OperatorStatus
   const StatusIcon = cfg.icon;
 
   return (
-    <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-ink/60 overflow-hidden hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-lg transition-all duration-300">
+    <div className="group relative rounded-2xl border border-gray-200 dark:border-text-secondary/15 bg-white dark:bg-navy/60 overflow-hidden hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-lg transition-all duration-300">
       {/* Color top bar */}
       <div className="h-1 w-full" style={{ backgroundColor: op.color }} />
 
@@ -135,14 +135,14 @@ function OperatorCard({ op, tLabel }: { op: Operator; tLabel: (k: OperatorStatus
           <div className="flex items-center gap-3">
             {/* Avatar */}
             <div
-              className="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center text-sm font-heading font-bold text-white shadow-md"
+              className="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center text-sm font-serif font-bold text-white shadow-md"
               style={{ backgroundColor: op.color, boxShadow: `0 4px 14px ${op.color}40` }}
             >
               {op.name.slice(0, 2).toUpperCase()}
             </div>
             <div>
-              <p className="font-semibold text-gray-900 dark:text-white text-sm leading-tight">{op.name}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{op.description}</p>
+              <p className="font-semibold text-gray-900 dark:text-text-primary text-sm leading-tight">{op.name}</p>
+              <p className="text-xs text-gray-500 dark:text-text-secondary mt-0.5">{op.description}</p>
             </div>
           </div>
 
@@ -161,19 +161,19 @@ function OperatorCard({ op, tLabel }: { op: Operator; tLabel: (k: OperatorStatus
         )}
 
         {/* Stats row */}
-        <div className="flex items-center gap-4 pt-3 border-t border-gray-100 dark:border-gray-800">
+        <div className="flex items-center gap-4 pt-3 border-t border-gray-100 dark:border-text-secondary/15">
           <div>
-            <p className="text-xs text-gray-400 dark:text-gray-500">Uptime 30j</p>
-            <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 font-mono">{op.uptime}</p>
+            <p className="text-xs text-gray-400 dark:text-text-secondary/70">Uptime 30j</p>
+            <p className="text-sm font-semibold text-gray-800 dark:text-text-primary font-mono">{op.uptime}</p>
           </div>
-          <div className="w-px h-8 bg-gray-100 dark:bg-gray-800" />
+          <div className="w-px h-8 bg-gray-100 dark:bg-navy-panel" />
           <div>
-            <p className="text-xs text-gray-400 dark:text-gray-500">Latence</p>
-            <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 font-mono">{op.latency}</p>
+            <p className="text-xs text-gray-400 dark:text-text-secondary/70">Latence</p>
+            <p className="text-sm font-semibold text-gray-800 dark:text-text-primary font-mono">{op.latency}</p>
           </div>
           {op.status !== 'coming_soon' && (
             <>
-              <div className="w-px h-8 bg-gray-100 dark:bg-gray-800" />
+              <div className="w-px h-8 bg-gray-100 dark:bg-navy-panel" />
               <div className="flex items-center gap-1.5">
                 <span className={`w-2 h-2 rounded-full flex-shrink-0 ${cfg.dot} ${op.status === 'operational' ? 'animate-pulse' : ''}`} />
                 <span className={`text-xs font-medium ${cfg.text}`}>Live</span>
@@ -224,24 +224,24 @@ export default function StatusPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-white dark:bg-ink pt-16 overflow-x-hidden">
+      <main className="min-h-screen bg-white dark:bg-navy pt-16 overflow-x-hidden">
 
         {/* ── Hero ──────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden py-16 lg:py-20 border-b border-gray-200 dark:border-gray-800">
-          <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/30 to-white dark:from-ink dark:via-ink/80 dark:to-ink" />
-          <div className="absolute top-0 right-0 w-96 h-96 bg-signal/5 rounded-full blur-3xl pointer-events-none" />
+        <section className="relative overflow-hidden py-16 lg:py-20 border-b border-gray-200 dark:border-text-secondary/15">
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/30 to-white dark:from-navy dark:via-navy/80 dark:to-navy" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-green-deep/5 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-signal/10 border border-signal/25 text-signal text-xs font-semibold mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-deep/10 border border-green-deep/25 text-green-deep text-xs font-semibold mb-4">
                   <Activity size={13} />
                   {t('badge')}
                 </div>
-                <h1 className="text-3xl sm:text-4xl font-heading font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+                <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 dark:text-text-primary mb-3 tracking-tight">
                   {t('title')}
                 </h1>
-                <p className="text-gray-600 dark:text-gray-400 max-w-lg text-sm sm:text-base leading-relaxed">
+                <p className="text-gray-600 dark:text-text-secondary max-w-lg text-sm sm:text-base leading-relaxed">
                   {t('subtitle')}
                 </p>
               </div>
@@ -262,17 +262,17 @@ export default function StatusPage() {
         </section>
 
         {/* ── Refresh bar ───────────────────────────────────────── */}
-        <div className="sticky top-16 z-20 bg-white/90 dark:bg-ink/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+        <div className="sticky top-16 z-20 bg-white/90 dark:bg-navy/90 backdrop-blur-md border-b border-gray-200 dark:border-text-secondary/15">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-3">
-            <span className="text-xs text-gray-500 dark:text-gray-400 min-w-0">
+            <span className="text-xs text-gray-500 dark:text-text-secondary min-w-0">
               <span className="hidden sm:inline">{t('last_updated')}: </span>
-              <span className="font-mono font-medium text-gray-700 dark:text-gray-300">{formatTime(lastUpdated)}</span>
-              <span className="ml-2 text-gray-400">· <span className="font-mono font-medium text-signal">{countdown}s</span></span>
+              <span className="font-mono font-medium text-gray-700 dark:text-text-primary">{formatTime(lastUpdated)}</span>
+              <span className="ml-2 text-gray-400">· <span className="font-mono font-medium text-green-deep">{countdown}s</span></span>
             </span>
             <button
               onClick={refresh}
               disabled={isRefreshing}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-signal hover:bg-signal/10 transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-text-secondary hover:text-green-deep hover:bg-green-deep/10 transition-colors disabled:opacity-50"
             >
               <RefreshCw size={13} className={isRefreshing ? 'animate-spin' : ''} />
               {t('refresh')}
@@ -280,9 +280,9 @@ export default function StatusPage() {
           </div>
 
           {/* Countdown progress bar */}
-          <div className="h-0.5 bg-gray-100 dark:bg-gray-800">
+          <div className="h-0.5 bg-gray-100 dark:bg-navy-panel">
             <div
-              className="h-full bg-signal transition-all duration-1000 ease-linear"
+              className="h-full bg-green-deep transition-all duration-1000 ease-linear"
               style={{ width: `${(countdown / AUTO_REFRESH_SECONDS) * 100}%` }}
             />
           </div>
@@ -299,13 +299,13 @@ export default function StatusPage() {
 
         {/* ── Status table (summary) ────────────────────────────── */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-          <div className="rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
-            <div className="px-5 py-4 bg-gray-50 dark:bg-ink/60 border-b border-gray-200 dark:border-gray-800">
-              <h2 className="text-sm font-semibold text-gray-900 dark:text-white">{t('incident_title')}</h2>
+          <div className="rounded-2xl border border-gray-200 dark:border-text-secondary/15 overflow-hidden">
+            <div className="px-5 py-4 bg-gray-50 dark:bg-navy/60 border-b border-gray-200 dark:border-text-secondary/15">
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary">{t('incident_title')}</h2>
             </div>
             <div className="px-5 py-8 flex flex-col items-center gap-2 text-center">
               <CheckCircle2 size={28} className="text-emerald-500" />
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('incident_none')}</p>
+              <p className="text-sm font-medium text-gray-700 dark:text-text-primary">{t('incident_none')}</p>
             </div>
           </div>
         </section>
@@ -318,13 +318,13 @@ export default function StatusPage() {
               return (
                 <div key={key} className="flex items-center gap-2">
                   <Icon size={14} className={cfg.text} />
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-xs text-gray-500 dark:text-text-secondary">
                     {STATUS_EMOJI[key]} {t(key as Parameters<typeof t>[0])}
                   </span>
                 </div>
               );
             })}
-            <span className="text-xs text-gray-400 dark:text-gray-500 italic">{t('page_info')}</span>
+            <span className="text-xs text-gray-400 dark:text-text-secondary/70 italic">{t('page_info')}</span>
           </div>
         </section>
 

@@ -12,7 +12,7 @@ const STATUS_STYLES: Record<string, string> = {
   processing: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   success: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   failed: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  cancelled: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+  cancelled: 'bg-gray-100 text-gray-600 dark:bg-navy-panel dark:text-text-secondary',
 };
 
 function fmt(n: number) {
@@ -66,7 +66,7 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">
+        <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary">
           {t('dashboard.transactions.title')}
         </h1>
         <ExportCsvButton transactions={transactions} />
@@ -76,19 +76,19 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
       <TransactionFilters searchParams={searchParams} />
 
       {/* Transactions */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden shadow-sm">
         {transactions.length === 0 ? (
-          <div className="text-center py-16 text-sm text-gray-400 dark:text-gray-600">
+          <div className="text-center py-16 text-sm text-gray-400 dark:text-text-secondary/50">
             {t('dashboard.transactions.no_results')}
           </div>
         ) : (
           <>
             {/* Mobile: cards */}
-            <div className="md:hidden divide-y divide-gray-100 dark:divide-gray-800">
+            <div className="md:hidden divide-y divide-gray-100 dark:divide-text-secondary/15">
               {transactions.map((tx) => (
                 <div key={tx.id} className="px-4 py-3 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium text-gray-900 dark:text-white capitalize">{tx.operator}</span>
+                    <span className="font-medium text-gray-900 dark:text-text-primary capitalize">{tx.operator}</span>
                     <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status])}>
                       {t(`dashboard.status.${tx.status}`)}
                     </span>
@@ -102,12 +102,12 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <div>
-                      <span className="text-gray-500 dark:text-gray-400">Montant: </span>
-                      <span className="font-medium text-gray-900 dark:text-white">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></span>
+                      <span className="text-gray-500 dark:text-text-secondary">Montant: </span>
+                      <span className="font-medium text-gray-900 dark:text-text-primary">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></span>
                     </div>
                     <div className="text-right">
-                      <span className="text-gray-500 dark:text-gray-400">Net: </span>
-                      <span className="font-medium text-gray-900 dark:text-white">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></span>
+                      <span className="text-gray-500 dark:text-text-secondary">Net: </span>
+                      <span className="font-medium text-gray-900 dark:text-text-primary">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></span>
                     </div>
                   </div>
                   <div className="text-xs text-gray-400">
@@ -121,31 +121,31 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100 dark:border-gray-800">
+                  <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                     {(['date', 'operator', 'direction', 'amount', 'fee', 'net', 'status'] as const).map((col) => (
                       <th
                         key={col}
-                        className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                        className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider whitespace-nowrap"
                       >
                         {t(`dashboard.transactions.${col}`)}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+                <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                   {transactions.map((tx) => (
-                    <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                      <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap text-xs">{fmtDate(tx.created_at)}</td>
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white capitalize">{tx.operator}</td>
+                    <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors">
+                      <td className="px-4 py-3 text-gray-500 dark:text-text-secondary whitespace-nowrap text-xs">{fmtDate(tx.created_at)}</td>
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary capitalize">{tx.operator}</td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <span className={clsx('inline-flex items-center gap-1 text-xs font-medium', tx.direction === 'collect' ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400')}>
                           {tx.direction === 'collect' ? <ArrowDownLeft size={13} /> : <ArrowUpRight size={13} />}
                           {t(`dashboard.transactions.${tx.direction}`)}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
-                      <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmt(tx.fee)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                      <td className="px-4 py-3 text-gray-900 dark:text-text-primary whitespace-nowrap">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                      <td className="px-4 py-3 text-gray-500 dark:text-text-secondary whitespace-nowrap">{fmt(tx.fee)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary whitespace-nowrap">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
                       <td className="px-4 py-3">
                         <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status])}>
                           {t(`dashboard.status.${tx.status}`)}
@@ -162,19 +162,19 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
 
       {/* Pagination */}
       {pagination.pages > 1 && (
-        <div className="flex flex-wrap items-center justify-between gap-y-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex flex-wrap items-center justify-between gap-y-2 text-xs sm:text-sm text-gray-600 dark:text-text-secondary">
           <span>{t('dashboard.transactions.page_info', { page: pagination.page, pages: pagination.pages, total: pagination.total })}</span>
           <div className="flex items-center gap-2">
             {pagination.page > 1 ? (
               <Link
                 href={buildHref(pagination.page - 1)}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 hover:bg-gray-50 dark:hover:bg-navy-panel transition-colors"
               >
                 <ChevronLeft size={14} />
                 {t('dashboard.transactions.prev')}
               </Link>
             ) : (
-              <span className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-700 cursor-not-allowed">
+              <span className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-100 dark:border-text-secondary/15 text-gray-300 dark:text-gray-700 cursor-not-allowed">
                 <ChevronLeft size={14} />
                 {t('dashboard.transactions.prev')}
               </span>
@@ -182,13 +182,13 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
             {pagination.page < pagination.pages ? (
               <Link
                 href={buildHref(pagination.page + 1)}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 hover:bg-gray-50 dark:hover:bg-navy-panel transition-colors"
               >
                 {t('dashboard.transactions.next')}
                 <ChevronRight size={14} />
               </Link>
             ) : (
-              <span className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-700 cursor-not-allowed">
+              <span className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-100 dark:border-text-secondary/15 text-gray-300 dark:text-gray-700 cursor-not-allowed">
                 {t('dashboard.transactions.next')}
                 <ChevronRight size={14} />
               </span>

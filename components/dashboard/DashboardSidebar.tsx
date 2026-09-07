@@ -1,10 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X, Shield, Users, SlidersHorizontal, Landmark, Wallet, Receipt, Building2, TrendingUp, Headset, DollarSign, ArrowDownToLine } from 'lucide-react';
 import clsx from 'clsx';
+import BrandLogo from '../BrandLogo';
 
 interface DashboardSidebarProps {
   mobileOpen?: boolean;
@@ -64,10 +64,8 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
   const Inner = ({ onItemClick }: { onItemClick?: () => void }) => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="flex items-center h-16 px-5 border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
-        <Link href="/" onClick={onItemClick}>
-          <Image src="/logo.png" alt="UniPay Congo" height={32} width={100} priority />
-        </Link>
+      <div className="flex items-center h-16 px-5 border-b border-gray-200 dark:border-text-secondary/15 flex-shrink-0">
+        <BrandLogo size={32} />
       </div>
 
       {/* Nav */}
@@ -80,8 +78,8 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
             className={clsx(
               'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
               isActive(href, exact)
-                ? 'bg-signal/10 text-signal dark:bg-signal/15 dark:text-signal'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
+                ? 'bg-green-deep/10 text-green-deep dark:bg-green-deep/15 dark:text-green-deep'
+                : 'text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel hover:text-gray-900 dark:hover:text-gray-100',
             )}
           >
             <Icon size={18} />
@@ -93,7 +91,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
           <>
             {/* Section: App Wallet */}
             <div className="pt-4 pb-1 px-3">
-              <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest">
+              <p className="text-[10px] font-semibold text-gray-400 dark:text-text-secondary/50 uppercase tracking-widest">
                 App Wallet
               </p>
             </div>
@@ -105,8 +103,8 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
                 className={clsx(
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
                   isActive(href, exact)
-                    ? 'bg-signal/10 text-signal dark:bg-signal/15 dark:text-signal'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
+                    ? 'bg-green-deep/10 text-green-deep dark:bg-green-deep/15 dark:text-green-deep'
+                    : 'text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel hover:text-gray-900 dark:hover:text-gray-100',
                 )}
               >
                 <Icon size={18} />
@@ -116,7 +114,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
 
             {/* Section: Paiements Marchands */}
             <div className="pt-5 pb-1 px-3">
-              <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest">
+              <p className="text-[10px] font-semibold text-gray-400 dark:text-text-secondary/50 uppercase tracking-widest">
                 Paiements Marchands
               </p>
             </div>
@@ -129,7 +127,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
                   isActive(href, exact)
                     ? 'bg-purple-500/10 text-purple-600 dark:bg-purple-500/15 dark:text-purple-400'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
+                    : 'text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel hover:text-gray-900 dark:hover:text-gray-100',
                 )}
               >
                 <Icon size={18} />
@@ -139,7 +137,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
 
             {/* Section: Infrastructure */}
             <div className="pt-5 pb-1 px-3">
-              <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest">
+              <p className="text-[10px] font-semibold text-gray-400 dark:text-text-secondary/50 uppercase tracking-widest">
                 Infrastructure
               </p>
             </div>
@@ -152,7 +150,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
                   isActive(href, exact)
                     ? 'bg-purple-500/10 text-purple-600 dark:bg-purple-500/15 dark:text-purple-400'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100',
+                    : 'text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel hover:text-gray-900 dark:hover:text-gray-100',
                 )}
               >
                 <Icon size={18} />
@@ -164,10 +162,10 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
       </nav>
 
       {/* Logout */}
-      <div className="px-3 py-4 border-t border-gray-200 dark:border-gray-800">
+      <div className="px-3 py-4 border-t border-gray-200 dark:border-text-secondary/15">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-all duration-150"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-text-secondary hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-all duration-150"
         >
           <LogOut size={18} />
           {t('nav.logout')}
@@ -179,7 +177,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
   return (
     <>
       {/* Desktop sidebar — full height, global Navbar is hidden on dashboard routes */}
-      <aside className="hidden md:flex flex-col fixed top-0 left-0 h-full w-64 bg-white dark:bg-ink border-r border-gray-200 dark:border-gray-800 z-40">
+      <aside className="hidden md:flex flex-col fixed top-0 left-0 h-full w-64 bg-white dark:bg-navy border-r border-gray-200 dark:border-text-secondary/15 z-40">
         <Inner />
       </aside>
 
@@ -190,10 +188,10 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={onClose}
           />
-          <aside className="relative w-72 h-full bg-white dark:bg-ink border-r border-gray-200 dark:border-gray-800 flex flex-col shadow-2xl">
+          <aside className="relative w-72 h-full bg-white dark:bg-navy border-r border-gray-200 dark:border-text-secondary/15 flex flex-col shadow-2xl">
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-1.5 rounded-lg text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
               aria-label="Close menu"
             >
               <X size={18} />

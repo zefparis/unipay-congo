@@ -1,22 +1,16 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
+import BrandLogo from './BrandLogo';
 
 export default function Footer() {
   const t = useTranslations('footer');
 
   return (
-    <footer id="contact" className="py-12 bg-white dark:bg-ink border-t border-gray-200 dark:border-bone/10">
+    <footer id="contact" className="py-12 bg-white dark:bg-navy border-t border-gray-200 dark:border-text-secondary/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Logo */}
-          <div className="flex items-center gap-2.5 flex-shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-signal flex items-center justify-center shadow-md shadow-signal/30">
-              <span className="text-white font-heading font-bold text-sm leading-none">U</span>
-            </div>
-            <span className="font-heading font-bold text-lg text-gray-900 dark:text-white">
-              UniPay<span className="text-signal">Congo</span>
-            </span>
-          </div>
+          <BrandLogo size={36} />
 
           {/* Quick nav */}
           <nav className="flex flex-wrap items-center justify-center gap-6">
@@ -24,7 +18,7 @@ export default function Footer() {
               <a
                 key={href}
                 href={href}
-                className="text-sm text-gray-500 dark:text-gray-400 hover:text-signal dark:hover:text-signal transition-colors capitalize"
+                className="text-sm text-gray-500 dark:text-text-secondary hover:text-green-deep dark:hover:text-green-deep transition-colors capitalize"
               >
                 {href.replace('#', '')}
               </a>
@@ -33,38 +27,38 @@ export default function Footer() {
 
           {/* Legal */}
           <div className="text-center md:text-right">
-            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+            <p className="text-xs text-gray-500 dark:text-text-secondary leading-relaxed">
               {t('copyright')}
             </p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+            <p className="text-xs text-gray-400 dark:text-text-secondary/70 mt-1">
               {t('rights')}
             </p>
           </div>
         </div>
 
         {/* Legal pages */}
-        <div className="mt-6 pt-5 border-t border-gray-100 dark:border-gray-800 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+        <div className="mt-6 pt-5 border-t border-gray-100 dark:border-text-secondary/10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
           <Link
             href="/legal"
-            className="text-xs text-gray-400 dark:text-gray-500 hover:text-signal dark:hover:text-signal transition-colors"
+            className="text-xs text-gray-400 dark:text-text-secondary/70 hover:text-green-deep dark:hover:text-green-deep transition-colors"
           >
             {t('legal_link')}
           </Link>
           <Link
             href="/privacy"
-            className="text-xs text-gray-400 dark:text-gray-500 hover:text-signal dark:hover:text-signal transition-colors"
+            className="text-xs text-gray-400 dark:text-text-secondary/70 hover:text-green-deep dark:hover:text-green-deep transition-colors"
           >
             {t('privacy_link')}
           </Link>
           <Link
             href="/terms"
-            className="text-xs text-gray-400 dark:text-gray-500 hover:text-signal dark:hover:text-signal transition-colors"
+            className="text-xs text-gray-400 dark:text-text-secondary/70 hover:text-green-deep dark:hover:text-green-deep transition-colors"
           >
             {t('terms_link')}
           </Link>
           <Link
             href="/status"
-            className="text-xs text-gray-400 dark:text-gray-500 hover:text-signal dark:hover:text-signal transition-colors"
+            className="text-xs text-gray-400 dark:text-text-secondary/70 hover:text-green-deep dark:hover:text-green-deep transition-colors"
           >
             {t('status_link')}
           </Link>

@@ -11,18 +11,18 @@ export default function Stats() {
   ];
 
   return (
-    <section className="py-14 bg-gray-50 dark:bg-ink/60 border-y border-gray-200 dark:border-bone/10">
+    <section className="py-14 bg-gray-50 dark:bg-navy-panel/40 border-y border-gray-200 dark:border-text-secondary/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-200 dark:divide-gray-700">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-200 dark:divide-text-secondary/15">
           {stats.map(({ icon: Icon, value, label }, i) => (
             <div key={i} className="flex flex-col items-center text-center py-8 sm:py-0 sm:px-8 first:pt-0 sm:first:pt-0 last:pb-0 sm:last:pb-0 first:pl-0 last:pr-0">
-              <div className="w-10 h-10 rounded-xl bg-signal/10 flex items-center justify-center mb-3">
-                <Icon size={20} className="text-signal" />
+              <div className="w-10 h-10 rounded-xl bg-green-deep/10 flex items-center justify-center mb-3">
+                <Icon size={20} className="text-green-deep" />
               </div>
-              <div className="text-4xl sm:text-5xl font-heading font-bold text-gray-900 dark:text-white mb-1">
+              <div className="text-4xl sm:text-5xl font-serif font-bold text-gray-900 dark:text-text-primary mb-1">
                 {value}
               </div>
-              <div className="text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+              <div className="text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-text-secondary">
                 {label}
               </div>
             </div>

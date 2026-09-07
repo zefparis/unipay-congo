@@ -30,7 +30,7 @@ const STATUS_LABELS: Record<string, string> = {
 const STATUS_STYLES: Record<string, string> = {
   open: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   escalated: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  resolved: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+  resolved: 'bg-gray-100 text-gray-600 dark:bg-navy-panel dark:text-text-secondary',
 };
 
 function fmtTime(iso: string) {
@@ -154,14 +154,14 @@ export default function MerchantSupportPage() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <Headset className="text-signal" size={22} />
+        <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary flex items-center gap-2">
+          <Headset className="text-green-deep" size={22} />
           Support
         </h1>
         <button
           onClick={loadConversations}
           disabled={loading}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all disabled:opacity-50"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-all disabled:opacity-50"
         >
           <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
           Actualiser
@@ -176,28 +176,28 @@ export default function MerchantSupportPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[600px]">
         {/* Conversations list */}
-        <div className="md:col-span-1 bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden flex flex-col">
-          <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Conversations</h2>
+        <div className="md:col-span-1 bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden flex flex-col">
+          <div className="px-4 py-3 border-b border-gray-100 dark:border-text-secondary/15">
+            <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary">Conversations</h2>
           </div>
           <div className="flex-1 overflow-y-auto">
             {loading ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 size={20} className="animate-spin text-signal" />
+                <Loader2 size={20} className="animate-spin text-green-deep" />
               </div>
             ) : conversations.length === 0 ? (
               <div className="text-center py-8 text-sm text-gray-400 px-4">
                 Aucune conversation. Envoyez un message pour commencer.
               </div>
             ) : (
-              <div className="divide-y divide-gray-50 dark:divide-gray-800/60">
+              <div className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                 {conversations.map((c) => (
                   <button
                     key={c.id}
                     onClick={() => setActiveConv(c)}
                     className={clsx(
-                      'w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors',
-                      activeConv?.id === c.id && 'bg-signal/5 dark:bg-signal/10',
+                      'w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors',
+                      activeConv?.id === c.id && 'bg-green-deep/5 dark:bg-green-deep/10',
                     )}
                   >
                     <div className="flex items-center justify-between gap-2 mb-1">
@@ -206,7 +206,7 @@ export default function MerchantSupportPage() {
                         {STATUS_LABELS[c.status]}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{c.id.slice(0, 8)}…</p>
+                    <p className="text-xs text-gray-500 dark:text-text-secondary truncate">{c.id.slice(0, 8)}…</p>
                   </button>
                 ))}
               </div>
@@ -215,9 +215,9 @@ export default function MerchantSupportPage() {
         </div>
 
         {/* Chat area */}
-        <div className="md:col-span-2 bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden flex flex-col">
+        <div className="md:col-span-2 bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden flex flex-col">
           {activeConv && (
-            <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <div className="px-4 py-3 border-b border-gray-100 dark:border-text-secondary/15 flex items-center justify-between">
               <span className="text-xs text-gray-400 font-mono">{activeConv.id.slice(0, 8)}…</span>
               <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold', STATUS_STYLES[activeConv.status])}>
                 {STATUS_LABELS[activeConv.status]}
@@ -245,10 +245,10 @@ export default function MerchantSupportPage() {
                     className={clsx(
                       'max-w-[80%] rounded-2xl px-4 py-2.5 text-sm',
                       m.role === 'merchant'
-                        ? 'bg-signal text-white rounded-br-sm'
+                        ? 'bg-green-deep text-white rounded-br-sm'
                         : m.role === 'admin'
                         ? 'bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-300 rounded-bl-sm'
-                        : 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 rounded-bl-sm',
+                        : 'bg-gray-100 text-gray-900 dark:bg-navy-panel dark:text-text-primary rounded-bl-sm',
                     )}
                   >
                     {m.role === 'admin' && (
@@ -257,7 +257,7 @@ export default function MerchantSupportPage() {
                       </div>
                     )}
                     {m.role === 'bot' && (
-                      <div className="flex items-center gap-1 text-[10px] font-semibold text-gray-500 dark:text-gray-400 mb-1">
+                      <div className="flex items-center gap-1 text-[10px] font-semibold text-gray-500 dark:text-text-secondary mb-1">
                         <Headset size={10} /> Assistant
                       </div>
                     )}
@@ -271,7 +271,7 @@ export default function MerchantSupportPage() {
             )}
             {sending && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-bl-sm px-4 py-2.5">
+                <div className="bg-gray-100 dark:bg-navy-panel rounded-2xl rounded-bl-sm px-4 py-2.5">
                   <Loader2 size={16} className="animate-spin text-gray-400" />
                 </div>
               </div>
@@ -286,7 +286,7 @@ export default function MerchantSupportPage() {
           </div>
 
           {/* Input */}
-          <div className="border-t border-gray-100 dark:border-gray-800 p-3">
+          <div className="border-t border-gray-100 dark:border-text-secondary/15 p-3">
             {activeConv?.status === 'resolved' ? (
               <div className="text-center text-sm text-gray-400 py-2">
                 Cette conversation est résolue. Démarrez une nouvelle conversation pour une nouvelle question.
@@ -299,13 +299,13 @@ export default function MerchantSupportPage() {
                   onKeyDown={handleKeyDown}
                   placeholder="Écrivez votre message…"
                   rows={1}
-                  className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/30 resize-none"
+                  className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/30 resize-none"
                   disabled={sending}
                 />
                 <button
                   onClick={handleSend}
                   disabled={!input.trim() || sending}
-                  className="flex-shrink-0 p-2.5 rounded-xl bg-signal text-white hover:bg-signal/85 transition-colors disabled:opacity-50"
+                  className="flex-shrink-0 p-2.5 rounded-xl bg-green-deep text-white hover:bg-green-deep/85 transition-colors disabled:opacity-50"
                 >
                   {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
                 </button>

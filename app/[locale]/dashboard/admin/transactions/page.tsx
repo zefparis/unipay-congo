@@ -32,7 +32,7 @@ const STATUS_STYLES: Record<string, string> = {
   processing: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   success:    'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   failed:     'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  cancelled:  'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+  cancelled:  'bg-gray-100 text-gray-600 dark:bg-navy-panel dark:text-text-secondary',
 };
 
 const DIR_ICON: Record<string, React.ReactNode> = {
@@ -125,15 +125,15 @@ export default function AdminTransactionsPage() {
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <ArrowLeftRight className="text-signal" size={22} />
+        <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary flex items-center gap-2">
+          <ArrowLeftRight className="text-green-deep" size={22} />
           Transactions Wallet
         </h1>
         <div className="flex items-center gap-2">
           <button
             onClick={handleExport}
             disabled={exporting}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-all disabled:opacity-50"
           >
             {exporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
             Exporter CSV
@@ -141,7 +141,7 @@ export default function AdminTransactionsPage() {
           <button
             onClick={load}
             disabled={loading}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-all disabled:opacity-50"
           >
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             Actualiser
@@ -154,7 +154,7 @@ export default function AdminTransactionsPage() {
         <select
           value={filterDir}
           onChange={(e) => { setFilterDir(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
+          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-700 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/40"
         >
           <option value="">Tous types</option>
           <option value="collect">Collect</option>
@@ -168,7 +168,7 @@ export default function AdminTransactionsPage() {
         <select
           value={filterStatus}
           onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
+          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-700 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/40"
         >
           <option value="">Tous statuts</option>
           <option value="pending">En attente</option>
@@ -180,7 +180,7 @@ export default function AdminTransactionsPage() {
         <select
           value={filterOp}
           onChange={(e) => { setFilterOp(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
+          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-700 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/40"
         >
           <option value="">Tous opérateurs</option>
           <option value="orange">Orange</option>
@@ -191,13 +191,13 @@ export default function AdminTransactionsPage() {
           type="date"
           value={dateFrom}
           onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
+          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-700 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/40"
         />
         <input
           type="date"
           value={dateTo}
           onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal/40"
+          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-700 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/40"
         />
       </form>
 
@@ -208,10 +208,10 @@ export default function AdminTransactionsPage() {
       )}
 
       {/* Table */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden shadow-sm">
         {loading && rows.length === 0 ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 size={24} className="animate-spin text-signal" />
+            <Loader2 size={24} className="animate-spin text-green-deep" />
           </div>
         ) : rows.length === 0 ? (
           <div className="text-center py-12 text-sm text-gray-400">Aucune transaction.</div>
@@ -219,22 +219,22 @@ export default function AdminTransactionsPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1100px] text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                   {['Date', 'User', 'Type', 'Opérateur', 'Montant', 'CGLT', 'Tx Chain', 'Frais', 'Net', 'Statut'].map((h) => (
-                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+              <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                 {rows.map((tx) => {
                   const wu = tx.wallet_users;
                   return (
-                    <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                      <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmtDate(tx.created_at)}</td>
+                    <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors">
+                      <td className="px-4 py-3 text-xs text-gray-500 dark:text-text-secondary whitespace-nowrap">{fmtDate(tx.created_at)}</td>
                       <td className="px-4 py-3">
-                        <div className="text-xs font-mono text-gray-700 dark:text-gray-300">{wu?.phone ?? tx.phone}</div>
+                        <div className="text-xs font-mono text-gray-700 dark:text-text-primary">{wu?.phone ?? tx.phone}</div>
                         {wu?.full_name && <div className="text-xs text-gray-400">{wu.full_name}</div>}
                       </td>
                       <td className="px-4 py-3">
@@ -242,15 +242,15 @@ export default function AdminTransactionsPage() {
                           {DIR_ICON[tx.direction] ?? <ArrowLeftRight size={13} className="text-gray-400" />} {DIR_LABEL[tx.direction] ?? tx.direction}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-xs capitalize text-gray-700 dark:text-gray-300">{tx.operator}</td>
-                      <td className="px-4 py-3 text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.amount)}</td>
+                      <td className="px-4 py-3 text-xs capitalize text-gray-700 dark:text-text-primary">{tx.operator}</td>
+                      <td className="px-4 py-3 text-gray-900 dark:text-text-primary whitespace-nowrap">{fmt(tx.amount)}</td>
                       <td className="px-4 py-3 whitespace-nowrap text-xs">
                         {tx.cglt_amount != null ? (
                           <span className="inline-flex items-center gap-1 text-sky-600 dark:text-sky-400 font-medium">
                             <Coins size={12} /> {fmtCglt(Number(tx.cglt_amount))}
                           </span>
                         ) : (
-                          <span className="text-gray-300 dark:text-gray-600">—</span>
+                          <span className="text-gray-300 dark:text-text-secondary/50">—</span>
                         )}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-xs">
@@ -259,18 +259,18 @@ export default function AdminTransactionsPage() {
                             href={`${BLOCKSCOUT_URL}/tx/${tx.blockchain_tx_hash}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 font-mono text-signal-dark hover:underline"
+                            className="inline-flex items-center gap-1 font-mono text-green-deep-dark hover:underline"
                             title={tx.blockchain_tx_hash}
                           >
                             {shortHash(tx.blockchain_tx_hash)}
                             <ExternalLink size={11} />
                           </a>
                         ) : (
-                          <span className="text-gray-300 dark:text-gray-600">—</span>
+                          <span className="text-gray-300 dark:text-text-secondary/50">—</span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmt(tx.fee)}</td>
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.net_amount)}</td>
+                      <td className="px-4 py-3 text-gray-500 dark:text-text-secondary whitespace-nowrap">{fmt(tx.fee)}</td>
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary whitespace-nowrap">{fmt(tx.net_amount)}</td>
                       <td className="px-4 py-3">
                         <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status] ?? STATUS_STYLES.cancelled)}>
                           {tx.status}
@@ -287,20 +287,20 @@ export default function AdminTransactionsPage() {
 
       {/* Pagination */}
       {pagination.pages > 1 && (
-        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-text-secondary">
           <span>{pagination.total} transactions — page {pagination.page}/{pagination.pages}</span>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1 || loading}
-              className="p-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 transition-all"
+              className="p-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 hover:bg-gray-100 dark:hover:bg-navy-panel disabled:opacity-40 transition-all"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={() => setPage((p) => Math.min(pagination.pages, p + 1))}
               disabled={page >= pagination.pages || loading}
-              className="p-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 transition-all"
+              className="p-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 hover:bg-gray-100 dark:hover:bg-navy-panel disabled:opacity-40 transition-all"
             >
               <ChevronRight size={16} />
             </button>

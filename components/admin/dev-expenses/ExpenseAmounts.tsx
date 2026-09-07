@@ -44,21 +44,21 @@ export default function ExpenseAmounts({ expense, locale }: Props) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-      <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Montants</h3>
+    <div className="bg-white dark:bg-navy-panel rounded-xl border border-gray-200 dark:border-text-secondary/20 p-5">
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary mb-4">Montants</h3>
       <dl className="space-y-3">
         {rows.map((row) => (
           <div key={row.label} className="flex items-center justify-between">
-            <dt className={`text-sm ${row.muted ? 'text-gray-400' : 'text-gray-600 dark:text-gray-400'}`}>
+            <dt className={`text-sm ${row.muted ? 'text-gray-400' : 'text-gray-600 dark:text-text-secondary'}`}>
               {row.label}
             </dt>
             <dd
               className={`font-mono text-sm ${
                 row.highlight
-                  ? 'font-bold text-gray-900 dark:text-white'
+                  ? 'font-bold text-gray-900 dark:text-text-primary'
                   : row.muted
                     ? 'text-gray-400'
-                    : 'text-gray-700 dark:text-gray-300'
+                    : 'text-gray-700 dark:text-text-primary'
               }`}
             >
               {row.value}

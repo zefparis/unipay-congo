@@ -28,10 +28,10 @@ interface StatsData {
 
 function StatCard({ label, value, sub, accent }: { label: string; value: number | string; sub?: string; accent?: string }) {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 flex flex-col gap-1 shadow-sm">
-      <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest">{label}</p>
-      <p className={clsx('text-3xl font-bold', accent ?? 'text-gray-900 dark:text-white')}>{value}</p>
-      {sub && <p className="text-xs text-gray-400 dark:text-gray-600">{sub}</p>}
+    <div className="bg-white dark:bg-navy-panel rounded-2xl border border-gray-200 dark:border-text-secondary/15 p-5 flex flex-col gap-1 shadow-sm">
+      <p className="text-xs font-semibold text-gray-400 dark:text-text-secondary/70 uppercase tracking-widest">{label}</p>
+      <p className={clsx('text-3xl font-bold', accent ?? 'text-gray-900 dark:text-text-primary')}>{value}</p>
+      {sub && <p className="text-xs text-gray-400 dark:text-text-secondary/50">{sub}</p>}
     </div>
   );
 }
@@ -109,15 +109,15 @@ export default function CdpWalletsPage() {
             <Wallet className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">CDP Wallets</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Adresses de dépôt USDC/Base (Coinbase Developer Platform)</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-text-primary">CDP Wallets</h1>
+            <p className="text-sm text-gray-500 dark:text-text-secondary">Adresses de dépôt USDC/Base (Coinbase Developer Platform)</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => load(page)}
             disabled={loading}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition disabled:opacity-50"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition disabled:opacity-50"
           >
             {loading ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
             Rafraîchir
@@ -168,9 +168,9 @@ export default function CdpWalletsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
-        <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-          <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="bg-white dark:bg-navy-panel rounded-2xl border border-gray-200 dark:border-text-secondary/15 overflow-hidden shadow-sm">
+        <div className="px-5 py-4 border-b border-gray-100 dark:border-text-secondary/15 flex items-center justify-between">
+          <p className="text-sm font-semibold text-gray-700 dark:text-text-primary">
             {data ? `${data.pagination.total} utilisateurs` : '…'}
           </p>
           {data && data.pagination.pages > 1 && (
@@ -178,7 +178,7 @@ export default function CdpWalletsPage() {
               <button
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                className="px-2 py-1 rounded border border-gray-200 dark:border-text-secondary/20 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-navy-panel transition"
               >
                 ←
               </button>
@@ -186,7 +186,7 @@ export default function CdpWalletsPage() {
               <button
                 onClick={() => setPage(p => Math.min(data.pagination.pages, p + 1))}
                 disabled={page === data.pagination.pages}
-                className="px-2 py-1 rounded border border-gray-200 dark:border-gray-700 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                className="px-2 py-1 rounded border border-gray-200 dark:border-text-secondary/20 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-navy-panel transition"
               >
                 →
               </button>
@@ -202,26 +202,26 @@ export default function CdpWalletsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Téléphone</th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Inscription</th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Adresse CDP</th>
-                  <th className="text-center px-5 py-3 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Statut</th>
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 dark:text-text-secondary/50 uppercase tracking-wider">Téléphone</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 dark:text-text-secondary/50 uppercase tracking-wider">Inscription</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 dark:text-text-secondary/50 uppercase tracking-wider">Adresse CDP</th>
+                  <th className="text-center px-5 py-3 text-xs font-semibold text-gray-400 dark:text-text-secondary/50 uppercase tracking-wider">Statut</th>
                 </tr>
               </thead>
               <tbody>
                 {(data?.users ?? []).map((user) => (
-                  <tr key={user.id} className="border-b border-gray-50 dark:border-gray-800/60 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition">
-                    <td className="px-5 py-3.5 font-medium text-gray-900 dark:text-white">
+                  <tr key={user.id} className="border-b border-gray-50 dark:border-text-secondary/15/60 last:border-0 hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition">
+                    <td className="px-5 py-3.5 font-medium text-gray-900 dark:text-text-primary">
                       {user.phone}
                     </td>
-                    <td className="px-5 py-3.5 text-gray-500 dark:text-gray-400">
+                    <td className="px-5 py-3.5 text-gray-500 dark:text-text-secondary">
                       {fmtDate(user.created_at)}
                     </td>
                     <td className="px-5 py-3.5">
                       {user.cdp_wallet_address ? (
                         <div className="flex items-center gap-1.5">
-                          <span className="font-mono text-xs text-gray-700 dark:text-gray-300">
+                          <span className="font-mono text-xs text-gray-700 dark:text-text-primary">
                             {truncAddr(user.cdp_wallet_address)}
                           </span>
                           <button
@@ -245,7 +245,7 @@ export default function CdpWalletsPage() {
                           </a>
                         </div>
                       ) : (
-                        <span className="text-xs text-gray-400 dark:text-gray-600 italic">—</span>
+                        <span className="text-xs text-gray-400 dark:text-text-secondary/50 italic">—</span>
                       )}
                     </td>
                     <td className="px-5 py-3.5 text-center">
@@ -263,7 +263,7 @@ export default function CdpWalletsPage() {
                 ))}
                 {(data?.users ?? []).length === 0 && !loading && (
                   <tr>
-                    <td colSpan={4} className="px-5 py-12 text-center text-sm text-gray-400 dark:text-gray-600">
+                    <td colSpan={4} className="px-5 py-12 text-center text-sm text-gray-400 dark:text-text-secondary/50">
                       Aucun utilisateur trouvé.
                     </td>
                   </tr>

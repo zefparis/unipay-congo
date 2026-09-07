@@ -40,16 +40,16 @@ export default function ConfirmDialog({ open, onClose, title, children, size = '
     >
       <div
         className={clsx(
-          'bg-white dark:bg-gray-900 rounded-xl shadow-2xl w-full p-6 space-y-4',
+          'bg-white dark:bg-navy-panel rounded-xl shadow-2xl w-full p-6 space-y-4',
           sizeCls,
         )}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-gray-900 dark:text-white">{title}</h3>
+          <h3 className="font-semibold text-gray-900 dark:text-text-primary">{title}</h3>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-1 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
             aria-label="Fermer"
           >
             <X className="w-4 h-4" />

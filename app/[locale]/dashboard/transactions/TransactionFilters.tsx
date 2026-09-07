@@ -35,7 +35,7 @@ export default function TransactionFilters({ searchParams }: Props) {
   );
 
   const selectClass =
-    'px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-signal focus:border-transparent transition-all';
+    'px-3 py-2 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel/50 text-sm text-gray-700 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep focus:border-transparent transition-all';
 
   return (
     <div className="flex flex-wrap gap-3">

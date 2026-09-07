@@ -13,8 +13,8 @@ interface Props {
   onMsg: (type: 'ok' | 'err', text: string) => void;
 }
 
-const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-300';
-const labelCls = 'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1';
+const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-purple-300';
+const labelCls = 'block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1';
 
 export default function QuoteList({ locale, onMsg }: Props) {
   const [quotes, setQuotes] = useState<Quote[]>([]);
@@ -88,7 +88,7 @@ export default function QuoteList({ locale, onMsg }: Props) {
     <div className="space-y-4">
       <div className="flex justify-between items-center flex-wrap gap-2">
         <div className="flex items-center gap-2">
-          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-600">
+          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-gray-600">
             <option value="">Tous statuts</option>
             <option value="draft">Brouillon</option>
             <option value="sent">Envoyé</option>
@@ -107,9 +107,9 @@ export default function QuoteList({ locale, onMsg }: Props) {
       </div>
 
       {showForm && (
-        <form onSubmit={submit} className="bg-white dark:bg-gray-900 rounded-xl border border-purple-200 dark:border-purple-800 p-5 space-y-4">
+        <form onSubmit={submit} className="bg-white dark:bg-navy-panel rounded-xl border border-purple-200 dark:border-purple-800 p-5 space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="font-medium text-gray-900 dark:text-white">Nouveau devis</h3>
+            <h3 className="font-medium text-gray-900 dark:text-text-primary">Nouveau devis</h3>
             <button type="button" onClick={() => setShowForm(false)}>
               <X className="w-4 h-4 text-gray-400" />
             </button>
@@ -145,7 +145,7 @@ export default function QuoteList({ locale, onMsg }: Props) {
           </div>
           <div>
             <label className={labelCls}>Devis PDF (optionnel)</label>
-            <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 hover:bg-gray-50 dark:hover:bg-navy-panel transition-colors">
               <Upload className="w-4 h-4 text-gray-400" />
               <span className="text-sm text-gray-500">{file ? file.name : 'Choisir un fichier…'}</span>
               <input ref={fileRef} type="file" accept=".pdf,.png,.jpg,.jpeg" className="hidden" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
@@ -158,17 +158,17 @@ export default function QuoteList({ locale, onMsg }: Props) {
         </form>
       )}
 
-      <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="divide-y divide-gray-100 dark:divide-text-secondary/15 rounded-xl border border-gray-200 dark:border-text-secondary/20 overflow-hidden">
         {filtered.map((q) => {
           const st = displayStatus(q);
           const cfg = QUOTE_STATUS_CONFIG[st] ?? QUOTE_STATUS_CONFIG.draft;
           const cname = q.creditors?.name ?? q.creditor_name ?? '—';
           return (
-            <div key={q.id} className="px-4 py-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+            <div key={q.id} className="px-4 py-3 bg-white dark:bg-navy-panel hover:bg-gray-50 dark:hover:bg-navy-panel/50 transition-colors">
               <div className="flex items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-medium text-sm text-gray-900 dark:text-white truncate">{q.project_ref}</span>
+                    <span className="font-medium text-sm text-gray-900 dark:text-text-primary truncate">{q.project_ref}</span>
                     <span className={clsx('text-xs px-1.5 py-0.5 rounded border font-medium', cfg.cls)}>{cfg.label}</span>
                   </div>
                   <div className="text-xs text-gray-500 mt-0.5">
@@ -176,7 +176,7 @@ export default function QuoteList({ locale, onMsg }: Props) {
                     {q.valid_until && <span> · valide jusqu&apos;au {formatDate(q.valid_until, locale)}</span>}
                   </div>
                 </div>
-                <span className="font-mono text-sm font-semibold text-gray-900 dark:text-white">
+                <span className="font-mono text-sm font-semibold text-gray-900 dark:text-text-primary">
                   {formatMoney(q.amount_usd, 'USD', locale)}
                 </span>
               </div>

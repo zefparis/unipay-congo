@@ -109,7 +109,7 @@ export default function SandboxPage() {
   if (loadingMode) {
     return (
       <div className="flex items-center justify-center h-48">
-        <Loader2 size={24} className="animate-spin text-signal" />
+        <Loader2 size={24} className="animate-spin text-green-deep" />
       </div>
     );
   }
@@ -127,22 +127,22 @@ export default function SandboxPage() {
           <div className="p-2 rounded-xl bg-amber-100 dark:bg-amber-900/20">
             <FlaskConical className="text-amber-600 dark:text-amber-400" size={20} />
           </div>
-          <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">{t('title')}</h1>
+          <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary">{t('title')}</h1>
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 ml-12">{t('subtitle')}</p>
+        <p className="text-sm text-gray-500 dark:text-text-secondary ml-12">{t('subtitle')}</p>
       </div>
 
       {/* ── Mode toggle card ──────────────────────────────────── */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 space-y-4">
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-5 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">{t('current_mode')}</p>
+            <p className="text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1">{t('current_mode')}</p>
             <div className="flex items-center gap-2">
               {isSandbox
                 ? <ToggleLeft size={22} className="text-amber-500" />
-                : <ToggleRight size={22} className="text-signal" />
+                : <ToggleRight size={22} className="text-green-deep" />
               }
-              <span className={`text-base font-bold ${isSandbox ? 'text-amber-600 dark:text-amber-400' : 'text-signal'}`}>
+              <span className={`text-base font-bold ${isSandbox ? 'text-amber-600 dark:text-amber-400' : 'text-green-deep'}`}>
                 {isSandbox ? t('mode_sandbox') : t('mode_live')}
               </span>
             </div>
@@ -153,7 +153,7 @@ export default function SandboxPage() {
             disabled={switching || (!kycApproved && isSandbox)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
               isSandbox
-                ? 'bg-signal hover:bg-signal/85 text-white shadow-sm shadow-signal/20'
+                ? 'bg-green-deep hover:bg-green-deep/85 text-white shadow-sm shadow-green-deep/20'
                 : 'bg-amber-500 hover:bg-amber-600 text-white shadow-sm shadow-amber-500/20'
             }`}
           >
@@ -168,7 +168,7 @@ export default function SandboxPage() {
             <AlertTriangle size={15} className="text-amber-500 mt-0.5 flex-shrink-0" />
             <div>
               <p className="text-amber-800 dark:text-amber-300">{t('live_requires_kyc')}</p>
-              <Link href="/dashboard/kyc" className="inline-flex items-center gap-1 text-signal-dark font-semibold text-xs mt-1 hover:underline">
+              <Link href="/dashboard/kyc" className="inline-flex items-center gap-1 text-green-deep-dark font-semibold text-xs mt-1 hover:underline">
                 {t('kyc_link')} →
               </Link>
             </div>
@@ -186,8 +186,8 @@ export default function SandboxPage() {
       </div>
 
       {/* ── Test form (always usable — sends X-UniPay-Mode: sandbox) ── */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-5 space-y-4">
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary flex items-center gap-2">
           <Play size={14} className="text-amber-500" />
           {t('test_form_title')}
         </h2>
@@ -201,7 +201,7 @@ export default function SandboxPage() {
               className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all border ${
                 direction === d
                   ? 'bg-amber-500 text-white border-amber-500'
-                  : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-amber-400'
+                  : 'bg-white dark:bg-navy-panel border-gray-200 dark:border-text-secondary/20 text-gray-600 dark:text-text-secondary hover:border-amber-400'
               }`}
             >
               {d === 'collect' ? t('direction_collect') : t('direction_payout')}
@@ -211,7 +211,7 @@ export default function SandboxPage() {
 
         {/* Operator */}
         <div>
-          <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5">{t('operator_label')}</label>
+          <label className="block text-xs font-semibold text-gray-700 dark:text-text-primary uppercase tracking-wider mb-1.5">{t('operator_label')}</label>
           <div className="flex gap-2 flex-wrap">
             {OPERATORS.map((op) => (
               <button
@@ -220,7 +220,7 @@ export default function SandboxPage() {
                 className={`px-4 py-2 rounded-xl text-sm font-medium capitalize border transition-all ${
                   operator === op
                     ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-transparent'
-                    : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400'
+                    : 'bg-white dark:bg-navy-panel border-gray-200 dark:border-text-secondary/20 text-gray-600 dark:text-text-secondary hover:border-gray-400'
                 }`}
               >
                 {op}
@@ -231,7 +231,7 @@ export default function SandboxPage() {
 
         {/* Currency */}
         <div>
-          <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5">Devise</label>
+          <label className="block text-xs font-semibold text-gray-700 dark:text-text-primary uppercase tracking-wider mb-1.5">Devise</label>
           <div className="flex gap-2 flex-wrap">
             {(['CDF', 'USD'] as Currency[]).map((cur) => (
               <button
@@ -240,7 +240,7 @@ export default function SandboxPage() {
                 className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${
                   currency === cur
                     ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-transparent'
-                    : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400'
+                    : 'bg-white dark:bg-navy-panel border-gray-200 dark:border-text-secondary/20 text-gray-600 dark:text-text-secondary hover:border-gray-400'
                 }`}
               >
                 {cur}
@@ -252,23 +252,23 @@ export default function SandboxPage() {
         {/* Phone + Amount */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5">{t('phone_label')}</label>
+            <label className="block text-xs font-semibold text-gray-700 dark:text-text-primary uppercase tracking-wider mb-1.5">{t('phone_label')}</label>
             <input
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder={t('phone_placeholder')}
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 font-mono transition-colors"
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 font-mono transition-colors"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5">{t('amount_label')}</label>
+            <label className="block text-xs font-semibold text-gray-700 dark:text-text-primary uppercase tracking-wider mb-1.5">{t('amount_label')}</label>
             <input
               type="number"
               min={100}
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 font-mono transition-colors"
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 font-mono transition-colors"
             />
           </div>
         </div>
@@ -285,10 +285,10 @@ export default function SandboxPage() {
 
       {/* ── Result ───────────────────────────────────────────── */}
       {testResult && (
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
-          <div className="px-5 py-3 bg-gray-50 dark:bg-[ink/60] flex items-center gap-2">
+        <div className="rounded-2xl border border-gray-200 dark:border-text-secondary/15 overflow-hidden">
+          <div className="px-5 py-3 bg-gray-50 dark:bg-navy-panel/60 flex items-center gap-2">
             <CheckCircle2 size={14} className="text-emerald-500" />
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{t('result_title')}</h3>
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary">{t('result_title')}</h3>
             {testResult.sandbox && (
               <span className="ml-auto px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-semibold border border-amber-200 dark:border-amber-800/40">sandbox</span>
             )}
@@ -300,10 +300,10 @@ export default function SandboxPage() {
       )}
 
       {/* ── Code example ─────────────────────────────────────── */}
-      <div className="rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+      <div className="rounded-2xl border border-gray-200 dark:border-text-secondary/15 overflow-hidden">
         <button
           onClick={() => setShowCode(!showCode)}
-          className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-[ink/60] text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors"
+          className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-navy-panel/60 text-sm font-semibold text-gray-900 dark:text-text-primary hover:bg-gray-100 dark:hover:bg-navy-panel/60 transition-colors"
         >
           <div className="flex items-center gap-2">
             <FlaskConical size={15} className="text-amber-500" />

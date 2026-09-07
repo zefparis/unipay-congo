@@ -22,7 +22,7 @@ const KYC_LABELS: Record<string, string> = {
   rejected: 'Rejeté',
 };
 const KYC_STYLES: Record<string, string> = {
-  pending: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+  pending: 'bg-gray-100 text-gray-500 dark:bg-navy-panel dark:text-text-secondary',
   submitted: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   approved: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   rejected: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
@@ -33,7 +33,7 @@ const STATUS_STYLES: Record<string, string> = {
   processing: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   success: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   failed: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  cancelled: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+  cancelled: 'bg-gray-100 text-gray-600 dark:bg-navy-panel dark:text-text-secondary',
 };
 
 function fmt(n: number) {
@@ -246,7 +246,7 @@ export default function MerchantDetailPage() {
   if (loading && !merchant) {
     return (
       <div className="flex items-center justify-center py-16">
-        <Loader2 size={24} className="animate-spin text-signal" />
+        <Loader2 size={24} className="animate-spin text-green-deep" />
       </div>
     );
   }
@@ -254,7 +254,7 @@ export default function MerchantDetailPage() {
   if (error && !merchant) {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
-        <Link href="/dashboard/admin/merchants/list" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-signal">
+        <Link href="/dashboard/admin/merchants/list" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-green-deep">
           <ArrowLeft size={14} /> Retour à la liste
         </Link>
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl px-4 py-3 text-sm text-red-600 dark:text-red-400">
@@ -284,18 +284,18 @@ export default function MerchantDetailPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href="/dashboard/admin/merchants/list" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-signal">
+          <Link href="/dashboard/admin/merchants/list" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-green-deep">
             <ArrowLeft size={14} /> Retour
           </Link>
-          <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <Building2 className="text-signal" size={22} />
+          <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary flex items-center gap-2">
+            <Building2 className="text-green-deep" size={22} />
             {merchant.company_name ?? merchant.name ?? merchant.email}
           </h1>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={openEmailModal}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-signal text-white text-sm font-medium hover:bg-signal/85 transition-all"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-all"
           >
             <Mail size={14} />
             Contacter par email
@@ -303,7 +303,7 @@ export default function MerchantDetailPage() {
           <button
             onClick={load}
             disabled={loading}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-all disabled:opacity-50"
           >
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             Actualiser
@@ -312,35 +312,35 @@ export default function MerchantDetailPage() {
       </div>
 
       {/* Profile */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-4">
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary flex items-center gap-2">
           <Building2 size={16} className="text-blue-500" />
           Profil
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">Email</div>
-            <div className="text-gray-900 dark:text-white font-medium">{merchant.email}</div>
+            <div className="text-gray-900 dark:text-text-primary font-medium">{merchant.email}</div>
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">Téléphone</div>
-            <div className="text-gray-900 dark:text-white font-medium">{merchant.phone ?? '—'}</div>
+            <div className="text-gray-900 dark:text-text-primary font-medium">{merchant.phone ?? '—'}</div>
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">Pays</div>
-            <div className="text-gray-900 dark:text-white font-medium">{merchant.country}</div>
+            <div className="text-gray-900 dark:text-text-primary font-medium">{merchant.country}</div>
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">Entreprise</div>
-            <div className="text-gray-900 dark:text-white font-medium">{merchant.company_name ?? '—'}</div>
+            <div className="text-gray-900 dark:text-text-primary font-medium">{merchant.company_name ?? '—'}</div>
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">RCCM</div>
-            <div className="text-gray-900 dark:text-white font-medium">{merchant.company_rccm ?? '—'}</div>
+            <div className="text-gray-900 dark:text-text-primary font-medium">{merchant.company_rccm ?? '—'}</div>
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">ID Nat.</div>
-            <div className="text-gray-900 dark:text-white font-medium">{merchant.company_idnat ?? '—'}</div>
+            <div className="text-gray-900 dark:text-text-primary font-medium">{merchant.company_idnat ?? '—'}</div>
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">Mode</div>
@@ -367,25 +367,25 @@ export default function MerchantDetailPage() {
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">Inscrit le</div>
-            <div className="text-gray-900 dark:text-white font-medium">{fmtDate(merchant.created_at)}</div>
+            <div className="text-gray-900 dark:text-text-primary font-medium">{fmtDate(merchant.created_at)}</div>
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">KYC soumis le</div>
-            <div className="text-gray-900 dark:text-white font-medium">{fmtDate(merchant.kyc_submitted_at)}</div>
+            <div className="text-gray-900 dark:text-text-primary font-medium">{fmtDate(merchant.kyc_submitted_at)}</div>
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">KYC reviewé le</div>
-            <div className="text-gray-900 dark:text-white font-medium">{fmtDate(merchant.kyc_reviewed_at)}</div>
+            <div className="text-gray-900 dark:text-text-primary font-medium">{fmtDate(merchant.kyc_reviewed_at)}</div>
           </div>
         </div>
         {merchant.kyc_notes && (
           <div className="text-sm">
             <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Notes KYC</div>
-            <div className="text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3">{merchant.kyc_notes}</div>
+            <div className="text-gray-700 dark:text-text-primary bg-gray-50 dark:bg-navy-panel/50 rounded-lg p-3">{merchant.kyc_notes}</div>
           </div>
         )}
         {/* Suspend/Reactivate */}
-        <div className="flex gap-2 pt-2 border-t border-gray-100 dark:border-gray-800">
+        <div className="flex gap-2 pt-2 border-t border-gray-100 dark:border-text-secondary/15">
           {merchant.status === 'active' ? (
             <button
               onClick={handleSuspend}
@@ -407,16 +407,16 @@ export default function MerchantDetailPage() {
       </div>
 
       {/* API Keys */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm space-y-4">
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary flex items-center gap-2">
             <KeyRound size={16} className="text-amber-500" />
             Clés API
           </h2>
           <button
             onClick={handleRegenerate}
             disabled={acting === 'regenerate'}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-signal text-white text-sm font-medium hover:bg-signal/85 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-colors disabled:opacity-50"
           >
             {acting === 'regenerate' ? <Loader2 size={14} className="animate-spin" /> : <KeyRound size={14} />}
             Régénérer
@@ -431,12 +431,12 @@ export default function MerchantDetailPage() {
               Nouvelle clé — copiez-la maintenant, elle ne sera plus affichée
             </div>
             <div className="flex items-center gap-2">
-              <code className="flex-1 bg-white dark:bg-gray-900 rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white break-all">
+              <code className="flex-1 bg-white dark:bg-navy-panel rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-text-primary break-all">
                 {newKey}
               </code>
               <button
                 onClick={copyKey}
-                className="flex-shrink-0 inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="flex-shrink-0 inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
               >
                 {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
                 {copied ? 'Copié' : 'Copier'}
@@ -451,28 +451,28 @@ export default function MerchantDetailPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                   {['Préfixe', 'Label', 'Statut', 'Créée le', 'Dernière utilisation', 'Action'].map((h) => (
-                    <th key={h} className="text-left px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                    <th key={h} className="text-left px-3 py-2 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+              <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                 {apiKeys.map((k) => (
-                  <tr key={k.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                    <td className="px-3 py-2 font-mono text-gray-900 dark:text-white">{k.key_prefix}…</td>
-                    <td className="px-3 py-2 text-gray-700 dark:text-gray-300">{k.label}</td>
+                  <tr key={k.id} className="hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors">
+                    <td className="px-3 py-2 font-mono text-gray-900 dark:text-text-primary">{k.key_prefix}…</td>
+                    <td className="px-3 py-2 text-gray-700 dark:text-text-primary">{k.label}</td>
                     <td className="px-3 py-2 whitespace-nowrap">
                       <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold',
-                        k.is_active ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+                        k.is_active ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 text-gray-500 dark:bg-navy-panel dark:text-text-secondary',
                       )}>
                         {k.is_active ? 'Active' : 'Inactive'}
                       </span>
                     </td>
-                    <td className="px-3 py-2 text-gray-500 dark:text-gray-400 whitespace-nowrap text-xs">{fmtDate(k.created_at)}</td>
-                    <td className="px-3 py-2 text-gray-500 dark:text-gray-400 whitespace-nowrap text-xs">{fmtDate(k.last_used_at)}</td>
+                    <td className="px-3 py-2 text-gray-500 dark:text-text-secondary whitespace-nowrap text-xs">{fmtDate(k.created_at)}</td>
+                    <td className="px-3 py-2 text-gray-500 dark:text-text-secondary whitespace-nowrap text-xs">{fmtDate(k.last_used_at)}</td>
                     <td className="px-3 py-2 whitespace-nowrap">
                       {k.is_active && (
                         <button
@@ -493,9 +493,9 @@ export default function MerchantDetailPage() {
       </div>
 
       {/* Recent transactions */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm space-y-4">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-          <ArrowDownLeft size={16} className="text-signal" />
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-4">
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary flex items-center gap-2">
+          <ArrowDownLeft size={16} className="text-green-deep" />
           Transactions récentes (20 dernières)
         </h2>
         {transactions.length === 0 ? (
@@ -504,29 +504,29 @@ export default function MerchantDetailPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                   {['Date', 'Type', 'Opérateur', 'Téléphone', 'Montant', 'Frais', 'Net', 'Statut'].map((h) => (
-                    <th key={h} className="text-left px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                    <th key={h} className="text-left px-3 py-2 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+              <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                 {transactions.map((tx) => (
-                  <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                    <td className="px-3 py-2 text-gray-500 dark:text-gray-400 whitespace-nowrap text-xs">{fmtDate(tx.created_at)}</td>
+                  <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors">
+                    <td className="px-3 py-2 text-gray-500 dark:text-text-secondary whitespace-nowrap text-xs">{fmtDate(tx.created_at)}</td>
                     <td className="px-3 py-2 whitespace-nowrap">
                       <span className="inline-flex items-center gap-1">
                         {tx.direction === 'collect' ? <ArrowDownLeft size={13} className="text-green-500" /> : <ArrowUpRight size={13} className="text-orange-500" />}
-                        <span className="text-gray-700 dark:text-gray-300">{tx.direction}</span>
+                        <span className="text-gray-700 dark:text-text-primary">{tx.direction}</span>
                       </span>
                     </td>
-                    <td className="px-3 py-2 text-gray-700 dark:text-gray-300">{tx.operator}</td>
-                    <td className="px-3 py-2 font-mono text-gray-700 dark:text-gray-300">{tx.phone}</td>
-                    <td className="px-3 py-2 font-medium text-gray-900 dark:text-white">{fmt(tx.amount)}</td>
-                    <td className="px-3 py-2 text-gray-500 dark:text-gray-400">{fmt(tx.fee)}</td>
-                    <td className="px-3 py-2 font-medium text-gray-900 dark:text-white">{fmt(tx.net_amount)}</td>
+                    <td className="px-3 py-2 text-gray-700 dark:text-text-primary">{tx.operator}</td>
+                    <td className="px-3 py-2 font-mono text-gray-700 dark:text-text-primary">{tx.phone}</td>
+                    <td className="px-3 py-2 font-medium text-gray-900 dark:text-text-primary">{fmt(tx.amount)}</td>
+                    <td className="px-3 py-2 text-gray-500 dark:text-text-secondary">{fmt(tx.fee)}</td>
+                    <td className="px-3 py-2 font-medium text-gray-900 dark:text-text-primary">{fmt(tx.net_amount)}</td>
                     <td className="px-3 py-2 whitespace-nowrap">
                       <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status] ?? 'bg-gray-100 text-gray-600')}>
                         {tx.status}
@@ -541,9 +541,9 @@ export default function MerchantDetailPage() {
       </div>
 
       {/* Support history */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm space-y-4">
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary flex items-center gap-2">
             <Headset size={16} className="text-purple-500" />
             Historique support
           </h2>
@@ -551,7 +551,7 @@ export default function MerchantDetailPage() {
             <select
               value={activeConvId ?? ''}
               onChange={(e) => setActiveConvId(e.target.value)}
-              className="px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs text-gray-700 dark:text-gray-300"
+              className="px-2 py-1 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-xs text-gray-700 dark:text-text-primary"
             >
               {supportConvs.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -585,8 +585,8 @@ export default function MerchantDetailPage() {
                         ? 'bg-blue-500 text-white rounded-br-sm'
                         : 'bg-purple-500 text-white rounded-br-sm'
                       : m.role === 'merchant'
-                      ? 'bg-signal text-white rounded-bl-sm'
-                      : 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 rounded-bl-sm',
+                      ? 'bg-green-deep text-white rounded-bl-sm'
+                      : 'bg-gray-100 text-gray-900 dark:bg-navy-panel dark:text-text-primary rounded-bl-sm',
                   )}
                 >
                   <div className="flex items-center gap-1.5 text-[10px] font-semibold mb-1 opacity-70">
@@ -613,16 +613,16 @@ export default function MerchantDetailPage() {
       {emailModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setEmailModalOpen(false)} />
-          <div className="relative w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 max-h-[90vh] flex flex-col">
+          <div className="relative w-full max-w-2xl bg-white dark:bg-navy-panel rounded-2xl shadow-2xl border border-gray-200 dark:border-text-secondary/15 max-h-[90vh] flex flex-col">
             {/* Modal header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800">
-              <h3 className="text-lg font-heading font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <Mail size={18} className="text-signal" />
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-text-secondary/15">
+              <h3 className="text-lg font-serif font-bold text-gray-900 dark:text-text-primary flex items-center gap-2">
+                <Mail size={18} className="text-green-deep" />
                 Contacter {merchant.email}
               </h3>
               <button
                 onClick={() => setEmailModalOpen(false)}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
               >
                 <X size={18} />
               </button>
@@ -632,14 +632,14 @@ export default function MerchantDetailPage() {
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
             {/* Template selector */}
             <div>
-              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">
                 Template
               </label>
               <select
                 value={selectedTemplate}
                 onChange={(e) => applyTemplate(e.target.value)}
                 disabled={templatesLoading}
-                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white disabled:opacity-50"
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary disabled:opacity-50"
               >
                 <option value="">
                   {templatesLoading ? 'Chargement des templates…' : '— Sélectionner un template —'}
@@ -666,45 +666,45 @@ export default function MerchantDetailPage() {
 
               {/* Subject */}
               <div>
-                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">
                   Objet
                 </label>
                 <input
                   type="text"
                   value={emailSubject}
                   onChange={(e) => setEmailSubject(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-signal/30"
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/30"
                   placeholder="Objet de l'email"
                 />
               </div>
 
               {/* Body */}
               <div>
-                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">
                   Message
                 </label>
                 <textarea
                   value={emailBody}
                   onChange={(e) => setEmailBody(e.target.value)}
                   rows={10}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-signal/30 resize-none"
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/30 resize-none"
                   placeholder="Votre message…"
                 />
               </div>
             </div>
 
             {/* Modal footer */}
-            <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-gray-100 dark:border-gray-800">
+            <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-gray-100 dark:border-text-secondary/15">
               <button
                 onClick={() => setEmailModalOpen(false)}
-                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
               >
                 Annuler
               </button>
               <button
                 onClick={handleSendEmail}
                 disabled={!emailSubject.trim() || !emailBody.trim() || sendingEmail}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-signal text-white text-sm font-medium hover:bg-signal/85 transition-colors disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-colors disabled:opacity-50"
               >
                 {sendingEmail ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                 Envoyer

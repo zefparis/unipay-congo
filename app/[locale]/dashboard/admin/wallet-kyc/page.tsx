@@ -146,13 +146,13 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
 
   return (
     <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/60 p-4 sm:items-center">
-      <div className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-gray-800 dark:bg-gray-900">
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-5 py-4 dark:border-gray-800 dark:bg-gray-900">
+      <div className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-text-secondary/15 dark:bg-navy-panel">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white px-5 py-4 dark:border-text-secondary/15 dark:bg-navy-panel">
           <div>
-            <h2 className="text-lg font-heading font-bold text-gray-900 dark:text-white">Détail soumission KYC</h2>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Soumis le {fmtDate(submission.submitted_at)}</p>
+            <h2 className="text-lg font-serif font-bold text-gray-900 dark:text-text-primary">Détail soumission KYC</h2>
+            <p className="text-xs text-gray-500 dark:text-text-secondary">Soumis le {fmtDate(submission.submitted_at)}</p>
           </div>
-          <button onClick={onClose} className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200">
+          <button onClick={onClose} className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-navy-panel dark:hover:text-gray-200">
             <X size={18} />
           </button>
         </div>
@@ -165,8 +165,8 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
               </div>
             )}
 
-            <div className="rounded-2xl border border-gray-100 p-4 dark:border-gray-800">
-              <h3 className="mb-3 text-sm font-semibold text-gray-900 dark:text-white">Infos user</h3>
+            <div className="rounded-2xl border border-gray-100 p-4 dark:border-text-secondary/15">
+              <h3 className="mb-3 text-sm font-semibold text-gray-900 dark:text-text-primary">Infos user</h3>
               <div className="grid gap-3 text-sm sm:grid-cols-2">
                 <Info label="Téléphone" value={submission.wallet_users?.phone ?? '—'} mono />
                 <Info label="Nom complet" value={submission.full_name} />
@@ -177,16 +177,16 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-gray-100 p-4 dark:border-gray-800">
-              <h3 className="mb-3 text-sm font-semibold text-gray-900 dark:text-white">PayGuard</h3>
+            <div className="rounded-2xl border border-gray-100 p-4 dark:border-text-secondary/15">
+              <h3 className="mb-3 text-sm font-semibold text-gray-900 dark:text-text-primary">PayGuard</h3>
               <div className="flex flex-wrap items-center gap-4">
-                <div className="rounded-2xl bg-signal/10 px-6 py-4 text-center">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-signal-dark">Score</p>
-                  <p className="text-4xl font-heading font-bold text-gray-900 dark:text-white">{fmtConfidence(submission.payguard_confidence)}</p>
+                <div className="rounded-2xl bg-green-deep/10 px-6 py-4 text-center">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-green-deep-dark">Score</p>
+                  <p className="text-4xl font-serif font-bold text-gray-900 dark:text-text-primary">{fmtConfidence(submission.payguard_confidence)}</p>
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Décision PayGuard</p>
-                  <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-white">{submission.payguard_decision ?? '—'}</p>
+                  <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-text-primary">{submission.payguard_decision ?? '—'}</p>
                 </div>
               </div>
             </div>
@@ -202,7 +202,7 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
           <div className="space-y-4">
             {/* Documents KYC : Recto + Verso + Selfie */}
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Documents</h3>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary">Documents</h3>
 
               <DocImage
                 label="Recto (ID)"
@@ -225,7 +225,7 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
               <button
                 onClick={approve}
                 disabled={busy !== null || submission.status === 'approved'}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-signal px-4 py-3 text-sm font-semibold text-white transition hover:bg-signal/85 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-green-deep px-4 py-3 text-sm font-semibold text-white transition hover:bg-green-deep/85 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {busy === 'approve' ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle2 size={15} />}
                 Approuver
@@ -247,7 +247,7 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   rows={3}
-                  className="w-full resize-none rounded-xl border border-red-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-400 dark:border-red-800/50 dark:bg-gray-900 dark:text-white"
+                  className="w-full resize-none rounded-xl border border-red-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-red-400 dark:border-red-800/50 dark:bg-navy-panel dark:text-text-primary"
                   placeholder="Expliquez la raison du rejet…"
                 />
                 <button
@@ -271,7 +271,7 @@ function DetailModal({ submission, onClose, onApprove, onReject }: {
 
 function DocImage({ label, signedUrl, onZoom }: { label: string; signedUrl: string | null; onZoom: () => void }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-800/40">
+    <div className="overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 dark:border-text-secondary/15 dark:bg-navy-panel/40">
       {signedUrl ? (
         <button onClick={onZoom} className="group relative block w-full" aria-label={`Agrandir ${label}`}>
           <img src={signedUrl} alt={label} className="h-48 w-full object-cover transition group-hover:brightness-95" />
@@ -282,7 +282,7 @@ function DocImage({ label, signedUrl, onZoom }: { label: string; signedUrl: stri
       ) : (
         <div className="flex h-48 items-center justify-center text-sm text-gray-400">{label} indisponible</div>
       )}
-      <div className="border-t border-gray-100 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:border-gray-800 dark:text-gray-400">
+      <div className="border-t border-gray-100 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:border-text-secondary/15 dark:text-text-secondary">
         {label}
       </div>
     </div>
@@ -309,7 +309,7 @@ function Info({ label, value, mono }: { label: string; value: string; mono?: boo
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">{label}</p>
-      <p className={clsx('mt-1 text-sm font-medium text-gray-900 dark:text-white', mono && 'font-mono')}>{value}</p>
+      <p className={clsx('mt-1 text-sm font-medium text-gray-900 dark:text-text-primary', mono && 'font-mono')}>{value}</p>
     </div>
   );
 }
@@ -385,16 +385,16 @@ export default function WalletKycPage() {
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="flex items-center gap-2 text-2xl font-heading font-bold text-gray-900 dark:text-white">
-            <ShieldCheck className="text-signal" size={22} />
+          <h1 className="flex items-center gap-2 text-2xl font-serif font-bold text-gray-900 dark:text-text-primary">
+            <ShieldCheck className="text-green-deep" size={22} />
             KYC Wallet
           </h1>
-          <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">Validation des soumissions wallet et résultats PayGuard.</p>
+          <p className="mt-0.5 text-sm text-gray-500 dark:text-text-secondary">Validation des soumissions wallet et résultats PayGuard.</p>
         </div>
         <button
           onClick={load}
           disabled={loading}
-          className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-600 transition hover:bg-gray-100 disabled:opacity-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800"
+          className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-600 transition hover:bg-gray-100 disabled:opacity-50 dark:border-text-secondary/20 dark:text-text-secondary dark:hover:bg-navy-panel"
         >
           <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
           Actualiser
@@ -405,7 +405,7 @@ export default function WalletKycPage() {
         <select
           value={status}
           onChange={(e) => { setStatus(e.target.value as KycStatus | ''); setPage(1); }}
-          className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-signal/40 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+          className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-green-deep/40 dark:border-text-secondary/20 dark:bg-navy-panel dark:text-text-primary"
         >
           <option value="">Tous les statuts</option>
           <option value="pending">pending</option>
@@ -421,38 +421,38 @@ export default function WalletKycPage() {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/60">
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-text-secondary/15 dark:bg-navy-panel/60">
         {loading && rows.length === 0 ? (
           <div className="flex justify-center py-16">
-            <Loader2 size={24} className="animate-spin text-signal" />
+            <Loader2 size={24} className="animate-spin text-green-deep" />
           </div>
         ) : rows.length === 0 ? (
-          <div className="py-12 text-center text-sm text-gray-400 dark:text-gray-600">Aucune soumission KYC.</div>
+          <div className="py-12 text-center text-sm text-gray-400 dark:text-text-secondary/50">Aucune soumission KYC.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1050px] text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                   {['Téléphone user', 'Nom complet', 'Type', 'Date soumission', 'Statut', 'Score PayGuard', 'Décision PayGuard', 'Actions'].map((col) => (
-                    <th key={col} className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">
+                    <th key={col} className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-text-secondary/70">
                       {col}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+              <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                 {rows.map((row) => (
-                  <tr key={row.id} className="transition hover:bg-gray-50 dark:hover:bg-gray-800/30">
-                    <td className="px-4 py-3 font-mono text-gray-900 dark:text-white">{row.wallet_users?.phone ?? '—'}</td>
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{row.full_name}</td>
-                    <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">{row.submission_type === 'cognitive_upgrade' ? 'Upgrade' : 'Initial'}</td>
-                    <td className="whitespace-nowrap px-4 py-3 text-gray-500 dark:text-gray-400">{fmtDate(row.submitted_at)}</td>
+                  <tr key={row.id} className="transition hover:bg-gray-50 dark:hover:bg-navy-panel/30">
+                    <td className="px-4 py-3 font-mono text-gray-900 dark:text-text-primary">{row.wallet_users?.phone ?? '—'}</td>
+                    <td className="px-4 py-3 text-gray-700 dark:text-text-primary">{row.full_name}</td>
+                    <td className="px-4 py-3 text-xs text-gray-500 dark:text-text-secondary">{row.submission_type === 'cognitive_upgrade' ? 'Upgrade' : 'Initial'}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-gray-500 dark:text-text-secondary">{fmtDate(row.submitted_at)}</td>
                     <td className="px-4 py-3"><StatusBadge status={row.status} /></td>
-                    <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">{fmtConfidence(row.payguard_confidence)}</td>
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{row.payguard_decision ?? '—'}</td>
+                    <td className="px-4 py-3 font-semibold text-gray-900 dark:text-text-primary">{fmtConfidence(row.payguard_confidence)}</td>
+                    <td className="px-4 py-3 text-gray-700 dark:text-text-primary">{row.payguard_decision ?? '—'}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <button onClick={() => setSelected(row)} className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1 text-xs font-medium text-gray-600 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800">
+                        <button onClick={() => setSelected(row)} className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1 text-xs font-medium text-gray-600 transition hover:bg-gray-100 dark:border-text-secondary/20 dark:text-text-secondary dark:hover:bg-navy-panel">
                           <Eye size={12} /> Voir
                         </button>
                         <button onClick={() => { console.log('[wallet-kyc] approve row button', { id: row.id, row }); void approve(row.id); }} disabled={row.status === 'approved'} className="inline-flex items-center gap-1 rounded-lg border border-emerald-200 px-2.5 py-1 text-xs font-medium text-emerald-600 transition hover:bg-emerald-50 disabled:opacity-40 dark:border-emerald-800/50 dark:text-emerald-400 dark:hover:bg-emerald-900/20">
@@ -472,11 +472,11 @@ export default function WalletKycPage() {
       </div>
 
       {pagination.pages > 1 && (
-        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center justify-between text-sm text-gray-600 dark:text-text-secondary">
           <span>{pagination.total} soumissions — page {pagination.page}/{pagination.pages}</span>
           <div className="flex gap-2">
-            <button disabled={page <= 1 || loading} onClick={() => setPage((p) => Math.max(1, p - 1))} className="rounded-lg border border-gray-200 px-3 py-1.5 disabled:opacity-40 dark:border-gray-700">Précédent</button>
-            <button disabled={page >= pagination.pages || loading} onClick={() => setPage((p) => Math.min(pagination.pages, p + 1))} className="rounded-lg border border-gray-200 px-3 py-1.5 disabled:opacity-40 dark:border-gray-700">Suivant</button>
+            <button disabled={page <= 1 || loading} onClick={() => setPage((p) => Math.max(1, p - 1))} className="rounded-lg border border-gray-200 px-3 py-1.5 disabled:opacity-40 dark:border-text-secondary/20">Précédent</button>
+            <button disabled={page >= pagination.pages || loading} onClick={() => setPage((p) => Math.min(pagination.pages, p + 1))} className="rounded-lg border border-gray-200 px-3 py-1.5 disabled:opacity-40 dark:border-text-secondary/20">Suivant</button>
           </div>
         </div>
       )}

@@ -25,7 +25,7 @@ const STATUS_STYLES: Record<string, string> = {
   processing: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   success:    'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   failed:     'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  cancelled:  'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+  cancelled:  'bg-gray-100 text-gray-600 dark:bg-navy-panel dark:text-text-secondary',
 };
 
 function Toast({ msg, type, onClose }: { msg: string; type: 'success' | 'error'; onClose: () => void }) {
@@ -212,14 +212,14 @@ export default function WalletUserDetailPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-24">
-      <Loader2 size={28} className="animate-spin text-signal" />
+      <Loader2 size={28} className="animate-spin text-green-deep" />
     </div>
   );
 
   if (error) return (
     <div className="max-w-xl mx-auto mt-12 text-center">
       <p className="text-red-500 mb-4">{error}</p>
-      <Link href="/dashboard/admin/wallet-users" className="text-sm text-signal-dark hover:underline">← Retour à la liste</Link>
+      <Link href="/dashboard/admin/wallet-users" className="text-sm text-green-deep-dark hover:underline">← Retour à la liste</Link>
     </div>
   );
 
@@ -230,22 +230,22 @@ export default function WalletUserDetailPage() {
       {toast && <Toast msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
 
       {/* Back */}
-      <Link href="/dashboard/admin/wallet-users" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-signal transition-colors">
+      <Link href="/dashboard/admin/wallet-users" className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-text-secondary hover:text-green-deep transition-colors">
         <ArrowLeft size={15} /> Retour à la liste
       </Link>
 
       {/* User info card */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-signal/10 flex items-center justify-center">
-              <User size={22} className="text-signal" />
+            <div className="w-12 h-12 rounded-2xl bg-green-deep/10 flex items-center justify-center">
+              <User size={22} className="text-green-deep" />
             </div>
             <div>
-              <h1 className="text-xl font-heading font-bold text-gray-900 dark:text-white">
+              <h1 className="text-xl font-serif font-bold text-gray-900 dark:text-text-primary">
                 {user.full_name ?? <span className="text-gray-400 font-normal">Nom inconnu</span>}
               </h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{user.phone}</p>
+              <p className="text-sm text-gray-500 dark:text-text-secondary font-mono">{user.phone}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -261,7 +261,7 @@ export default function WalletUserDetailPage() {
             )}
             <button
               onClick={openEmailModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-signal text-white hover:bg-signal/85"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-green-deep text-white hover:bg-green-deep/85"
             >
               <Mail size={13} />
               Contacter par email
@@ -294,32 +294,32 @@ export default function WalletUserDetailPage() {
         <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
           <div>
             <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Solde</p>
-            <p className="font-heading font-bold text-lg text-gray-900 dark:text-white">{fmt(user.balance_cdf)} CDF</p>
+            <p className="font-serif font-bold text-lg text-gray-900 dark:text-text-primary">{fmt(user.balance_cdf)} CDF</p>
           </div>
           <div>
             <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">KYC</p>
-            <p className="font-semibold text-gray-900 dark:text-white">Niveau {user.kyc_level}</p>
+            <p className="font-semibold text-gray-900 dark:text-text-primary">Niveau {user.kyc_level}</p>
           </div>
           <div>
             <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Inscription</p>
-            <p className="text-gray-700 dark:text-gray-300">{fmtDate(user.created_at)}</p>
+            <p className="text-gray-700 dark:text-text-primary">{fmtDate(user.created_at)}</p>
           </div>
           <div>
             <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">KYC soumis</p>
-            <p className="text-gray-700 dark:text-gray-300">{fmtDate(user.kyc_submitted_at ?? null)}</p>
+            <p className="text-gray-700 dark:text-text-primary">{fmtDate(user.kyc_submitted_at ?? null)}</p>
           </div>
         </div>
       </div>
 
       {/* Balance adjustment */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm space-y-4">
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-4">
         <div className="flex items-center gap-2">
-          <Wallet size={16} className="text-signal" />
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Ajustement de solde</h2>
+          <Wallet size={16} className="text-green-deep" />
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary">Ajustement de solde</h2>
         </div>
         <div className="flex flex-wrap gap-3 items-end">
           <div className="flex-1 min-w-36">
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">
               Montant CDF
             </label>
             <div className="relative">
@@ -328,31 +328,31 @@ export default function WalletUserDetailPage() {
                 value={adjustAmount}
                 onChange={(e) => setAdjustAmount(e.target.value)}
                 placeholder="ex : +5000 ou -1000"
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/40 focus:border-green-deep transition-colors"
               />
             </div>
           </div>
           <div className="flex-[2] min-w-48">
-            <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Motif</label>
+            <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">Motif</label>
             <input
               type="text"
               value={adjustReason}
               onChange={(e) => setAdjustReason(e.target.value)}
               placeholder="Motif de l'ajustement…"
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/40 focus:border-signal transition-colors"
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/40 focus:border-green-deep transition-colors"
             />
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => { setAdjustAmount((prev) => prev.startsWith('-') ? prev.slice(1) : (prev ? `+${prev}` : '')); }}
-              className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-emerald-600 hover:border-emerald-400 transition-colors"
+              className="p-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 text-gray-500 hover:text-emerald-600 hover:border-emerald-400 transition-colors"
               title="Crédit"
             >
               <Plus size={16} />
             </button>
             <button
               onClick={() => { setAdjustAmount((prev) => { const n = prev.replace(/^[+-]/, ''); return n ? `-${n}` : ''; }); }}
-              className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-red-500 hover:border-red-400 transition-colors"
+              className="p-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 text-gray-500 hover:text-red-500 hover:border-red-400 transition-colors"
               title="Débit"
             >
               <Minus size={16} />
@@ -360,7 +360,7 @@ export default function WalletUserDetailPage() {
             <button
               onClick={handleAdjust}
               disabled={adjusting || !adjustAmount || !adjustReason}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-green-deep hover:bg-green-deep/85 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all"
             >
               {adjusting ? <Loader2 size={14} className="animate-spin" /> : null}
               Appliquer
@@ -371,9 +371,9 @@ export default function WalletUserDetailPage() {
       </div>
 
       {/* Transactions */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
-        <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">20 dernières transactions</h2>
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden shadow-sm">
+        <div className="px-5 py-4 border-b border-gray-100 dark:border-text-secondary/15">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary">20 dernières transactions</h2>
         </div>
         {transactions.length === 0 ? (
           <p className="text-sm text-gray-400 text-center py-8">Aucune transaction.</p>
@@ -381,25 +381,25 @@ export default function WalletUserDetailPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px] text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                   {['Date', 'Type', 'Opérateur', 'Montant', 'Frais', 'Net', 'Statut'].map((h) => (
-                    <th key={h} className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                    <th key={h} className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+              <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                 {transactions.map((tx) => (
-                  <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                    <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400 whitespace-nowrap text-xs">{fmtDate(tx.created_at)}</td>
+                  <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors">
+                    <td className="px-4 py-2.5 text-gray-500 dark:text-text-secondary whitespace-nowrap text-xs">{fmtDate(tx.created_at)}</td>
                     <td className="px-4 py-2.5">
                       <span className="inline-flex items-center gap-1">{dirIcon(tx.direction)} {tx.direction}</span>
                     </td>
-                    <td className="px-4 py-2.5 capitalize text-gray-700 dark:text-gray-300">{tx.operator}</td>
-                    <td className="px-4 py-2.5 text-gray-900 dark:text-white">{fmt(tx.amount)}</td>
+                    <td className="px-4 py-2.5 capitalize text-gray-700 dark:text-text-primary">{tx.operator}</td>
+                    <td className="px-4 py-2.5 text-gray-900 dark:text-text-primary">{fmt(tx.amount)}</td>
                     <td className="px-4 py-2.5 text-gray-500">{fmt(tx.fee)}</td>
-                    <td className="px-4 py-2.5 font-medium text-gray-900 dark:text-white">{fmt(tx.net_amount)}</td>
+                    <td className="px-4 py-2.5 font-medium text-gray-900 dark:text-text-primary">{fmt(tx.net_amount)}</td>
                     <td className="px-4 py-2.5">
                       <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status] ?? STATUS_STYLES.cancelled)}>
                         {tx.status}
@@ -415,22 +415,22 @@ export default function WalletUserDetailPage() {
 
       {/* Ledger */}
       {ledger.length > 0 && (
-        <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
-          <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Derniers ajustements admin</h2>
+        <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden shadow-sm">
+          <div className="px-5 py-4 border-b border-gray-100 dark:border-text-secondary/15">
+            <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary">Derniers ajustements admin</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[400px] text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
                   {['Date', 'Direction', 'Montant', 'Motif'].map((h) => (
-                    <th key={h} className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider">
+                    <th key={h} className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+              <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
                 {ledger.map((l) => (
                   <tr key={l.id}>
                     <td className="px-4 py-2.5 text-xs text-gray-500">{fmtDate(l.created_at)}</td>
@@ -439,8 +439,8 @@ export default function WalletUserDetailPage() {
                         {l.direction}
                       </span>
                     </td>
-                    <td className="px-4 py-2.5 text-gray-900 dark:text-white">{fmt(l.amount)}</td>
-                    <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400">{l.reason}</td>
+                    <td className="px-4 py-2.5 text-gray-900 dark:text-text-primary">{fmt(l.amount)}</td>
+                    <td className="px-4 py-2.5 text-gray-500 dark:text-text-secondary">{l.reason}</td>
                   </tr>
                 ))}
               </tbody>
@@ -452,10 +452,10 @@ export default function WalletUserDetailPage() {
       {/* Email modal */}
       {emailModalOpen && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center">
-          <div className="w-full max-w-lg rounded-2xl bg-white dark:bg-gray-900 shadow-xl">
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 px-5 py-4">
-              <h2 className="text-lg font-heading font-bold text-gray-900 dark:text-white">Contacter par email</h2>
-              <button onClick={() => setEmailModalOpen(false)} className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800">
+          <div className="w-full max-w-lg rounded-2xl bg-white dark:bg-navy-panel shadow-xl">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-text-secondary/15 px-5 py-4">
+              <h2 className="text-lg font-serif font-bold text-gray-900 dark:text-text-primary">Contacter par email</h2>
+              <button onClick={() => setEmailModalOpen(false)} className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-navy-panel">
                 <X size={18} />
               </button>
             </div>
@@ -467,11 +467,11 @@ export default function WalletUserDetailPage() {
               )}
               {templates.length > 0 && (
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Template</label>
+                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-text-secondary">Template</label>
                   <select
                     value={selectedTemplate}
                     onChange={(e) => applyTemplate(e.target.value)}
-                    className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-signal/40 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                    className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-green-deep/40 dark:border-text-secondary/20 dark:bg-navy-panel dark:text-text-primary"
                   >
                     <option value="">— Message libre —</option>
                     {templates.map((t) => (
@@ -481,31 +481,31 @@ export default function WalletUserDetailPage() {
                 </div>
               )}
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Sujet</label>
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-text-secondary">Sujet</label>
                 <input
                   type="text"
                   value={emailSubject}
                   onChange={(e) => setEmailSubject(e.target.value)}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-signal/40 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-green-deep/40 dark:border-text-secondary/20 dark:bg-navy-panel dark:text-text-primary"
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Message</label>
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-text-secondary">Message</label>
                 <textarea
                   value={emailBody}
                   onChange={(e) => setEmailBody(e.target.value)}
                   rows={6}
-                  className="w-full resize-none rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-signal/40 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                  className="w-full resize-none rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-green-deep/40 dark:border-text-secondary/20 dark:bg-navy-panel dark:text-text-primary"
                 />
               </div>
               <div className="flex justify-end gap-3">
-                <button onClick={() => setEmailModalOpen(false)} className="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                <button onClick={() => setEmailModalOpen(false)} className="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-600 dark:border-text-secondary/20 dark:text-text-secondary">
                   Annuler
                 </button>
                 <button
                   onClick={sendEmail}
                   disabled={!emailSubject.trim() || !emailBody.trim() || emailSending}
-                  className="flex items-center gap-2 rounded-xl bg-signal px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-signal/85 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-xl bg-green-deep px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-deep/85 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {emailSending ? <Loader2 size={15} className="animate-spin" /> : <Mail size={15} />}
                   Envoyer

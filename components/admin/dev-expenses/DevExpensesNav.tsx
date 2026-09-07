@@ -19,7 +19,7 @@ export default function DevExpensesNav() {
     exact ? pathname === href : pathname.startsWith(href);
 
   return (
-    <div className="flex gap-1 border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
+    <div className="flex gap-1 border-b border-gray-200 dark:border-text-secondary/20 overflow-x-auto">
       {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => (
         <Link
           key={href}
@@ -28,7 +28,7 @@ export default function DevExpensesNav() {
             'flex items-center gap-1.5 px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap',
             isActive(href, exact)
               ? 'border-purple-600 text-purple-700 dark:text-purple-400'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400',
+              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-text-secondary',
           )}
         >
           <Icon className="w-4 h-4" />

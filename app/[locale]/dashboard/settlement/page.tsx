@@ -191,17 +191,17 @@ export default function SettlementPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary">
             Règlement
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-text-secondary mt-1">
             Solde disponible et demandes de versement Mobile Money
           </p>
         </div>
         <button
           onClick={() => void load()}
           disabled={loading}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all disabled:opacity-50"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-all disabled:opacity-50"
         >
           <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
           Actualiser
@@ -232,7 +232,7 @@ export default function SettlementPage() {
 
       {/* Balance cards — one per currency */}
       {loading && !balance ? (
-        <div className="p-6 rounded-2xl bg-gray-100 dark:bg-gray-800 animate-pulse h-32" />
+        <div className="p-6 rounded-2xl bg-gray-100 dark:bg-navy-panel animate-pulse h-32" />
       ) : balance && balance.balances && balance.balances.length > 0 ? (
         <div className={clsx('space-y-4', balance.balances.length === 1 && 'space-y-0')}>
           {balance.balances.map((cur) => (
@@ -241,7 +241,7 @@ export default function SettlementPage() {
               className={clsx(
                 'relative overflow-hidden rounded-2xl p-6 text-white shadow-lg',
                 cur.currency === 'CDF'
-                  ? 'bg-gradient-to-br from-signal to-[#0f6b4f] shadow-signal/20'
+                  ? 'bg-gradient-to-br from-signal to-[#0f6b4f] shadow-green-deep/20'
                   : 'bg-gradient-to-br from-blue-600 to-blue-800 shadow-blue-600/20',
               )}
             >
@@ -254,7 +254,7 @@ export default function SettlementPage() {
                     Solde disponible {cur.currency === 'USD' ? '(USD)' : ''}
                   </span>
                 </div>
-                <div className="text-4xl font-heading font-bold tracking-tight">
+                <div className="text-4xl font-serif font-bold tracking-tight">
                   {fmt(cur.balance)} <span className="text-lg text-white/60">{cur.currency}</span>
                 </div>
                 <div className="flex gap-6 mt-4 text-sm">
@@ -273,14 +273,14 @@ export default function SettlementPage() {
         </div>
       ) : balance ? (
         // Fallback for backward compat (no balances array)
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-signal to-[#0f6b4f] p-6 text-white shadow-lg shadow-signal/20">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-signal to-[#0f6b4f] p-6 text-white shadow-lg shadow-green-deep/20">
           <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full" />
           <div className="relative">
             <div className="flex items-center gap-2 mb-3">
               <Wallet size={16} className="text-white/70" />
               <span className="text-sm font-medium text-white/70">Solde disponible</span>
             </div>
-            <div className="text-4xl font-heading font-bold tracking-tight">
+            <div className="text-4xl font-serif font-bold tracking-tight">
               {fmt(balance.balance)} <span className="text-lg text-white/60">CDF</span>
             </div>
           </div>
@@ -326,7 +326,7 @@ export default function SettlementPage() {
               value={phoneInput}
               onChange={(e) => setPhoneInput(e.target.value)}
               placeholder="+243997174834"
-              className="flex-1 px-3 py-2 rounded-lg border border-amber-300 dark:border-amber-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-400/30"
+              className="flex-1 px-3 py-2 rounded-lg border border-amber-300 dark:border-amber-700 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-amber-400/30"
             />
             <button
               onClick={() => void handleSavePhone()}
@@ -345,9 +345,9 @@ export default function SettlementPage() {
       )}
 
       {balance && balance.settlement_phone && (
-        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-text-secondary">
           <Phone size={14} />
-          Numéro de règlement : <strong className="text-gray-700 dark:text-gray-300">{balance.settlement_phone}</strong>
+          Numéro de règlement : <strong className="text-gray-700 dark:text-text-primary">{balance.settlement_phone}</strong>
         </div>
       )}
 
@@ -358,11 +358,11 @@ export default function SettlementPage() {
               merchant sees the service exists. USDT only if present. */}
           {hasMultipleCurrencies && (
             <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-500 dark:text-gray-400">Devise :</label>
+              <label className="text-sm text-gray-500 dark:text-text-secondary">Devise :</label>
               <select
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
-                className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-signal/30"
+                className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/30"
               >
                 {visibleCurrencies.map((b) => (
                   <option
@@ -378,26 +378,26 @@ export default function SettlementPage() {
           )}
 
           {showConfirm ? (
-            <div className="flex flex-wrap items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 w-full">
+            <div className="flex flex-wrap items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-gray-50 dark:bg-navy-panel/50 w-full">
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                <p className="text-sm font-medium text-gray-900 dark:text-text-primary">
                   Confirmer le règlement de{' '}
                   <strong>{fmt(selectedBalance?.balance ?? 0)} {selectedCurrency}</strong> ?
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                <p className="text-xs text-gray-500 dark:text-text-secondary mt-0.5">
                   Le montant sera versé sur votre numéro Mobile Money.
                 </p>
               </div>
               <button
                 onClick={() => void handleRequestSettlement()}
                 disabled={!!acting}
-                className="px-4 py-2 rounded-lg bg-signal text-white text-sm font-medium hover:bg-signal/85 transition-colors disabled:opacity-50"
+                className="px-4 py-2 rounded-lg bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-colors disabled:opacity-50"
               >
                 {acting === 'request' ? <Loader2 size={16} className="animate-spin" /> : 'Confirmer'}
               </button>
               <button
                 onClick={() => setShowConfirm(false)}
-                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="px-4 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
               >
                 Annuler
               </button>
@@ -406,7 +406,7 @@ export default function SettlementPage() {
             <button
               onClick={() => setShowConfirm(true)}
               disabled={!canRequest || !kycApproved || !liveMode}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-signal text-white text-sm font-medium hover:bg-signal/85 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ArrowDownToLine size={16} />
               Demander un règlement {hasMultipleCurrencies && `(${selectedCurrency})`}
@@ -454,13 +454,13 @@ export default function SettlementPage() {
 
       {/* History table */}
       <div>
-        <h2 className="text-lg font-heading font-semibold text-gray-900 dark:text-white mb-4">
+        <h2 className="text-lg font-serif font-semibold text-gray-900 dark:text-text-primary mb-4">
           Historique des règlements
         </h2>
-        <div className="overflow-x-auto rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
+        <div className="overflow-x-auto rounded-2xl border border-gray-100 dark:border-text-secondary/15 bg-white dark:bg-navy-panel">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 dark:border-gray-800 text-left text-xs uppercase tracking-wider text-gray-400">
+              <tr className="border-b border-gray-100 dark:border-text-secondary/15 text-left text-xs uppercase tracking-wider text-gray-400">
                 <th className="px-4 py-3 font-semibold">Date</th>
                 <th className="px-4 py-3 font-semibold text-right">Montant</th>
                 <th className="px-4 py-3 font-semibold">Statut</th>
@@ -480,9 +480,9 @@ export default function SettlementPage() {
                   const Icon = cfg.icon;
                   const cur = req.currency ?? 'CDF';
                   return (
-                    <tr key={req.id} className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
-                      <td className="px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap">{fmtDate(req.created_at)}</td>
-                      <td className="px-4 py-3 text-right font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(req.amount)} {cur}</td>
+                    <tr key={req.id} className="border-b border-gray-50 dark:border-text-secondary/15/50 hover:bg-gray-50 dark:hover:bg-navy-panel/30">
+                      <td className="px-4 py-3 text-gray-600 dark:text-text-primary whitespace-nowrap">{fmtDate(req.created_at)}</td>
+                      <td className="px-4 py-3 text-right font-medium text-gray-900 dark:text-text-primary whitespace-nowrap">{fmt(req.amount)} {cur}</td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <span className={clsx('inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold', cfg.bg, cfg.color)}>
                           <Icon size={10} className={req.status === 'processing' ? 'animate-spin' : ''} />

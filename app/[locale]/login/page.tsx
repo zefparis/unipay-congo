@@ -39,7 +39,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-ink px-4 pt-16">
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-navy px-4 pt-16">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-8">
@@ -49,14 +49,14 @@ export default function LoginPage() {
         </div>
 
         {/* Card */}
-        <div className="bg-gray-50 dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl shadow-black/5 dark:shadow-black/40 backdrop-blur-sm">
-          <h1 className="text-2xl font-heading font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">{t('subtitle')}</p>
+        <div className="bg-gray-50 dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 sm:p-8 shadow-xl shadow-black/5 dark:shadow-black/40 backdrop-blur-sm">
+          <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary mb-1">{t('title')}</h1>
+          <p className="text-sm text-gray-500 dark:text-text-secondary mb-8">{t('subtitle')}</p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-700 dark:text-text-primary mb-1.5">
                 {t('email')}
               </label>
               <input
@@ -66,13 +66,13 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t('email_placeholder')}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-signal focus:border-transparent transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel/50 text-gray-900 dark:text-text-primary placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-deep focus:border-transparent transition-all"
               />
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-700 dark:text-text-primary mb-1.5">
                 {t('password')}
               </label>
               <div className="relative">
@@ -83,7 +83,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder={t('password_placeholder')}
-                  className="w-full px-4 py-2.5 pr-11 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-signal focus:border-transparent transition-all"
+                  className="w-full px-4 py-2.5 pr-11 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel/50 text-gray-900 dark:text-text-primary placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-deep focus:border-transparent transition-all"
                 />
                 <button
                   type="button"
@@ -106,7 +106,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-xl bg-signal hover:bg-signal/85 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200 shadow-sm shadow-signal/25"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-xl bg-green-deep hover:bg-green-deep/85 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold transition-all duration-200 shadow-sm shadow-signal/25"
             >
               {loading && <Loader2 size={16} className="animate-spin" />}
               {loading ? t('loading') : t('submit')}
@@ -114,9 +114,9 @@ export default function LoginPage() {
           </form>
 
           {/* Register link */}
-          <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
+          <p className="text-center text-sm text-gray-500 dark:text-text-secondary mt-6">
             {t('no_account')}{' '}
-            <Link href="/register" className="text-signal hover:text-signal/85 font-medium">
+            <Link href="/register" className="text-green-deep hover:text-green-deep/85 font-medium">
               {t('register_link')}
             </Link>
           </p>

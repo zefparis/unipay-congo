@@ -33,7 +33,7 @@ const STATUS_LABELS: Record<string, string> = {
 const STATUS_STYLES: Record<string, string> = {
   open: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   escalated: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  resolved: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+  resolved: 'bg-gray-100 text-gray-600 dark:bg-navy-panel dark:text-text-secondary',
 };
 
 function fmtTime(iso: string) {
@@ -131,7 +131,7 @@ export default function AdminSupportDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <Loader2 size={24} className="animate-spin text-signal" />
+        <Loader2 size={24} className="animate-spin text-green-deep" />
       </div>
     );
   }
@@ -143,7 +143,7 @@ export default function AdminSupportDetailPage() {
         <p className="text-sm text-gray-400">Conversation introuvable.</p>
         <button
           onClick={() => router.push('/dashboard/admin/merchants/support')}
-          className="mt-4 text-sm text-signal hover:underline"
+          className="mt-4 text-sm text-green-deep hover:underline"
         >
           ← Retour à la liste
         </button>
@@ -158,15 +158,15 @@ export default function AdminSupportDetailPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.push('/dashboard/admin/merchants/support')}
-            className="p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
           <div>
-            <h1 className="text-lg font-heading font-bold text-gray-900 dark:text-white">
+            <h1 className="text-lg font-serif font-bold text-gray-900 dark:text-text-primary">
               {getMerchantName(conversation)}
             </h1>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{getMerchantEmail(conversation)}</p>
+            <p className="text-xs text-gray-500 dark:text-text-secondary">{getMerchantEmail(conversation)}</p>
           </div>
         </div>
         <span className={clsx('inline-flex px-3 py-1 rounded-full text-xs font-semibold', STATUS_STYLES[conversation.status])}>
@@ -181,7 +181,7 @@ export default function AdminSupportDetailPage() {
       )}
 
       {/* Messages */}
-      <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden flex flex-col h-[500px]">
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl overflow-hidden flex flex-col h-[500px]">
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
           {messages.length === 0 ? (
             <div className="text-center py-12 text-sm text-gray-400">Aucun message dans cette conversation.</div>
@@ -197,8 +197,8 @@ export default function AdminSupportDetailPage() {
                     m.role === 'admin'
                       ? 'bg-purple-500 text-white rounded-br-sm'
                       : m.role === 'merchant'
-                      ? 'bg-signal text-white rounded-bl-sm'
-                      : 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 rounded-bl-sm',
+                      ? 'bg-green-deep text-white rounded-bl-sm'
+                      : 'bg-gray-100 text-gray-900 dark:bg-navy-panel dark:text-text-primary rounded-bl-sm',
                   )}
                 >
                   {m.role === 'merchant' && (
@@ -207,7 +207,7 @@ export default function AdminSupportDetailPage() {
                     </div>
                   )}
                   {m.role === 'bot' && (
-                    <div className="flex items-center gap-1 text-[10px] font-semibold text-gray-500 dark:text-gray-400 mb-1">
+                    <div className="flex items-center gap-1 text-[10px] font-semibold text-gray-500 dark:text-text-secondary mb-1">
                       <Headset size={10} /> Assistant IA
                     </div>
                   )}
@@ -229,7 +229,7 @@ export default function AdminSupportDetailPage() {
 
         {/* Reply input */}
         {conversation.status !== 'resolved' && (
-          <div className="border-t border-gray-100 dark:border-gray-800 p-3 space-y-2">
+          <div className="border-t border-gray-100 dark:border-text-secondary/15 p-3 space-y-2">
             <div className="flex items-end gap-2">
               <textarea
                 value={input}
@@ -237,18 +237,18 @@ export default function AdminSupportDetailPage() {
                 onKeyDown={handleKeyDown}
                 placeholder="Répondez au marchand…"
                 rows={2}
-                className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-signal/30 resize-none"
+                className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/30 resize-none"
                 disabled={sending}
               />
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || sending}
-                className="flex-shrink-0 p-2.5 rounded-xl bg-signal text-white hover:bg-signal/85 transition-colors disabled:opacity-50"
+                className="flex-shrink-0 p-2.5 rounded-xl bg-green-deep text-white hover:bg-green-deep/85 transition-colors disabled:opacity-50"
               >
                 {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
               </button>
             </div>
-            <label className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+            <label className="flex items-center gap-2 text-xs text-gray-500 dark:text-text-secondary">
               <input
                 type="checkbox"
                 checked={resolve}

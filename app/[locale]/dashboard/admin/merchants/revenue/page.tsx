@@ -163,21 +163,21 @@ export default function MerchantRevenuePage() {
         { label: `Volume collecté (${kpiCurrency})`, value: `${fmt(selectedCurrencyTotals.volume_collected)} ${kpiCurrency}`, icon: TrendingUp, color: 'text-blue-500', bg: 'bg-blue-500/10' },
         { label: `Marge UniPay (${kpiCurrency})`, value: `${fmt(selectedCurrencyTotals.net_margin)} ${kpiCurrency}`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
         { label: `Coût Avada (${kpiCurrency})`, value: `${fmt(selectedCurrencyTotals.avada_cost)} ${kpiCurrency}`, icon: Building2, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-        { label: `Transactions (${kpiCurrency})`, value: fmt(selectedCurrencyTotals.transaction_count), icon: ArrowDownToLine, color: 'text-signal-dark', bg: 'bg-signal/10' },
+        { label: `Transactions (${kpiCurrency})`, value: fmt(selectedCurrencyTotals.transaction_count), icon: ArrowDownToLine, color: 'text-green-deep-dark', bg: 'bg-green-deep/10' },
       ]
     : totals ? [
         { label: 'Volume collecté', value: `${fmt(totals.volume_collected)} CDF`, icon: TrendingUp, color: 'text-blue-500', bg: 'bg-blue-500/10' },
         { label: 'Marge UniPay', value: `${fmt(totals.net_margin)} CDF`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
         { label: 'Coût Avada', value: `${fmt(totals.avada_cost)} CDF`, icon: Building2, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-        { label: 'Transactions', value: fmt(totals.transaction_count), icon: ArrowDownToLine, color: 'text-signal-dark', bg: 'bg-signal/10' },
+        { label: 'Transactions', value: fmt(totals.transaction_count), icon: ArrowDownToLine, color: 'text-green-deep-dark', bg: 'bg-green-deep/10' },
       ] : [];
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Revenus Marchands</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-text-primary">Revenus Marchands</h1>
+          <p className="text-sm text-gray-500 dark:text-text-secondary mt-1">
             Répartition des revenus par marchand — marge UniPay (2%), coût Avada (3%), fees client (5%)
           </p>
         </div>
@@ -185,7 +185,7 @@ export default function MerchantRevenuePage() {
           <button
             onClick={() => void load()}
             disabled={loading}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-text-primary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors disabled:opacity-50"
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             Actualiser
@@ -211,7 +211,7 @@ export default function MerchantRevenuePage() {
               'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
               period === p
                 ? 'bg-purple-500 text-white'
-                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
+                : 'text-gray-600 dark:text-text-primary hover:bg-gray-100 dark:hover:bg-navy-panel',
             )}
           >
             {p === '7d' ? '7 jours' : p === '30d' ? '30 jours' : p === '90d' ? '90 jours' : 'Personnalisé'}
@@ -223,14 +223,14 @@ export default function MerchantRevenuePage() {
               type="date"
               value={customFrom}
               onChange={(e) => setCustomFrom(e.target.value)}
-              className="px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white"
+              className="px-2 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary"
             />
             <span className="text-gray-400">→</span>
             <input
               type="date"
               value={customTo}
               onChange={(e) => setCustomTo(e.target.value)}
-              className="px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white"
+              className="px-2 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary"
             />
           </div>
         )}
@@ -244,8 +244,8 @@ export default function MerchantRevenuePage() {
               className={clsx(
                 'px-2.5 py-1 rounded-lg text-xs font-medium transition-colors',
                 sortBy === s
-                  ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
-                  : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800',
+                  ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-text-primary'
+                  : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-navy-panel',
               )}
             >
               {s === 'margin' ? 'Marge' : s === 'volume' ? 'Volume' : 'Nb tx'}
@@ -275,7 +275,7 @@ export default function MerchantRevenuePage() {
                   ? tc.currency === 'CDF'
                     ? 'bg-emerald-500 text-white'
                     : 'bg-blue-500 text-white'
-                  : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800',
+                  : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-navy-panel',
               )}
             >
               {tc.currency}
@@ -288,18 +288,18 @@ export default function MerchantRevenuePage() {
       {loading && !data ? (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="p-5 rounded-2xl bg-gray-100 dark:bg-gray-800 animate-pulse h-28" />
+            <div key={i} className="p-5 rounded-2xl bg-gray-100 dark:bg-navy-panel animate-pulse h-28" />
           ))}
         </div>
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {kpis.map((kpi) => (
-            <div key={kpi.label} className="p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
+            <div key={kpi.label} className="p-5 rounded-2xl bg-white dark:bg-navy-panel border border-gray-100 dark:border-text-secondary/15">
               <div className={clsx('inline-flex p-2 rounded-lg mb-3', kpi.bg)}>
                 <kpi.icon size={20} className={kpi.color} />
               </div>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{kpi.value}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{kpi.label}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-text-primary">{kpi.value}</p>
+              <p className="text-xs text-gray-500 dark:text-text-secondary mt-1">{kpi.label}</p>
             </div>
           ))}
         </div>
@@ -307,10 +307,10 @@ export default function MerchantRevenuePage() {
 
       {/* Merchant table */}
       {data && (
-        <div className="overflow-x-auto rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
+        <div className="overflow-x-auto rounded-2xl border border-gray-100 dark:border-text-secondary/15 bg-white dark:bg-navy-panel">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 dark:border-gray-800 text-left text-xs uppercase tracking-wider text-gray-400">
+              <tr className="border-b border-gray-100 dark:border-text-secondary/15 text-left text-xs uppercase tracking-wider text-gray-400">
                 <th className="px-4 py-3 font-semibold">Marchand</th>
                 <th className="px-4 py-3 font-semibold">Devise</th>
                 <th className="px-4 py-3 font-semibold text-right">Nb tx</th>
@@ -336,8 +336,8 @@ export default function MerchantRevenuePage() {
                     : [{ currency: 'CDF', transaction_count: m.transaction_count, volume_collected: m.volume_collected, client_fees: m.client_fees, avada_cost: m.avada_cost, net_margin: m.net_margin, net_amount_owed: m.net_amount_owed }];
 
                   return rows.map((c, idx) => (
-                    <tr key={`${m.merchant_id}-${c.currency}`} className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">
+                    <tr key={`${m.merchant_id}-${c.currency}`} className="border-b border-gray-50 dark:border-text-secondary/15/50 hover:bg-gray-50 dark:hover:bg-navy-panel/30">
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary">
                         {idx === 0 ? m.name : ''}
                       </td>
                       <td className="px-4 py-3">
@@ -352,12 +352,12 @@ export default function MerchantRevenuePage() {
                           {c.currency}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{fmt(c.transaction_count)}</td>
-                      <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{fmt(c.volume_collected)}</td>
-                      <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{fmt(c.client_fees)}</td>
+                      <td className="px-4 py-3 text-right text-gray-600 dark:text-text-primary">{fmt(c.transaction_count)}</td>
+                      <td className="px-4 py-3 text-right text-gray-600 dark:text-text-primary">{fmt(c.volume_collected)}</td>
+                      <td className="px-4 py-3 text-right text-gray-600 dark:text-text-primary">{fmt(c.client_fees)}</td>
                       <td className="px-4 py-3 text-right text-amber-600 dark:text-amber-400">{fmt(c.avada_cost)}</td>
                       <td className="px-4 py-3 text-right font-semibold text-emerald-600 dark:text-emerald-400">{fmt(c.net_margin)}</td>
-                      <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{fmt(c.net_amount_owed)}</td>
+                      <td className="px-4 py-3 text-right text-gray-600 dark:text-text-primary">{fmt(c.net_amount_owed)}</td>
                     </tr>
                   ));
                 })
@@ -366,8 +366,8 @@ export default function MerchantRevenuePage() {
             {data.merchants.length > 0 && totalsByCurrency.length > 0 && (
               <tfoot>
                 {totalsByCurrency.map((tc) => (
-                  <tr key={tc.currency} className="border-t-2 border-gray-200 dark:border-gray-700 font-semibold">
-                    <td className="px-4 py-3 text-gray-900 dark:text-white">Total {tc.currency}</td>
+                  <tr key={tc.currency} className="border-t-2 border-gray-200 dark:border-text-secondary/20 font-semibold">
+                    <td className="px-4 py-3 text-gray-900 dark:text-text-primary">Total {tc.currency}</td>
                     <td className="px-4 py-3">
                       <span className={clsx(
                         'inline-flex px-2 py-0.5 rounded-full text-xs font-semibold',
@@ -380,12 +380,12 @@ export default function MerchantRevenuePage() {
                         {tc.currency}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{fmt(tc.transaction_count)}</td>
-                    <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{fmt(tc.volume_collected)}</td>
-                    <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{fmt(tc.client_fees)}</td>
+                    <td className="px-4 py-3 text-right text-gray-900 dark:text-text-primary">{fmt(tc.transaction_count)}</td>
+                    <td className="px-4 py-3 text-right text-gray-900 dark:text-text-primary">{fmt(tc.volume_collected)}</td>
+                    <td className="px-4 py-3 text-right text-gray-900 dark:text-text-primary">{fmt(tc.client_fees)}</td>
                     <td className="px-4 py-3 text-right text-amber-600 dark:text-amber-400">{fmt(tc.avada_cost)}</td>
                     <td className="px-4 py-3 text-right text-emerald-600 dark:text-emerald-400">{fmt(tc.net_margin)}</td>
-                    <td className="px-4 py-3 text-right text-gray-900 dark:text-white">{fmt(tc.net_amount_owed)}</td>
+                    <td className="px-4 py-3 text-right text-gray-900 dark:text-text-primary">{fmt(tc.net_amount_owed)}</td>
                   </tr>
                 ))}
               </tfoot>

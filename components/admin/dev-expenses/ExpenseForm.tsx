@@ -13,8 +13,8 @@ interface Props {
   onCreated: (message: string) => void;
 }
 
-const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300';
-const labelCls = 'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1';
+const inputCls = 'w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-300';
+const labelCls = 'block text-xs font-medium text-gray-600 dark:text-text-secondary mb-1';
 
 export default function ExpenseForm({ onClose, onCreated }: Props) {
   const [form, setForm] = useState<CreateExpenseForm>({
@@ -95,12 +95,12 @@ export default function ExpenseForm({ onClose, onCreated }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-xl">
-          <h2 className="font-semibold text-gray-900 dark:text-white">Nouvelle facture</h2>
+      <div className="bg-white dark:bg-navy-panel rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white dark:bg-navy-panel border-b border-gray-200 dark:border-text-secondary/20 px-6 py-4 flex items-center justify-between rounded-t-xl">
+          <h2 className="font-semibold text-gray-900 dark:text-text-primary">Nouvelle facture</h2>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="p-1 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-navy-panel"
             aria-label="Fermer"
           >
             <X className="w-5 h-5" />
@@ -110,7 +110,7 @@ export default function ExpenseForm({ onClose, onCreated }: Props) {
         <form onSubmit={(e) => handleSubmit(e, false)} className="px-6 py-4 space-y-6">
           {/* Section 1: Facture */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-1">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary border-b border-gray-100 dark:border-text-secondary/15 pb-1">
               Facture
             </h3>
             <div>
@@ -198,7 +198,7 @@ export default function ExpenseForm({ onClose, onCreated }: Props) {
             </div>
             <div>
               <label className={labelCls}>Pièce jointe (PDF / PNG / JPEG, max 10 Mo)</label>
-              <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+              <label className="flex items-center gap-2 cursor-pointer border border-dashed border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 hover:bg-gray-50 dark:hover:bg-navy-panel transition-colors">
                 <Upload className="w-4 h-4 text-gray-400" />
                 <span className="text-sm text-gray-500">{file ? file.name : 'Choisir un fichier…'}</span>
                 <input
@@ -214,7 +214,7 @@ export default function ExpenseForm({ onClose, onCreated }: Props) {
 
           {/* Section 2: Prise en charge */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-1">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary border-b border-gray-100 dark:border-text-secondary/15 pb-1">
               Prise en charge
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -310,11 +310,11 @@ export default function ExpenseForm({ onClose, onCreated }: Props) {
           )}
 
           {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 justify-end pt-2 border-t border-gray-100 dark:border-gray-800">
+          <div className="flex flex-col sm:flex-row gap-2 justify-end pt-2 border-t border-gray-100 dark:border-text-secondary/15">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium"
+              className="px-4 py-2.5 text-sm rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-600 hover:bg-gray-50 dark:hover:bg-navy-panel font-medium"
             >
               Annuler
             </button>

@@ -97,7 +97,7 @@ export default function WalletSupportDetailPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-16">
-        <Loader2 size={24} className="animate-spin text-signal" />
+        <Loader2 size={24} className="animate-spin text-green-deep" />
       </div>
     );
   }
@@ -106,14 +106,14 @@ export default function WalletSupportDetailPage() {
     <div className="mx-auto max-w-4xl space-y-4">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <button onClick={() => router.push('/dashboard/admin/wallet-support')} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500">
+        <button onClick={() => router.push('/dashboard/admin/wallet-support')} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-navy-panel text-gray-500">
           <ArrowLeft size={18} />
         </button>
         <div className="flex-1">
-          <h1 className="text-lg font-heading font-bold text-gray-900 dark:text-white">
+          <h1 className="text-lg font-serif font-bold text-gray-900 dark:text-text-primary">
             {conv?.owner_name ?? '—'}
           </h1>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-gray-500 dark:text-text-secondary">
             {conv?.owner_phone ?? '—'} · {conv?.owner_email ?? 'pas d\'email'}
           </p>
         </div>
@@ -122,7 +122,7 @@ export default function WalletSupportDetailPage() {
             'inline-flex rounded-full px-3 py-1 text-xs font-semibold',
             conv.status === 'open' && 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
             conv.status === 'escalated' && 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-            conv.status === 'resolved' && 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+            conv.status === 'resolved' && 'bg-gray-100 text-gray-500 dark:bg-navy-panel dark:text-text-secondary',
           )}>
             {STATUS_LABELS[conv.status]}
           </span>
@@ -136,7 +136,7 @@ export default function WalletSupportDetailPage() {
       )}
 
       {/* Chat */}
-      <div className="h-[500px] overflow-y-auto rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900/60">
+      <div className="h-[500px] overflow-y-auto rounded-2xl border border-gray-200 bg-white p-4 dark:border-text-secondary/15 dark:bg-navy-panel/60">
         <div className="space-y-3">
           {messages.map((m) => (
             <div key={m.id} className={clsx('flex', m.role === 'admin' ? 'justify-end' : 'justify-start')}>
@@ -147,8 +147,8 @@ export default function WalletSupportDetailPage() {
                   : m.role === 'admin'
                   ? 'bg-purple-500 text-white rounded-br-sm'
                   : m.role === 'wallet'
-                  ? 'bg-signal text-white rounded-bl-sm'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-slate-200 rounded-bl-sm',
+                  ? 'bg-green-deep text-white rounded-bl-sm'
+                  : 'bg-gray-100 dark:bg-navy-panel text-gray-800 dark:text-slate-200 rounded-bl-sm',
               )}>
                 {m.channel === 'email' && m.subject && (
                   <p className="text-xs font-semibold mb-1 opacity-70">📧 {m.subject}</p>
@@ -173,17 +173,17 @@ export default function WalletSupportDetailPage() {
             onChange={(e) => setInput(e.target.value)}
             rows={3}
             placeholder="Votre réponse…"
-            className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none focus:border-signal focus:ring-2 focus:ring-signal/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+            className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none focus:border-green-deep focus:ring-2 focus:ring-green-deep/20 dark:border-text-secondary/20 dark:bg-navy-panel dark:text-text-primary"
           />
           <div className="flex items-center justify-between gap-3">
-            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-text-secondary">
               <input type="checkbox" checked={resolve} onChange={(e) => setResolve(e.target.checked)} className="rounded border-gray-300" />
               Marquer comme résolu après envoi
             </label>
             <button
               onClick={handleReply}
               disabled={!input.trim() || sending}
-              className="flex items-center gap-2 rounded-xl bg-signal px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-signal/85 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl bg-green-deep px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-deep/85 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {sending ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
               Envoyer
