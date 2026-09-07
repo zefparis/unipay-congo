@@ -6,7 +6,7 @@ import { Link } from '@/i18n/navigation';
 import {
   ArrowLeft, User, Wallet, ShieldCheck, ShieldX,
   ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Loader2,
-  CheckCircle2, XCircle, AlertCircle, Plus, Minus,
+  CheckCircle2, XCircle, AlertCircle, Plus, Minus, Mail, X,
 } from 'lucide-react';
 import { getUserDetail, blockUser, unblockUser, adjustBalance, approveUserKyc, type WalletUser, type WalletTransaction, type LedgerEntry } from '@/lib/admin-api';
 import clsx from 'clsx';
@@ -63,9 +63,69 @@ export default function WalletUserDetailPage() {
 
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
 
+  // Email modal state
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [templates, setTemplates] = useState<Array<{ label: string; subject: string; body: string }>>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState('');
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailBody, setEmailBody] = useState('');
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailError, setEmailError] = useState('');
+
   const showToast = (msg: string, type: 'success' | 'error') => {
     setToast({ msg, type });
   };
+
+  async function openEmailModal() {
+    setEmailModalOpen(true);
+    setEmailError('');
+    setEmailSubject('');
+    setEmailBody('');
+    setSelectedTemplate('');
+    try {
+      const res = await fetch(`/api/admin/wallet/users/${id}/support-templates`);
+      if (res.ok) {
+        const data = await res.json();
+        setTemplates(data.templates ?? []);
+      }
+    } catch {
+      // Templates are optional — modal still works with free-form
+    }
+  }
+
+  function applyTemplate(label: string) {
+    setSelectedTemplate(label);
+    const t = templates.find((t) => t.label === label);
+    if (t) {
+      setEmailSubject(t.subject);
+      setEmailBody(t.body);
+    }
+  }
+
+  async function sendEmail() {
+    if (!emailSubject.trim() || !emailBody.trim()) return;
+    setEmailSending(true);
+    setEmailError('');
+    try {
+      const res = await fetch(`/api/admin/wallet/users/${id}/email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subject: emailSubject.trim(),
+          body: emailBody.trim(),
+          template_label: selectedTemplate || undefined,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? 'Failed to send email');
+      showToast('Email envoyé avec succès', 'success');
+      setEmailModalOpen(false);
+    } catch (e) {
+      setEmailError((e as Error).message);
+    } finally {
+      setEmailSending(false);
+    }
+  }
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -199,6 +259,13 @@ export default function WalletUserDetailPage() {
                 Valider KYC
               </button>
             )}
+            <button
+              onClick={openEmailModal}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-signal text-white hover:bg-signal/85"
+            >
+              <Mail size={13} />
+              Contacter par email
+            </button>
             {user.is_active ? (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
                 <CheckCircle2 size={13} /> Actif
@@ -378,6 +445,73 @@ export default function WalletUserDetailPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Email modal */}
+      {emailModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center">
+          <div className="w-full max-w-lg rounded-2xl bg-white dark:bg-gray-900 shadow-xl">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 px-5 py-4">
+              <h2 className="text-lg font-heading font-bold text-gray-900 dark:text-white">Contacter par email</h2>
+              <button onClick={() => setEmailModalOpen(false)} className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800">
+                <X size={18} />
+              </button>
+            </div>
+            <div className="space-y-4 p-5">
+              {emailError && (
+                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400">
+                  {emailError}
+                </div>
+              )}
+              {templates.length > 0 && (
+                <div>
+                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Template</label>
+                  <select
+                    value={selectedTemplate}
+                    onChange={(e) => applyTemplate(e.target.value)}
+                    className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-signal/40 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                  >
+                    <option value="">— Message libre —</option>
+                    {templates.map((t) => (
+                      <option key={t.label} value={t.label}>{t.label}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <div>
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Sujet</label>
+                <input
+                  type="text"
+                  value={emailSubject}
+                  onChange={(e) => setEmailSubject(e.target.value)}
+                  className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-signal/40 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Message</label>
+                <textarea
+                  value={emailBody}
+                  onChange={(e) => setEmailBody(e.target.value)}
+                  rows={6}
+                  className="w-full resize-none rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-signal/40 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                />
+              </div>
+              <div className="flex justify-end gap-3">
+                <button onClick={() => setEmailModalOpen(false)} className="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                  Annuler
+                </button>
+                <button
+                  onClick={sendEmail}
+                  disabled={!emailSubject.trim() || !emailBody.trim() || emailSending}
+                  className="flex items-center gap-2 rounded-xl bg-signal px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-signal/85 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {emailSending ? <Loader2 size={15} className="animate-spin" /> : <Mail size={15} />}
+                  Envoyer
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

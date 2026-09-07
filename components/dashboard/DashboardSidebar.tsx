@@ -29,6 +29,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
     { href: '/dashboard/admin/transactions', label: 'Transactions', icon: ArrowLeftRight, exact: false },
     { href: '/dashboard/admin/adjustments', label: 'Ajustements', icon: SlidersHorizontal, exact: false },
     { href: '/dashboard/admin/wallet-kyc', label: 'KYC Wallet', icon: ShieldCheck, exact: false },
+    { href: '/dashboard/admin/wallet-support', label: 'Support Wallet', icon: Headset, exact: false },
     { href: '/dashboard/admin/treasury', label: 'Trésorerie', icon: Landmark, exact: false },
     { href: '/dashboard/admin/cdp-wallets', label: 'CDP Wallets', icon: Wallet, exact: false },
   ];
