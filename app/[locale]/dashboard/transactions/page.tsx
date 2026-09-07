@@ -75,51 +75,88 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
       {/* Filters */}
       <TransactionFilters searchParams={searchParams} />
 
-      {/* Table */}
+      {/* Transactions */}
       <div className="bg-white dark:bg-gray-900/60 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
         {transactions.length === 0 ? (
           <div className="text-center py-16 text-sm text-gray-400 dark:text-gray-600">
             {t('dashboard.transactions.no_results')}
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] text-sm">
-              <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
-                  {(['date', 'operator', 'direction', 'amount', 'fee', 'net', 'status'] as const).map((col) => (
-                    <th
-                      key={col}
-                      className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider whitespace-nowrap"
-                    >
-                      {t(`dashboard.transactions.${col}`)}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
-                {transactions.map((tx) => (
-                  <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-                    <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap text-xs">{fmtDate(tx.created_at)}</td>
-                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white capitalize">{tx.operator}</td>
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <span className={clsx('inline-flex items-center gap-1 text-xs font-medium', tx.direction === 'collect' ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400')}>
-                        {tx.direction === 'collect' ? <ArrowDownLeft size={13} /> : <ArrowUpRight size={13} />}
-                        {t(`dashboard.transactions.${tx.direction}`)}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
-                    <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmt(tx.fee)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
-                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
-                    <td className="px-4 py-3">
-                      <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status])}>
-                        {t(`dashboard.status.${tx.status}`)}
-                      </span>
-                    </td>
+          <>
+            {/* Mobile: cards */}
+            <div className="md:hidden divide-y divide-gray-100 dark:divide-gray-800">
+              {transactions.map((tx) => (
+                <div key={tx.id} className="px-4 py-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-gray-900 dark:text-white capitalize">{tx.operator}</span>
+                    <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status])}>
+                      {t(`dashboard.status.${tx.status}`)}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className={clsx('inline-flex items-center gap-1', tx.direction === 'collect' ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400')}>
+                      {tx.direction === 'collect' ? <ArrowDownLeft size={14} /> : <ArrowUpRight size={14} />}
+                      {t(`dashboard.transactions.${tx.direction}`)}
+                    </span>
+                    <span className="text-gray-400 text-xs">{fmtDate(tx.created_at)}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <div>
+                      <span className="text-gray-500 dark:text-gray-400">Montant: </span>
+                      <span className="font-medium text-gray-900 dark:text-white">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-gray-500 dark:text-gray-400">Net: </span>
+                      <span className="font-medium text-gray-900 dark:text-white">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></span>
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-400">
+                    Frais: {fmt(tx.fee)} {tx.currency ?? 'CDF'}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop: table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-100 dark:border-gray-800">
+                    {(['date', 'operator', 'direction', 'amount', 'fee', 'net', 'status'] as const).map((col) => (
+                      <th
+                        key={col}
+                        className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                      >
+                        {t(`dashboard.transactions.${col}`)}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60">
+                  {transactions.map((tx) => (
+                    <tr key={tx.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+                      <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap text-xs">{fmtDate(tx.created_at)}</td>
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white capitalize">{tx.operator}</td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <span className={clsx('inline-flex items-center gap-1 text-xs font-medium', tx.direction === 'collect' ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400')}>
+                          {tx.direction === 'collect' ? <ArrowDownLeft size={13} /> : <ArrowUpRight size={13} />}
+                          {t(`dashboard.transactions.${tx.direction}`)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                      <td className="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">{fmt(tx.fee)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white whitespace-nowrap">{fmt(tx.net_amount)} <span className="text-xs text-gray-400">{tx.currency ?? 'CDF'}</span></td>
+                      <td className="px-4 py-3">
+                        <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status])}>
+                          {t(`dashboard.status.${tx.status}`)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
