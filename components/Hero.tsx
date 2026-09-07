@@ -1,7 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { ArrowRight, BookOpen, ShieldCheck, Check } from 'lucide-react';
-import ConvergenceLattice from './ConvergenceLattice';
 
 export default function Hero() {
   const t = useTranslations('hero');
@@ -10,20 +9,50 @@ export default function Hero() {
     <section
       className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-navy"
     >
-      {/* Convergence Lattice — atmospheric background */}
-      <div className="absolute inset-0 text-text-primary pointer-events-none">
-        <ConvergenceLattice variant="hero" opacity={0.04} className="w-full h-full" />
-      </div>
-
-      {/* Subtle radial glow from center */}
+      {/* ── Background image — dark/light switch ─────────────────── */}
+      {/* Light mode: hero-bg-light.webp | Dark mode: hero-bg-dark.webp */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 bg-cover bg-[position:right_center] bg-[url(/hero-bg-light.webp)] dark:bg-[url(/hero-bg-dark.webp)] pointer-events-none"
+        aria-hidden="true"
+      />
+
+      {/* ── Readability overlay — gradient stronger on left where text sits ── */}
+      {/* Desktop: gentle left-to-right fade so shield stays visible on right */}
+      <div
+        className="absolute inset-0 pointer-events-none hidden md:block"
         style={{
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(15,110,86,0.10) 0%, transparent 60%)',
+          background:
+            'linear-gradient(to right, rgba(10,25,48,0.92) 0%, rgba(10,25,48,0.75) 40%, rgba(10,25,48,0.35) 70%, rgba(10,25,48,0.15) 100%)',
+        }}
+      />
+      {/* Light mode desktop overlay — softer since bg is light */}
+      <div
+        className="absolute inset-0 pointer-events-none hidden md:block dark:hidden"
+        style={{
+          background:
+            'linear-gradient(to right, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.75) 40%, rgba(255,255,255,0.30) 70%, rgba(255,255,255,0.05) 100%)',
         }}
       />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+      {/* Mobile: stronger full overlay + recentered background to avoid shield overlap with text */}
+      <div
+        className="absolute inset-0 pointer-events-none md:hidden bg-cover bg-[position:center_right]"
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(10,25,48,0.85) 0%, rgba(10,25,48,0.80) 50%, rgba(10,25,48,0.90) 100%)',
+        }}
+      />
+      {/* Light mode mobile overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none md:hidden dark:hidden"
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.82) 50%, rgba(255,255,255,0.90) 100%)',
+        }}
+      />
+
+      {/* ── Content ──────────────────────────────────────────────── */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Text */}
           <div>
