@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X, Shield, Users, SlidersHorizontal, Landmark, Wallet, Receipt, Building2, TrendingUp, Headset, DollarSign, ArrowDownToLine } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X, Shield, Users, SlidersHorizontal, Landmark, Wallet, Receipt, Building2, TrendingUp, Headset, DollarSign, ArrowDownToLine, UserCircle } from 'lucide-react';
 import clsx from 'clsx';
 import BrandLogo from '../BrandLogo';
 
@@ -56,6 +56,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
     { href: '/dashboard/kyc', label: t('dashboard.nav.kyc'), icon: ShieldCheck, exact: false },
     { href: '/dashboard/sandbox', label: t('dashboard.nav.sandbox'), icon: FlaskConical, exact: false },
     { href: '/dashboard/support', label: 'Support', icon: Headset, exact: false },
+    { href: '/dashboard/profile', label: 'Profil', icon: UserCircle, exact: false },
   ];
 
   const isActive = (href: string, exact: boolean) =>
