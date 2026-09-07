@@ -9,9 +9,18 @@ export default function Hero() {
     <section
       className="relative h-[100svh] md:h-screen flex items-center pt-16 overflow-hidden bg-white dark:bg-navy"
     >
-      {/* Subtle radial glow — same pattern as other sections, no image */}
+      {/* ── Background ───────────────────────────────────────────── */}
+      {/* Light mode: soft radial gradient — white center → pale blue-grey edges */}
       <div
-        className="absolute inset-0 pointer-events-none dark:block"
+        className="absolute inset-0 pointer-events-none dark:hidden"
+        style={{
+          background:
+            'radial-gradient(ellipse at 50% 35%, #FFFFFF 0%, #EDF1F6 70%, #E2E8F0 100%)',
+        }}
+      />
+      {/* Dark mode: subtle green radial glow (existing pattern) */}
+      <div
+        className="absolute inset-0 pointer-events-none hidden dark:block"
         style={{
           background:
             'radial-gradient(ellipse at 70% 50%, rgba(15,110,86,0.08) 0%, transparent 60%)',
@@ -58,37 +67,52 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right: Trust panel — official document style */}
+          {/* Right: Trust panel — glassmorphism in light, solid navy in dark */}
           <div className="hidden lg:block">
-            <div className="relative rounded-xl border border-text-secondary/15 bg-navy-panel shadow-2xl shadow-black/40 overflow-hidden max-w-sm ml-auto">
+            <div
+              className="relative rounded-xl overflow-hidden max-w-sm ml-auto backdrop-blur-[16px]"
+              style={{
+                // Light mode: frosted glass
+                backgroundColor: 'rgba(255,255,255,0.65)',
+                border: '1px solid rgba(10,25,48,0.08)',
+                boxShadow: '0 8px 32px rgba(10,25,48,0.08)',
+              }}
+            >
+              {/* Dark mode overrides via wrapper div */}
+              <div className="hidden dark:block absolute inset-0 rounded-xl" style={{
+                backgroundColor: 'rgba(18,35,63,0.95)',
+                border: '1px solid rgba(124,147,172,0.15)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+              }} />
+
               {/* Panel header */}
-              <div className="px-6 py-4 border-b border-text-secondary/10 bg-navy/50">
+              <div className="relative px-6 py-4 border-b border-navy/8 dark:border-text-secondary/10 bg-navy/5 dark:bg-navy/50">
                 <div className="flex items-center gap-2.5">
                   <ShieldCheck size={18} className="text-gold" />
-                  <span className="text-sm font-serif font-semibold text-text-primary tracking-wide">
+                  <span className="text-sm font-serif font-semibold text-navy dark:text-text-primary tracking-wide">
                     {t('panel_title')}
                   </span>
                 </div>
               </div>
 
               {/* Panel body */}
-              <div className="p-6 space-y-5">
+              <div className="relative p-6 space-y-5">
                 {/* License number */}
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-text-secondary mb-1.5">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-navy/55 dark:text-text-secondary mb-1.5">
                     {t('panel_license_label')}
                   </p>
-                  <p className="text-base font-mono text-text-primary leading-relaxed">
+                  <p className="text-base font-mono text-navy dark:text-text-primary leading-relaxed">
                     ASVA-ARPTC n°0573/008/Mars/2023
                   </p>
                 </div>
 
                 {/* Divider */}
-                <div className="border-t border-text-secondary/10" />
+                <div className="border-t border-navy/8 dark:border-text-secondary/10" />
 
                 {/* Connected networks */}
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-text-secondary mb-3">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-navy/55 dark:text-text-secondary mb-3">
                     {t('panel_networks_label')}
                   </p>
                   <ul className="space-y-2.5">
@@ -97,14 +121,14 @@ export default function Hero() {
                         <span className="flex items-center justify-center w-5 h-5 rounded-full bg-green-deep/15">
                           <Check size={12} className="text-green-deep" />
                         </span>
-                        <span className="text-sm text-text-primary font-medium">{network}</span>
+                        <span className="text-sm text-navy dark:text-text-primary font-medium">{network}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
                 {/* Divider */}
-                <div className="border-t border-text-secondary/10" />
+                <div className="border-t border-navy/8 dark:border-text-secondary/10" />
 
                 {/* Platform status */}
                 <div className="flex items-center gap-3">
@@ -112,7 +136,7 @@ export default function Hero() {
                     <span className="absolute inline-flex h-full w-full rounded-full bg-green-deep opacity-60" />
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-deep" />
                   </span>
-                  <span className="text-sm text-text-secondary font-medium">
+                  <span className="text-sm text-navy/70 dark:text-text-secondary font-medium">
                     {t('panel_status')}
                   </span>
                 </div>
