@@ -32,10 +32,10 @@ export default function BrandLogo({
       </svg>
       {showText && (
         <div className="flex flex-col leading-none">
-          <span className={`font-serif font-bold text-lg text-text-primary tracking-tight ${textClassName}`}>
+          <span className={`font-serif font-bold text-lg text-navy dark:text-text-primary tracking-tight ${textClassName}`}>
             UniPay
           </span>
-          <span className="font-body text-[10px] font-semibold uppercase tracking-widest text-text-secondary">
+          <span className="font-body text-[10px] font-semibold uppercase tracking-widest text-navy/55 dark:text-text-secondary">
             Congo
           </span>
         </div>
