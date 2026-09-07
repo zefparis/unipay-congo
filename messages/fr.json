@@ -15,7 +15,11 @@
     "title": "Paiements mobiles unifiés pour la RDC",
     "subtitle": "UniPay Congo connecte votre application à tous les réseaux Mobile Money de la République Démocratique du Congo en une seule intégration sécurisée.",
     "cta_primary": "Créer un compte gratuit",
-    "cta_secondary": "Voir la documentation API"
+    "cta_secondary": "Voir la documentation API",
+    "panel_title": "Licence ARPTC",
+    "panel_license_label": "Numéro de licence",
+    "panel_networks_label": "Réseaux connectés",
+    "panel_status": "Plateforme opérationnelle"
   },
   "stats": {
     "population": "100M+",
