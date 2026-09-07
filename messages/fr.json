@@ -202,7 +202,24 @@
       "login_link": "Se connecter",
       "error": "Erreur lors de la création du compte",
       "success": "Compte créé avec succès"
-    }
+    },
+    "forgot_password": "Mot de passe oublié ?",
+    "forgot_password_title": "Mot de passe oublié",
+    "forgot_password_subtitle": "Entrez votre adresse email pour recevoir un lien de réinitialisation",
+    "forgot_password_email": "Adresse email",
+    "forgot_password_submit": "Envoyer le lien",
+    "forgot_password_loading": "Envoi…",
+    "forgot_password_success": "Si ce compte existe, un email avec les instructions de réinitialisation a été envoyé.",
+    "forgot_password_back": "Retour à la connexion",
+    "reset_password_title": "Nouveau mot de passe",
+    "reset_password_subtitle": "Définissez votre nouveau mot de passe",
+    "reset_password_new": "Nouveau mot de passe",
+    "reset_password_confirm": "Confirmer le mot de passe",
+    "reset_password_submit": "Réinitialiser",
+    "reset_password_loading": "Réinitialisation…",
+    "reset_password_success": "Mot de passe réinitialisé avec succès. Vous pouvez vous connecter.",
+    "reset_password_error": "Token invalide, expiré ou déjà utilisé. Veuillez refaire une demande.",
+    "reset_password_back": "Refaire une demande"
   },
   "dashboard": {
     "nav": {

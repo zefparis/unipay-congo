@@ -9,6 +9,7 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   const t = useTranslations('auth.login');
+  const tAuth = useTranslations('auth');
   const router = useRouter();
 
   const [email, setEmail] = useState('');
@@ -101,6 +102,13 @@ export default function LoginPage() {
                 {error}
               </div>
             )}
+
+            {/* Forgot password link */}
+            <div className="text-right">
+              <Link href="/forgot-password" className="text-sm text-gray-500 dark:text-text-secondary hover:text-green-deep dark:hover:text-green-deep transition-colors">
+                {tAuth('forgot_password')}
+              </Link>
+            </div>
 
             {/* Submit */}
             <button

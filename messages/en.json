@@ -202,7 +202,24 @@
       "login_link": "Sign in",
       "error": "Error creating account",
       "success": "Account created successfully"
-    }
+    },
+    "forgot_password": "Forgot password?",
+    "forgot_password_title": "Forgot password",
+    "forgot_password_subtitle": "Enter your email address to receive a reset link",
+    "forgot_password_email": "Email address",
+    "forgot_password_submit": "Send link",
+    "forgot_password_loading": "Sending…",
+    "forgot_password_success": "If this account exists, an email with reset instructions has been sent.",
+    "forgot_password_back": "Back to login",
+    "reset_password_title": "New password",
+    "reset_password_subtitle": "Set your new password",
+    "reset_password_new": "New password",
+    "reset_password_confirm": "Confirm password",
+    "reset_password_submit": "Reset",
+    "reset_password_loading": "Resetting…",
+    "reset_password_success": "Password reset successfully. You can now sign in.",
+    "reset_password_error": "Token invalid, expired, or already used. Please request a new one.",
+    "reset_password_back": "Request new link"
   },
   "dashboard": {
     "nav": {
