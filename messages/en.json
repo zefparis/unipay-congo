@@ -512,5 +512,9 @@
     "s_operators": "Operators",
     "s_errors": "Error Codes",
     "s_fees": "Pricing"
+  },
+  "howitworks": {
+    "title": "How it works",
+    "subtitle": "From customer to merchant, in a single integration"
   }
 }

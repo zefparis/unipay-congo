@@ -512,5 +512,9 @@
     "s_operators": "Opérateurs",
     "s_errors": "Codes d'Erreur",
     "s_fees": "Tarification"
+  },
+  "howitworks": {
+    "title": "Comment ça marche",
+    "subtitle": "Du client au marchand, en une seule intégration"
   }
 }
