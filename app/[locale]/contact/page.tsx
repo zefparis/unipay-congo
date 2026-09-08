@@ -17,7 +17,7 @@ export default function ContactPage() {
       icon: Phone,
       label: t('phone_label'),
       value: t('phone'),
-      href: 'tel:+243891023520',
+      href: 'tel:+243844131001',
     },
     {
       icon: Mail,
