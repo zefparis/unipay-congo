@@ -56,6 +56,11 @@ export default function TermsPage() {
       body: t('tarification_body'),
     },
     {
+      id: 'reglement',
+      title: t('reglement_title'),
+      body: t('reglement_body'),
+    },
+    {
       id: 'responsabilite',
       title: t('responsabilite_title'),
       body: t('responsabilite_body'),
