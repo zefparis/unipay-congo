@@ -51,6 +51,18 @@
     "company": "Congo Gaming Limited S.a.r.l",
     "description": "UniPay Congo is operated by Congo Gaming Limited S.a.r.l, duly licensed by the Regulatory Authority for Post and Telecommunications of Congo (ARPTC)."
   },
+  "funds_security": {
+    "badge": "Funds security",
+    "title": "Your funds never pass through UniPay",
+    "subtitle": "UniPay is an ARPTC-licensed payment aggregator, not a funds custodian.",
+    "p1_title": "UniPay is never a funds custodian",
+    "p1_desc": "Every Mobile Money transaction is processed via licensed telecom operators (Orange Money, Airtel Money, Afrimoney). UniPay orchestrates the transaction technically but never holds the funds in an own account.",
+    "p2_title": "UniPay orchestrates, does not custody",
+    "p2_desc": "Our role is limited to technical orchestration: API routing, transmission to the operator, callback reconciliation. No deposit account, no funds custody.",
+    "p3_title": "Dashboard balances = operator-confirmed transactions",
+    "p3_desc": "The balance shown in your dashboard reflects transactions confirmed by the telecom operators — it is not a balance held at UniPay. Settlement is paid from the operator to your Mobile Money number.",
+    "license_note": "UniPay Congo is operated by Congo Gaming Limited S.a.r.l, licensed by ARPTC under number ASVA-ARPTC n°0573/008/Mars/2023. See the Licenses section below."
+  },
   "channels": {
     "title": "Payment channels",
     "subtitle": "All major Mobile Money networks in the DRC in a single unified platform.",

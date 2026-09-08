@@ -2,6 +2,7 @@ import Hero from '@/components/Hero';
 import HowItWorks from '@/components/HowItWorks';
 import Stats from '@/components/Stats';
 import Features from '@/components/Features';
+import FundsSecurity from '@/components/FundsSecurity';
 import LicenseBanner from '@/components/LicenseBanner';
 import Channels from '@/components/Channels';
 import Footer from '@/components/Footer';
@@ -13,6 +14,7 @@ export default function HomePage() {
       <HowItWorks />
       <Stats />
       <Features />
+      <FundsSecurity />
       <LicenseBanner />
       <Channels />
       <Footer />
