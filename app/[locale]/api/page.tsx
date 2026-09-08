@@ -116,6 +116,9 @@ const OPERATORS = [
 ];
 const ERRORS = [
   { code: '400', desc: 'Erreur de validation des champs',  descEn: 'Field validation error' },
+  { code: '400 INVALID_CURRENCY', desc: 'Devise/opérateur incompatible (ex: USDT avec orange, ou CDF avec usdt)', descEn: 'Currency/operator mismatch (e.g. USDT with orange, or CDF with usdt)' },
+  { code: '400 CURRENCY_MISMATCH', desc: 'Callback provider avec une devise différente de la transaction initiale', descEn: 'Provider callback with a currency different from the original transaction' },
+  { code: '400 UNSUPPORTED_CURRENCY', desc: 'Devise hors liste autorisée (CDF, USD, USDT uniquement)', descEn: 'Currency not in allowed list (CDF, USD, USDT only)' },
   { code: '401', desc: 'Identifiants invalides',           descEn: 'Invalid credentials' },
   { code: '403', desc: 'Accès non autorisé',               descEn: 'Unauthorized access' },
   { code: '429', desc: 'Limite dépassée (60 req/min)',     descEn: 'Rate limit exceeded (60 req/min)' },
@@ -130,6 +133,7 @@ const collectCode: CodeEx = {
     "operator": "orange",
     "phone": "+243810000000",
     "amount": 5000,
+    "currency": "CDF",
     "reference": "ORDER-001",
     "direction": "collect"
   }'`,
@@ -143,6 +147,7 @@ const collectCode: CodeEx = {
     operator: 'orange',
     phone: '+243810000000',
     amount: 5000,
+    currency: 'CDF',
     reference: 'ORDER-001',
     direction: 'collect',
   }),
@@ -160,6 +165,7 @@ r = requests.post(
         'operator': 'orange',
         'phone': '+243810000000',
         'amount': 5000,
+        'currency': 'CDF',
         'reference': 'ORDER-001',
         'direction': 'collect',
     }
@@ -175,6 +181,7 @@ const payoutCode: CodeEx = {
     "operator": "airtel",
     "phone": "+243820000000",
     "amount": 10000,
+    "currency": "CDF",
     "reference": "PAYOUT-042",
     "direction": "payout"
   }'`,
@@ -188,6 +195,7 @@ const payoutCode: CodeEx = {
     operator: 'airtel',
     phone: '+243820000000',
     amount: 10000,
+    currency: 'CDF',
     reference: 'PAYOUT-042',
     direction: 'payout',
   }),
@@ -205,6 +213,7 @@ r = requests.post(
         'operator': 'airtel',
         'phone': '+243820000000',
         'amount': 10000,
+        'currency': 'CDF',
         'reference': 'PAYOUT-042',
         'direction': 'payout',
     }
@@ -314,9 +323,10 @@ bearer_headers = {
 };
 
 const paymentParams: Param[] = [
-  { field: 'operator',  type: 'string',  req: true,  desc: 'orange | airtel | afrimoney' },
+  { field: 'operator',  type: 'string',  req: true,  desc: 'orange | airtel | afrimoney | usdt' },
   { field: 'phone',     type: 'string',  req: true,  desc: 'Numéro mobile E.164 (+243…)' },
-  { field: 'amount',    type: 'number',  req: true,  desc: 'Montant en CDF (> 0)' },
+  { field: 'amount',    type: 'number',  req: true,  desc: 'Montant (> 0) dans la devise indiquée par currency' },
+  { field: 'currency',  type: 'string',  req: true,  desc: '"CDF" | "USD" | "USDT" — USDT nécessite operator: "usdt"; les opérateurs Mobile Money (orange/airtel/afrimoney) acceptent CDF ou USD' },
   { field: 'reference', type: 'string',  req: false, desc: 'Référence interne de votre système' },
   { field: 'direction', type: 'string',  req: true,  desc: '"collect" ou "payout"' },
 ];
@@ -631,7 +641,7 @@ ${BASE}/v1/merchant/balance`}</pre>
                 <div className="grid lg:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <p className="text-sm text-gray-600 dark:text-text-secondary leading-relaxed">
-                      {isFr ? 'Retourne le solde total CDF du compte marchand. Requiert un Bearer JWT obtenu via /v1/merchant/login.' : 'Returns the total CDF balance of the merchant account. Requires a Bearer JWT obtained via /v1/merchant/login.'}
+                      {isFr ? 'Retourne le solde du compte marchand, ventilé par devise (CDF, USD, USDT). Requiert un Bearer JWT obtenu via /v1/merchant/login.' : 'Returns the merchant account balance, broken down by currency (CDF, USD, USDT). Requires a Bearer JWT obtained via /v1/merchant/login.'}
                     </p>
                     <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/40 text-xs text-amber-700 dark:text-amber-400">
                       🔐 {isFr ? 'Authentification JWT requise (Authorization: Bearer)' : 'JWT authentication required (Authorization: Bearer)'}
@@ -740,11 +750,11 @@ ${BASE}/v1/merchant/balance`}</pre>
                 <div className="grid sm:grid-cols-3 gap-4">
                   {[
                     { label: isFr ? 'Commission' : 'Fee', value: '5%', sub: isFr ? 'par transaction (TTC)' : 'per transaction (all-in)' },
-                    { label: isFr ? 'Devise' : 'Currency', value: 'CDF', sub: isFr ? 'Franc Congolais' : 'Congolese Franc' },
+                    { label: isFr ? 'Devises' : 'Currencies', value: 'CDF · USD · USDT', sub: isFr ? 'Franc Congolais, Dollar US, Tether' : 'Congolese Franc, US Dollar, Tether' },
                     { label: 'Settlement', value: isFr ? 'À la demande' : 'On demand', sub: isFr ? 'versement sous quelques minutes' : 'paid out within minutes' },
                   ].map(({ label, value, sub }) => (
                     <div key={label} className="p-5 rounded-2xl border border-gray-200 dark:border-text-secondary/15 bg-gray-50/50 dark:bg-navy/60 text-center">
-                      <div className="text-3xl font-serif font-bold text-green-deep mb-1">{value}</div>
+                      <div className="text-2xl sm:text-3xl font-serif font-bold text-green-deep mb-1">{value}</div>
                       <div className="text-sm font-semibold text-gray-800 dark:text-text-primary mb-0.5">{label}</div>
                       <div className="text-xs text-gray-500 dark:text-text-secondary">{sub}</div>
                     </div>
@@ -752,8 +762,8 @@ ${BASE}/v1/merchant/balance`}</pre>
                 </div>
                 <p className="mt-6 text-sm text-gray-500 dark:text-text-secondary leading-relaxed">
                   {isFr
-                    ? 'Les frais de 5% sont prélevés sur chaque transaction (collect et payout). Le net_amount retourné dans la réponse correspond au montant après déduction des frais.'
-                    : 'The 5% fee is deducted from each transaction (collect and payout). The net_amount in the response is the amount after fee deduction.'}
+                    ? 'Les frais de 5% sont prélevés sur chaque transaction (collect et payout), identiquement pour les trois devises (CDF, USD, USDT). Le net_amount retourné dans la réponse correspond au montant après déduction des frais. Les soldes marchands sont tracked séparément par devise — jamais mélangés.'
+                    : 'The 5% fee is deducted from each transaction (collect and payout), identically for all three currencies (CDF, USD, USDT). The net_amount in the response is the amount after fee deduction. Merchant balances are tracked separately per currency — never mixed.'}
                 </p>
               </section>
 
