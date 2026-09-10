@@ -199,9 +199,9 @@ export default function MerchantTransactionsPage() {
                       </td>
                       <td className="px-4 py-3 text-gray-700 dark:text-text-primary">{tx.operator}</td>
                       <td className="px-4 py-3 font-mono text-gray-700 dark:text-text-primary">{tx.phone}</td>
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary">{fmt(tx.amount)}</td>
-                      <td className="px-4 py-3 text-gray-500 dark:text-text-secondary">{fmt(tx.fee)}</td>
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary">{fmt(tx.net_amount)}</td>
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary whitespace-nowrap">{fmt(tx.amount)} <span className="text-gray-400 text-xs font-normal">{tx.currency}</span></td>
+                      <td className="px-4 py-3 text-gray-500 dark:text-text-secondary whitespace-nowrap">{fmt(tx.fee)} <span className="text-gray-400 text-xs">{tx.currency}</span></td>
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary whitespace-nowrap">{fmt(tx.net_amount)} <span className="text-gray-400 text-xs font-normal">{tx.currency}</span></td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status] ?? 'bg-gray-100 text-gray-600')}>
                           {tx.status}
