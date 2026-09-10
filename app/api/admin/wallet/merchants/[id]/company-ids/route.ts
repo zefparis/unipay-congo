@@ -24,7 +24,6 @@ export async function PUT(
   const body = await request.json().catch(() => ({}));
   return adminProxyFetch(`/v1/admin/merchants/${params.id}/company-ids`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body,
   });
 }
