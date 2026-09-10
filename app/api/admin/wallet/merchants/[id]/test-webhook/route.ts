@@ -21,7 +21,7 @@ export async function POST(
     );
   }
 
-  return adminProxyFetch(`/v1/admin/merchants/${params.id}/test-callback`, {
+  return adminProxyFetch(`/v1/admin/merchants/${params.id}/test-webhook`, {
     method: 'POST',
   });
 }

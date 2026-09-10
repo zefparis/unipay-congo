@@ -22,7 +22,7 @@ export async function PUT(
   }
 
   const body = await request.json().catch(() => ({}));
-  return adminProxyFetch(`/v1/admin/merchants/${params.id}/callback-url`, {
+  return adminProxyFetch(`/v1/admin/merchants/${params.id}/webhook-url`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),

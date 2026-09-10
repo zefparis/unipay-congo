@@ -189,7 +189,8 @@ export interface Merchant {
   last_kyc_reminder_count?: number;
   last_kyc_reminder_at?: string | null;
   settlement_phone?: string | null;
-  callback_url?: string | null;
+  webhook_url?: string | null;
+  webhook_secret?: string | null;
 }
 
 export interface MerchantStats {

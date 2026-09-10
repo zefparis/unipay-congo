@@ -92,13 +92,13 @@ export default function MerchantDetailPage() {
   const [statsWindow, setStatsWindow] = useState<'7d' | '30d'>('7d');
   const [statsLoading, setStatsLoading] = useState(false);
 
-  // Callback test state
-  const [callbackUrl, setCallbackUrl] = useState('');
-  const [callbackEditing, setCallbackEditing] = useState(false);
-  const [callbackSaving, setCallbackSaving] = useState(false);
-  const [callbackTesting, setCallbackTesting] = useState(false);
-  const [callbackResult, setCallbackResult] = useState<{ ok: boolean; http_status: number; elapsed_ms: number; body: string; content_type: string | null } | null>(null);
-  const [callbackError, setCallbackError] = useState('');
+  // Webhook test state
+  const [webhookUrl, setWebhookUrl] = useState('');
+  const [webhookEditing, setWebhookEditing] = useState(false);
+  const [webhookSaving, setWebhookSaving] = useState(false);
+  const [webhookTesting, setWebhookTesting] = useState(false);
+  const [webhookResult, setWebhookResult] = useState<{ ok: boolean; http_status: number; elapsed_ms: number; body: string; content_type: string | null; signed: boolean } | null>(null);
+  const [webhookError, setWebhookError] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -110,7 +110,7 @@ export default function MerchantDetailPage() {
       setTransactions(res.transactions);
       setBalances(res.balances ?? []);
       setSettlementRequests(res.settlement_requests ?? []);
-      setCallbackUrl(res.merchant.callback_url ?? '');
+      setWebhookUrl(res.merchant.webhook_url ?? '');
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -241,45 +241,45 @@ export default function MerchantDetailPage() {
     }
   };
 
-  const handleSaveCallbackUrl = async () => {
-    if (!merchant || callbackSaving) return;
-    setCallbackSaving(true);
+  const handleSaveWebhookUrl = async () => {
+    if (!merchant || webhookSaving) return;
+    setWebhookSaving(true);
     try {
-      const res = await fetch(`/api/admin/wallet/merchants/${id}/callback-url`, {
+      const res = await fetch(`/api/admin/wallet/merchants/${id}/webhook-url`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ callback_url: callbackUrl.trim() || null }),
+        body: JSON.stringify({ webhook_url: webhookUrl.trim() || null }),
       });
       if (!res.ok) throw new Error('Échec de la sauvegarde');
       const data = await res.json();
-      setCallbackUrl(data.callback_url ?? '');
-      setMerchant((prev) => prev ? { ...prev, callback_url: data.callback_url } : prev);
-      setCallbackEditing(false);
-      setToast({ msg: 'Callback URL mis à jour', type: 'success' });
+      setWebhookUrl(data.webhook_url ?? '');
+      setMerchant((prev) => prev ? { ...prev, webhook_url: data.webhook_url } : prev);
+      setWebhookEditing(false);
+      setToast({ msg: 'Webhook URL mis à jour', type: 'success' });
     } catch (e) {
       setToast({ msg: (e as Error).message, type: 'error' });
     } finally {
-      setCallbackSaving(false);
+      setWebhookSaving(false);
     }
   };
 
-  const handleTestCallback = async () => {
-    if (!merchant || callbackTesting) return;
-    setCallbackTesting(true);
-    setCallbackResult(null);
-    setCallbackError('');
+  const handleTestWebhook = async () => {
+    if (!merchant || webhookTesting) return;
+    setWebhookTesting(true);
+    setWebhookResult(null);
+    setWebhookError('');
     try {
-      const res = await fetch(`/api/admin/wallet/merchants/${id}/test-callback`, { method: 'POST' });
+      const res = await fetch(`/api/admin/wallet/merchants/${id}/test-webhook`, { method: 'POST' });
       const data = await res.json();
       if (!res.ok) {
-        setCallbackError(data.message ?? data.error ?? 'Échec du test');
+        setWebhookError(data.message ?? data.error ?? 'Échec du test');
       } else {
-        setCallbackResult(data);
+        setWebhookResult(data);
       }
     } catch (e) {
-      setCallbackError((e as Error).message);
+      setWebhookError((e as Error).message);
     } finally {
-      setCallbackTesting(false);
+      setWebhookTesting(false);
     }
   };
 
@@ -815,25 +815,25 @@ export default function MerchantDetailPage() {
         </h2>
         <div className="space-y-3">
           <div>
-            <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">URL de callback</label>
-            {callbackEditing ? (
+            <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">URL de webhook</label>
+            {webhookEditing ? (
               <div className="flex gap-2">
                 <input
                   type="url"
-                  value={callbackUrl}
-                  onChange={(e) => setCallbackUrl(e.target.value)}
+                  value={webhookUrl}
+                  onChange={(e) => setWebhookUrl(e.target.value)}
                   placeholder="https://example.com/webhooks/unipay"
                   className="flex-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/30"
                 />
                 <button
-                  onClick={handleSaveCallbackUrl}
-                  disabled={callbackSaving}
+                  onClick={handleSaveWebhookUrl}
+                  disabled={webhookSaving}
                   className="px-3 py-2 rounded-lg bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-colors disabled:opacity-50"
                 >
-                  {callbackSaving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                  {webhookSaving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
                 </button>
                 <button
-                  onClick={() => { setCallbackEditing(false); setCallbackUrl(merchant?.callback_url ?? ''); }}
+                  onClick={() => { setWebhookEditing(false); setWebhookUrl(merchant?.webhook_url ?? ''); }}
                   className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
                 >
                   <X size={14} />
@@ -842,10 +842,10 @@ export default function MerchantDetailPage() {
             ) : (
               <div className="flex items-center gap-2">
                 <code className="flex-1 bg-gray-50 dark:bg-navy-panel/50 rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-text-primary break-all">
-                  {merchant?.callback_url ?? '—'}
+                  {merchant?.webhook_url ?? '—'}
                 </code>
                 <button
-                  onClick={() => { setCallbackEditing(true); setCallbackUrl(merchant?.callback_url ?? ''); }}
+                  onClick={() => { setWebhookEditing(true); setWebhookUrl(merchant?.webhook_url ?? ''); }}
                   className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors whitespace-nowrap"
                 >
                   Modifier
@@ -854,53 +854,58 @@ export default function MerchantDetailPage() {
             )}
           </div>
 
-          {merchant?.callback_url ? (
+          {merchant?.webhook_url ? (
             <div className="flex items-center gap-2">
               <button
-                onClick={handleTestCallback}
-                disabled={callbackTesting}
+                onClick={handleTestWebhook}
+                disabled={webhookTesting}
                 className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition-colors disabled:opacity-50"
               >
-                  {callbackTesting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                  Tester le callback
+                  {webhookTesting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                  Tester le webhook
                 </button>
               </div>
             ) : (
-              <p className="text-sm text-gray-400">Aucun callback configuré. Cliquez sur « Modifier » pour en ajouter un.</p>
+              <p className="text-sm text-gray-400">Aucun webhook configuré. Cliquez sur « Modifier » pour en ajouter un.</p>
             )}
 
           {/* Test result */}
-          {callbackError && (
+          {webhookError && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-lg p-3 text-sm text-red-600 dark:text-red-400 flex items-start gap-2">
               <AlertCircle size={16} className="flex-shrink-0 mt-0.5" />
-              <span>{callbackError}</span>
+              <span>{webhookError}</span>
             </div>
           )}
-          {callbackResult && (
+          {webhookResult && (
             <div className="bg-gray-50 dark:bg-navy-panel/50 border border-gray-200 dark:border-text-secondary/15 rounded-lg p-3 space-y-2">
               <div className="flex items-center gap-3 flex-wrap text-sm">
                 <span className={clsx(
                   'inline-flex px-2 py-0.5 rounded-full text-xs font-semibold',
-                  callbackResult.ok
+                  webhookResult.ok
                     ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                     : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
                 )}>
-                  HTTP {callbackResult.http_status}
+                  HTTP {webhookResult.http_status}
                 </span>
                 <span className="text-gray-500 dark:text-text-secondary">
-                  Temps de réponse: <span className="font-medium text-gray-900 dark:text-text-primary">{callbackResult.elapsed_ms}ms</span>
+                  Temps de réponse: <span className="font-medium text-gray-900 dark:text-text-primary">{webhookResult.elapsed_ms}ms</span>
                 </span>
-                {callbackResult.content_type && (
+                {webhookResult.signed && (
+                  <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                    Signé HMAC
+                  </span>
+                )}
+                {webhookResult.content_type && (
                   <span className="text-gray-500 dark:text-text-secondary">
-                    Type: <span className="font-mono text-xs">{callbackResult.content_type}</span>
+                    Type: <span className="font-mono text-xs">{webhookResult.content_type}</span>
                   </span>
                 )}
               </div>
-              {callbackResult.body && (
+              {webhookResult.body && (
                 <div>
                   <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Corps de la réponse</div>
                   <pre className="text-xs font-mono text-gray-700 dark:text-text-primary bg-white dark:bg-navy-panel rounded-lg p-2 max-h-48 overflow-auto whitespace-pre-wrap break-all">
-                    {callbackResult.body}
+                    {webhookResult.body}
                   </pre>
                 </div>
               )}
