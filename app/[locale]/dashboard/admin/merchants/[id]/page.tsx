@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import {
   getMerchantDetail, revokeApiKey, regenerateApiKey,
-  suspendMerchant, reactivateMerchant, settleMerchant, getMerchantStatsById,
+  suspendMerchant, reactivateMerchant, settleMerchant, getMerchantStatsById, approveKyc,
   type Merchant, type MerchantApiKey, type MerchantTransaction,
   type MerchantBalance, type SettlementRequest, type MerchantStats as MerchantStatsType,
 } from '@/lib/admin-api';
@@ -293,6 +293,34 @@ export default function MerchantDetailPage() {
       setToast({ msg: (e as Error).message, type: 'error' });
     } finally {
       setCompanyIdsSaving(false);
+    }
+  };
+
+  const handleApproveKyc = async () => {
+    if (!merchant) return;
+    const confirmed = confirm(
+      `Valider le KYC de ${merchant.email} ?\n\n` +
+      `Le marchand passera en mode Live.\n` +
+      (merchant.kyc_submitted_at ? '' : 'KYC soumis le sera renseigné à maintenant (documents reçus par email).\n'),
+    );
+    if (!confirmed) return;
+    setActing('kyc-approve');
+    try {
+      const res = await approveKyc(merchant.id);
+      const m = res.merchant as Partial<Merchant>;
+      setMerchant((prev) => prev ? {
+        ...prev,
+        kyc_status: 'approved',
+        kyc_reviewed_at: m.kyc_reviewed_at ?? new Date().toISOString(),
+        kyc_submitted_at: prev.kyc_submitted_at ?? m.kyc_submitted_at ?? new Date().toISOString(),
+        kyc_notes: null,
+        mode: 'live',
+      } : prev);
+      setToast({ msg: 'KYC validé — marchand passé en Live', type: 'success' });
+    } catch (e) {
+      setToast({ msg: (e as Error).message, type: 'error' });
+    } finally {
+      setActing(null);
     }
   };
 
@@ -731,9 +759,21 @@ export default function MerchantDetailPage() {
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">KYC</div>
-            <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', KYC_STYLES[merchant.kyc_status] ?? 'bg-gray-100 text-gray-600')}>
-              {KYC_LABELS[merchant.kyc_status] ?? merchant.kyc_status}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', KYC_STYLES[merchant.kyc_status] ?? 'bg-gray-100 text-gray-600')}>
+                {KYC_LABELS[merchant.kyc_status] ?? merchant.kyc_status}
+              </span>
+              {merchant.kyc_status !== 'approved' && (
+                <button
+                  onClick={handleApproveKyc}
+                  disabled={acting === 'kyc-approve'}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-green-deep text-white hover:bg-green-deep/85 transition-colors disabled:opacity-50"
+                >
+                  {acting === 'kyc-approve' ? <Loader2 size={10} className="animate-spin" /> : <CheckCircle2 size={10} />}
+                  Valider le KYC
+                </button>
+              )}
+            </div>
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">Statut</div>
