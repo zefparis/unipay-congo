@@ -188,6 +188,7 @@ export interface Merchant {
   api_key_status?: 'none' | 'active' | 'inactive';
   last_kyc_reminder_count?: number;
   last_kyc_reminder_at?: string | null;
+  settlement_phone?: string | null;
 }
 
 export interface MerchantStats {
@@ -225,6 +226,25 @@ export interface MerchantTransaction {
   merchants?: { name: string; email: string }[] | null;
 }
 
+export interface MerchantBalance {
+  currency: string;
+  balance: number;
+  total_credits: number;
+  total_settlements: number;
+}
+
+export interface SettlementRequest {
+  id: string;
+  amount: number;
+  currency: string;
+  phone: string;
+  status: string;
+  provider_ref: string | null;
+  reject_reason: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export function getMerchants(params?: Record<string, string | number>): Promise<{ data: Merchant[]; pagination: Pagination }> {
   if (params && Object.keys(params).length > 0) {
     const qs = new URLSearchParams(
@@ -241,7 +261,7 @@ export function getMerchantStats(): Promise<MerchantStats> {
   return get<MerchantStats>(`${BASE}/merchants/stats`);
 }
 
-export function getMerchantDetail(id: string): Promise<{ merchant: Merchant; api_keys: MerchantApiKey[]; transactions: MerchantTransaction[] }> {
+export function getMerchantDetail(id: string): Promise<{ merchant: Merchant; api_keys: MerchantApiKey[]; transactions: MerchantTransaction[]; balances: MerchantBalance[]; settlement_requests: SettlementRequest[] }> {
   return get(`${BASE}/merchants/${id}`);
 }
 

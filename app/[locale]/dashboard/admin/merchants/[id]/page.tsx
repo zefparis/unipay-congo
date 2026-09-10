@@ -7,11 +7,13 @@ import {
   Building2, ArrowLeft, RefreshCw, KeyRound, Ban, CheckCircle2,
   AlertCircle, Loader2, FlaskConical, Globe, ShieldCheck,
   Copy, Check, Trash2, ArrowDownLeft, ArrowUpRight, Mail, Headset, X, Send, AlertTriangle,
+  Wallet, Banknote,
 } from 'lucide-react';
 import {
   getMerchantDetail, revokeApiKey, regenerateApiKey,
   suspendMerchant, reactivateMerchant,
   type Merchant, type MerchantApiKey, type MerchantTransaction,
+  type MerchantBalance, type SettlementRequest,
 } from '@/lib/admin-api';
 import clsx from 'clsx';
 
@@ -52,6 +54,8 @@ export default function MerchantDetailPage() {
   const [merchant, setMerchant] = useState<Merchant | null>(null);
   const [apiKeys, setApiKeys] = useState<MerchantApiKey[]>([]);
   const [transactions, setTransactions] = useState<MerchantTransaction[]>([]);
+  const [balances, setBalances] = useState<MerchantBalance[]>([]);
+  const [settlementRequests, setSettlementRequests] = useState<SettlementRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [acting, setActing] = useState<string | null>(null);
@@ -83,6 +87,8 @@ export default function MerchantDetailPage() {
       setMerchant(res.merchant);
       setApiKeys(res.api_keys);
       setTransactions(res.transactions);
+      setBalances(res.balances ?? []);
+      setSettlementRequests(res.settlement_requests ?? []);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -311,6 +317,59 @@ export default function MerchantDetailPage() {
         </div>
       </div>
 
+      {/* Balance card */}
+      <div className={clsx(
+        'relative overflow-hidden rounded-2xl p-5 border shadow-sm',
+        'bg-gradient-to-r from-green-deep/10 to-emerald-500/5 border-green-deep/30 dark:border-green-deep/20',
+      )}>
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-green-deep/15">
+            <Wallet size={22} className="text-green-deep" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-green-deep-dark uppercase tracking-wider mb-0.5">Solde dû au marchand</p>
+            <div className="flex items-end gap-4 flex-wrap">
+              {balances.length === 0 ? (
+                <p className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary">—</p>
+              ) : (
+                balances.map((b) => (
+                  <div key={b.currency} className="flex items-baseline gap-1.5">
+                    <span className={clsx(
+                      'text-2xl font-serif font-bold',
+                      b.balance > 0 ? 'text-gray-900 dark:text-text-primary' : 'text-gray-400',
+                    )}>
+                      {fmt(b.balance)}
+                    </span>
+                    <span className="text-sm font-normal text-gray-500 dark:text-text-secondary">{b.currency}</span>
+                  </div>
+                ))
+              )}
+            </div>
+            <p className="text-xs text-gray-500 dark:text-text-secondary mt-0.5">
+              Cumul des crédits moins les règlements déjà payés (ledger entries)
+              {merchant?.settlement_phone && (
+                <> · Règlement via <span className="font-mono">{merchant.settlement_phone}</span></>
+              )}
+            </p>
+          </div>
+        </div>
+        {balances.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 pt-4 border-t border-green-deep/15">
+            {balances.map((b) => (
+              <div key={`detail-${b.currency}`} className="text-xs">
+                <div className="text-gray-400 uppercase tracking-wider mb-0.5">{b.currency}</div>
+                <div className="text-gray-700 dark:text-text-primary">
+                  Crédits: <span className="font-medium">{fmt(b.total_credits)}</span>
+                </div>
+                <div className="text-gray-700 dark:text-text-primary">
+                  Réglé: <span className="font-medium">{fmt(b.total_settlements)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Profile */}
       <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-4">
         <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary flex items-center gap-2">
@@ -532,6 +591,57 @@ export default function MerchantDetailPage() {
                         {tx.status}
                       </span>
                     </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Settlement history */}
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-4">
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary flex items-center gap-2">
+          <Banknote size={16} className="text-amber-500" />
+          Historique des règlements
+        </h2>
+        {settlementRequests.length === 0 ? (
+          <div className="text-sm text-gray-400 text-center py-4">Aucun règlement effectué.</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-text-secondary/15">
+                  {['Date', 'Montant', 'Devise', 'Téléphone', 'Statut', 'Référence provider', 'Motif rejet'].map((h) => (
+                    <th key={h} className="text-left px-3 py-2 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider whitespace-nowrap">
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
+                {settlementRequests.map((s) => (
+                  <tr key={s.id} className="hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors">
+                    <td className="px-3 py-2 text-gray-500 dark:text-text-secondary whitespace-nowrap text-xs">{fmtDate(s.created_at)}</td>
+                    <td className="px-3 py-2 font-medium text-gray-900 dark:text-text-primary">{fmt(s.amount)}</td>
+                    <td className="px-3 py-2">
+                      <span className={clsx(
+                        'inline-flex px-2 py-0.5 rounded-full text-xs font-semibold',
+                        s.currency === 'CDF'
+                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                          : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+                      )}>
+                        {s.currency}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2 font-mono text-gray-700 dark:text-text-primary text-xs">{s.phone}</td>
+                    <td className="px-3 py-2 whitespace-nowrap">
+                      <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[s.status] ?? 'bg-gray-100 text-gray-600')}>
+                        {s.status}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2 font-mono text-gray-500 dark:text-text-secondary text-xs">{s.provider_ref ?? '—'}</td>
+                    <td className="px-3 py-2 text-red-500 dark:text-red-400 text-xs">{s.reject_reason ?? '—'}</td>
                   </tr>
                 ))}
               </tbody>
