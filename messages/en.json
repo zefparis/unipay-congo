@@ -514,7 +514,9 @@
     "coming_soon": "Coming soon",
     "incident_none": "No incidents reported",
     "incident_title": "Recent incidents",
-    "page_info": "This page refreshes automatically every 60 seconds."
+    "page_info": "This page refreshes automatically every 60 seconds.",
+    "preview_banner": "Page under construction",
+    "preview_description": "The statuses shown below are indicative values and do not yet reflect the real-time state of the operators. Integration with live monitoring data is in progress."
   },
   "api_doc": {
     "badge": "API Reference",

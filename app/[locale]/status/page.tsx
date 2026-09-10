@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { RefreshCw, Activity, CheckCircle2, AlertTriangle, XCircle, Clock, type LucideIcon } from 'lucide-react';
+import { RefreshCw, Activity, CheckCircle2, AlertTriangle, XCircle, Clock, Construction, type LucideIcon } from 'lucide-react';
 import Footer from '@/components/Footer';
 
 /* ── types ────────────────────────────────────────────────────── */
@@ -225,6 +225,17 @@ export default function StatusPage() {
   return (
     <>
       <main className="min-h-screen bg-[#E8EBF0] dark:bg-navy pt-16 overflow-x-hidden">
+
+        {/* ── Preview / under-construction banner ─────────────── */}
+        <div className="bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800/40">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-start gap-3">
+            <Construction size={18} className="text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">{t('preview_banner')}</p>
+              <p className="text-xs text-amber-700 dark:text-amber-400/80 mt-0.5">{t('preview_description')}</p>
+            </div>
+          </div>
+        </div>
 
         {/* ── Hero ──────────────────────────────────────────────── */}
         <section className="relative overflow-hidden py-16 lg:py-20 border-b border-gray-200 dark:border-text-secondary/15">

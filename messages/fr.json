@@ -514,7 +514,9 @@
     "coming_soon": "Bientôt disponible",
     "incident_none": "Aucun incident en cours",
     "incident_title": "Incidents récents",
-    "page_info": "Cette page se met à jour automatiquement toutes les 60 secondes."
+    "page_info": "Cette page se met à jour automatiquement toutes les 60 secondes.",
+    "preview_banner": "Page en construction",
+    "preview_description": "Les statuts affichés ci-dessous sont des valeurs indicatives et ne reflètent pas encore l'état réel des opérateurs en temps réel. L'intégration avec les données de supervision live est en cours."
   },
   "api_doc": {
     "badge": "Référence API",
