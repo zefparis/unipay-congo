@@ -512,11 +512,12 @@
     "degraded": "Degraded",
     "down": "Down",
     "coming_soon": "Coming soon",
+    "insufficient_data": "Insufficient data",
+    "unavailable": "Status unavailable",
     "incident_none": "No incidents reported",
+    "incident_active": "Active incident — see operator details",
     "incident_title": "Recent incidents",
-    "page_info": "This page refreshes automatically every 60 seconds.",
-    "preview_banner": "Page under construction",
-    "preview_description": "The statuses shown below are indicative values and do not yet reflect the real-time state of the operators. Integration with live monitoring data is in progress."
+    "page_info": "This page refreshes automatically every 60 seconds."
   },
   "api_doc": {
     "badge": "API Reference",

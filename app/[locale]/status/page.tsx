@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { RefreshCw, Activity, CheckCircle2, AlertTriangle, XCircle, Clock, Construction, type LucideIcon } from 'lucide-react';
+import { RefreshCw, Activity, CheckCircle2, AlertTriangle, XCircle, Clock, type LucideIcon } from 'lucide-react';
 import Footer from '@/components/Footer';
 
 /* ── types ────────────────────────────────────────────────────── */
-type OperatorStatus = 'operational' | 'degraded' | 'down' | 'coming_soon';
+type OperatorStatus = 'operational' | 'degraded' | 'down' | 'insufficient_data';
 
 interface Operator {
   id: string;
@@ -14,45 +14,41 @@ interface Operator {
   color: string;
   bgColor: string;
   status: OperatorStatus;
-  uptime: string;
-  latency: string;
+  successRatePct: number | null;
+  totalAttempts: number;
+  successCount: number;
+  failedCount: number;
+  processingCount: number;
+  providerOutageFailures: number;
+  avgLatencyMs: number | null;
+  lastIncidentAt: string | null;
   description: string;
 }
 
-/* ── static data (hardcoded, replace with API fetch when ready) ─ */
-const OPERATORS: Operator[] = [
-  {
-    id: 'orange',
-    name: 'Orange Money',
-    color: '#FF7900',
-    bgColor: 'rgba(255,121,0,0.12)',
-    status: 'operational',
-    uptime: '99.9%',
-    latency: '1.2s',
-    description: 'Orange Money RDC',
-  },
-  {
-    id: 'airtel',
-    name: 'Airtel Money',
-    color: '#E40000',
-    bgColor: 'rgba(228,0,0,0.10)',
-    status: 'operational',
-    uptime: '99.8%',
-    latency: '1.4s',
-    description: 'Airtel Money RDC',
-  },
-  {
-    id: 'afrimoney',
-    name: 'Afrimoney',
-    color: '#0057A8',
-    bgColor: 'rgba(0,87,168,0.10)',
-    status: 'operational',
-    uptime: '99.7%',
-    latency: '1.6s',
-    description: 'Afrimoney RDC',
-  },
-];
+interface ApiOperator {
+  operator: string;
+  name: string;
+  status: OperatorStatus;
+  success_rate_pct: number | null;
+  total_attempts_24h: number;
+  success_count: number;
+  failed_count: number;
+  processing_count: number;
+  provider_outage_failures_24h: number;
+  avg_latency_ms: number | null;
+  last_incident_at: string | null;
+}
 
+/* ── operator visual config (static — colors don't change) ────── */
+const OPERATOR_VISUAL: Record<string, { color: string; bgColor: string; description: string }> = {
+  orange:    { color: '#FF7900', bgColor: 'rgba(255,121,0,0.12)', description: 'Orange Money RDC' },
+  airtel:    { color: '#E40000', bgColor: 'rgba(228,0,0,0.10)',  description: 'Airtel Money RDC' },
+  afrimoney: { color: '#0057A8', bgColor: 'rgba(0,87,168,0.10)', description: 'Afrimoney RDC' },
+};
+
+const OPERATOR_ORDER = ['orange', 'airtel', 'afrimoney'];
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://unipay-api.onrender.com';
 const AUTO_REFRESH_SECONDS = 60;
 
 /* ── status config ────────────────────────────────────────────── */
@@ -80,7 +76,7 @@ const STATUS_CONFIG: Record<OperatorStatus, {
     badge: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800/40',
     text: 'text-red-600 dark:text-red-400',
   },
-  coming_soon: {
+  insufficient_data: {
     icon: Clock,
     dot: 'bg-gray-400',
     badge: 'bg-gray-100 dark:bg-navy-panel text-gray-600 dark:text-text-secondary border-gray-200 dark:border-text-secondary/20',
@@ -92,7 +88,7 @@ const STATUS_EMOJI: Record<OperatorStatus, string> = {
   operational: '✅',
   degraded: '⚠️',
   down: '❌',
-  coming_soon: '🔜',
+  insufficient_data: '⏳',
 };
 
 /* ── helpers ──────────────────────────────────────────────────── */
@@ -100,10 +96,36 @@ function formatTime(d: Date): string {
   return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
 
+function formatLatency(ms: number | null): string {
+  if (ms === null) return '—';
+  if (ms < 1000) return `${ms}ms`;
+  return `${(ms / 1000).toFixed(1)}s`;
+}
+
+function formatSuccessRate(pct: number | null): string {
+  if (pct === null) return '—';
+  return `${pct}%`;
+}
+
+function formatIncidentTime(iso: string | null): string {
+  if (!iso) return '—';
+  try {
+    const d = new Date(iso);
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffMin = Math.floor(diffMs / 60000);
+    if (diffMin < 60) return `il y a ${diffMin} min`;
+    const diffH = Math.floor(diffMin / 60);
+    if (diffH < 24) return `il y a ${diffH}h`;
+    return d.toLocaleDateString();
+  } catch {
+    return '—';
+  }
+}
+
 /* ── UptimeBar ────────────────────────────────────────────────── */
-function UptimeBar({ uptime }: { uptime: string }) {
-  if (uptime === '—') return <span className="text-sm text-gray-400">—</span>;
-  const pct = parseFloat(uptime);
+function UptimeBar({ pct }: { pct: number | null }) {
+  if (pct === null) return <span className="text-sm text-gray-400">—</span>;
   return (
     <div className="flex items-center gap-2">
       <div className="flex gap-0.5">
@@ -114,7 +136,7 @@ function UptimeBar({ uptime }: { uptime: string }) {
           />
         ))}
       </div>
-      <span className="text-xs font-semibold text-gray-700 dark:text-text-primary w-12 flex-shrink-0">{uptime}</span>
+      <span className="text-xs font-semibold text-gray-700 dark:text-text-primary w-12 flex-shrink-0">{pct}%</span>
     </div>
   );
 }
@@ -153,34 +175,40 @@ function OperatorCard({ op, tLabel }: { op: Operator; tLabel: (k: OperatorStatus
           </span>
         </div>
 
-        {/* Uptime bar */}
-        {op.status !== 'coming_soon' && (
-          <div className="mb-3">
-            <UptimeBar uptime={op.uptime} />
-          </div>
-        )}
+        {/* Success rate bar (24h) */}
+        <div className="mb-3">
+          <UptimeBar pct={op.successRatePct} />
+        </div>
 
         {/* Stats row */}
         <div className="flex items-center gap-4 pt-3 border-t border-gray-100 dark:border-text-secondary/15">
           <div>
-            <p className="text-xs text-gray-400 dark:text-text-secondary/70">Uptime 30j</p>
-            <p className="text-sm font-semibold text-gray-800 dark:text-text-primary font-mono">{op.uptime}</p>
+            <p className="text-xs text-gray-400 dark:text-text-secondary/70">Taux succès 24h</p>
+            <p className="text-sm font-semibold text-gray-800 dark:text-text-primary font-mono">{formatSuccessRate(op.successRatePct)}</p>
           </div>
           <div className="w-px h-8 bg-gray-100 dark:bg-navy-panel" />
           <div>
-            <p className="text-xs text-gray-400 dark:text-text-secondary/70">Latence</p>
-            <p className="text-sm font-semibold text-gray-800 dark:text-text-primary font-mono">{op.latency}</p>
+            <p className="text-xs text-gray-400 dark:text-text-secondary/70">Latence moy.</p>
+            <p className="text-sm font-semibold text-gray-800 dark:text-text-primary font-mono">{formatLatency(op.avgLatencyMs)}</p>
           </div>
-          {op.status !== 'coming_soon' && (
-            <>
-              <div className="w-px h-8 bg-gray-100 dark:bg-navy-panel" />
-              <div className="flex items-center gap-1.5">
-                <span className={`w-2 h-2 rounded-full flex-shrink-0 ${cfg.dot} ${op.status === 'operational' ? 'animate-pulse' : ''}`} />
-                <span className={`text-xs font-medium ${cfg.text}`}>Live</span>
-              </div>
-            </>
-          )}
+          <div className="w-px h-8 bg-gray-100 dark:bg-navy-panel" />
+          <div>
+            <p className="text-xs text-gray-400 dark:text-text-secondary/70">Tentatives 24h</p>
+            <p className="text-sm font-semibold text-gray-800 dark:text-text-primary font-mono">{op.totalAttempts}</p>
+          </div>
         </div>
+
+        {/* Last incident */}
+        {op.lastIncidentAt && (
+          <div className="mt-3 pt-3 border-t border-gray-100 dark:border-text-secondary/15">
+            <p className="text-xs text-gray-400 dark:text-text-secondary/70">
+              Dernier incident : <span className="text-red-500 dark:text-red-400 font-medium">{formatIncidentTime(op.lastIncidentAt)}</span>
+              {op.providerOutageFailures > 0 && (
+                <span className="ml-2 text-amber-600 dark:text-amber-400">({op.providerOutageFailures} panne(s) provider 24h)</span>
+              )}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -190,52 +218,79 @@ function OperatorCard({ op, tLabel }: { op: Operator; tLabel: (k: OperatorStatus
 export default function StatusPage() {
   const t = useTranslations('status');
 
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [operators, setOperators] = useState<Operator[]>([]);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [countdown, setCountdown] = useState(AUTO_REFRESH_SECONDS);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const refresh = useCallback(() => {
+  const fetchStatus = useCallback(async () => {
     setIsRefreshing(true);
-    setTimeout(() => {
+    setError(null);
+    try {
+      const res = await fetch(`${API_URL}/status/operators`, {
+        headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(10000),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json() as { operators: ApiOperator[] };
+
+      const mapped: Operator[] = OPERATOR_ORDER.map((id) => {
+        const apiOp = data.operators.find((o) => o.operator === id);
+        const visual = OPERATOR_VISUAL[id];
+        return {
+          id,
+          name: apiOp?.name ?? visual.description,
+          color: visual.color,
+          bgColor: visual.bgColor,
+          description: visual.description,
+          status: apiOp?.status ?? 'insufficient_data',
+          successRatePct: apiOp?.success_rate_pct ?? null,
+          totalAttempts: apiOp?.total_attempts_24h ?? 0,
+          successCount: apiOp?.success_count ?? 0,
+          failedCount: apiOp?.failed_count ?? 0,
+          processingCount: apiOp?.processing_count ?? 0,
+          providerOutageFailures: apiOp?.provider_outage_failures_24h ?? 0,
+          avgLatencyMs: apiOp?.avg_latency_ms ?? null,
+          lastIncidentAt: apiOp?.last_incident_at ?? null,
+        };
+      });
+
+      setOperators(mapped);
       setLastUpdated(new Date());
       setCountdown(AUTO_REFRESH_SECONDS);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Fetch failed');
+    } finally {
       setIsRefreshing(false);
-    }, 600);
+    }
   }, []);
 
-  /* Auto-refresh countdown */
+  /* Initial fetch + auto-refresh countdown */
   useEffect(() => {
+    void fetchStatus();
+
     const interval = setInterval(() => {
       setCountdown((c) => {
         if (c <= 1) {
-          refresh();
+          void fetchStatus();
           return AUTO_REFRESH_SECONDS;
         }
         return c - 1;
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [refresh]);
+  }, [fetchStatus]);
 
   const tLabel = (s: OperatorStatus) => t(s as Parameters<typeof t>[0]);
 
-  const activeOps = OPERATORS.filter((o) => o.status !== 'coming_soon');
-  const allOk = activeOps.every((o) => o.status === 'operational');
+  const activeOps = operators.filter((o) => o.status !== 'insufficient_data');
+  const allOk = activeOps.length > 0 && activeOps.every((o) => o.status === 'operational');
+  const hasIssues = activeOps.some((o) => o.status === 'down' || o.status === 'degraded');
 
   return (
     <>
       <main className="min-h-screen bg-[#E8EBF0] dark:bg-navy pt-16 overflow-x-hidden">
-
-        {/* ── Preview / under-construction banner ─────────────── */}
-        <div className="bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800/40">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-start gap-3">
-            <Construction size={18} className="text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">{t('preview_banner')}</p>
-              <p className="text-xs text-amber-700 dark:text-amber-400/80 mt-0.5">{t('preview_description')}</p>
-            </div>
-          </div>
-        </div>
 
         {/* ── Hero ──────────────────────────────────────────────── */}
         <section className="relative overflow-hidden py-16 lg:py-20 border-b border-gray-200 dark:border-text-secondary/15">
@@ -259,13 +314,30 @@ export default function StatusPage() {
 
               {/* Overall status pill */}
               <div className={`flex-shrink-0 self-start lg:self-auto flex items-center gap-3 px-5 py-3.5 rounded-2xl border ${
-                allOk
-                  ? 'bg-emerald-50 dark:bg-emerald-900/15 border-emerald-200 dark:border-emerald-800/40'
-                  : 'bg-amber-50 dark:bg-amber-900/15 border-amber-200 dark:border-amber-800/40'
+                error
+                  ? 'bg-gray-50 dark:bg-gray-900/15 border-gray-200 dark:border-gray-700/40'
+                  : hasIssues
+                    ? 'bg-red-50 dark:bg-red-900/15 border-red-200 dark:border-red-800/40'
+                    : allOk
+                      ? 'bg-emerald-50 dark:bg-emerald-900/15 border-emerald-200 dark:border-emerald-800/40'
+                      : 'bg-amber-50 dark:bg-amber-900/15 border-amber-200 dark:border-amber-800/40'
               }`}>
-                <span className={`w-3 h-3 rounded-full flex-shrink-0 ${allOk ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500 animate-pulse'}`} />
-                <span className={`text-sm font-semibold ${allOk ? 'text-emerald-700 dark:text-emerald-400' : 'text-amber-700 dark:text-amber-400'}`}>
-                  {allOk ? t('all_operational') : t('some_issues')}
+                <span className={`w-3 h-3 rounded-full flex-shrink-0 ${
+                  error ? 'bg-gray-400' : hasIssues ? 'bg-red-500 animate-pulse' : allOk ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500 animate-pulse'
+                }`} />
+                <span className={`text-sm font-semibold ${
+                  error ? 'text-gray-600 dark:text-gray-400'
+                    : hasIssues ? 'text-red-700 dark:text-red-400'
+                      : allOk ? 'text-emerald-700 dark:text-emerald-400'
+                        : 'text-amber-700 dark:text-amber-400'
+                }`}>
+                  {error
+                    ? t('unavailable')
+                    : hasIssues
+                      ? t('some_issues')
+                      : allOk
+                        ? t('all_operational')
+                        : t('some_issues')}
                 </span>
               </div>
             </div>
@@ -276,12 +348,20 @@ export default function StatusPage() {
         <div className="sticky top-16 z-20 bg-white/90 dark:bg-navy/90 backdrop-blur-md border-b border-gray-200 dark:border-text-secondary/15">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-3">
             <span className="text-xs text-gray-500 dark:text-text-secondary min-w-0">
-              <span className="hidden sm:inline">{t('last_updated')}: </span>
-              <span className="font-mono font-medium text-gray-700 dark:text-text-primary">{formatTime(lastUpdated)}</span>
-              <span className="ml-2 text-gray-400">· <span className="font-mono font-medium text-green-deep">{countdown}s</span></span>
+              {error ? (
+                <span className="text-red-500 dark:text-red-400 font-medium">{t('unavailable')}</span>
+              ) : lastUpdated ? (
+                <>
+                  <span className="hidden sm:inline">{t('last_updated')}: </span>
+                  <span className="font-mono font-medium text-gray-700 dark:text-text-primary">{formatTime(lastUpdated)}</span>
+                  <span className="ml-2 text-gray-400">· <span className="font-mono font-medium text-green-deep">{countdown}s</span></span>
+                </>
+              ) : (
+                <span className="text-gray-400">Chargement…</span>
+              )}
             </span>
             <button
-              onClick={refresh}
+              onClick={() => void fetchStatus()}
               disabled={isRefreshing}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-text-secondary hover:text-green-deep hover:bg-green-deep/10 transition-colors disabled:opacity-50"
             >
@@ -301,11 +381,24 @@ export default function StatusPage() {
 
         {/* ── Operator cards ────────────────────────────────────── */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 ${isRefreshing ? 'opacity-50 transition-opacity' : 'opacity-100 transition-opacity duration-300'}`}>
-            {OPERATORS.map((op) => (
-              <OperatorCard key={op.id} op={op} tLabel={tLabel} />
-            ))}
-          </div>
+          {error && operators.length === 0 ? (
+            <div className="flex flex-col items-center gap-3 py-16 text-center">
+              <XCircle size={32} className="text-red-400" />
+              <p className="text-sm font-medium text-gray-600 dark:text-text-secondary">{t('unavailable')}</p>
+              <button
+                onClick={() => void fetchStatus()}
+                className="mt-2 px-4 py-2 rounded-lg text-xs font-medium text-green-deep border border-green-deep/30 hover:bg-green-deep/10 transition-colors"
+              >
+                {t('refresh')}
+              </button>
+            </div>
+          ) : (
+            <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 ${isRefreshing ? 'opacity-50 transition-opacity' : 'opacity-100 transition-opacity duration-300'}`}>
+              {operators.map((op) => (
+                <OperatorCard key={op.id} op={op} tLabel={tLabel} />
+              ))}
+            </div>
+          )}
         </section>
 
         {/* ── Status table (summary) ────────────────────────────── */}
@@ -315,8 +408,17 @@ export default function StatusPage() {
               <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary">{t('incident_title')}</h2>
             </div>
             <div className="px-5 py-8 flex flex-col items-center gap-2 text-center">
-              <CheckCircle2 size={28} className="text-emerald-500" />
-              <p className="text-sm font-medium text-gray-700 dark:text-text-primary">{t('incident_none')}</p>
+              {hasIssues ? (
+                <>
+                  <AlertTriangle size={28} className="text-amber-500" />
+                  <p className="text-sm font-medium text-gray-700 dark:text-text-primary">{t('incident_active')}</p>
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 size={28} className="text-emerald-500" />
+                  <p className="text-sm font-medium text-gray-700 dark:text-text-primary">{t('incident_none')}</p>
+                </>
+              )}
             </div>
           </div>
         </section>

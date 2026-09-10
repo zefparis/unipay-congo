@@ -512,11 +512,12 @@
     "degraded": "Dégradé",
     "down": "Hors service",
     "coming_soon": "Bientôt disponible",
+    "insufficient_data": "Données insuffisantes",
+    "unavailable": "Statut indisponible",
     "incident_none": "Aucun incident en cours",
+    "incident_active": "Incident en cours — voir les détails par opérateur",
     "incident_title": "Incidents récents",
-    "page_info": "Cette page se met à jour automatiquement toutes les 60 secondes.",
-    "preview_banner": "Page en construction",
-    "preview_description": "Les statuts affichés ci-dessous sont des valeurs indicatives et ne reflètent pas encore l'état réel des opérateurs en temps réel. L'intégration avec les données de supervision live est en cours."
+    "page_info": "Cette page se met à jour automatiquement toutes les 60 secondes."
   },
   "api_doc": {
     "badge": "Référence API",
