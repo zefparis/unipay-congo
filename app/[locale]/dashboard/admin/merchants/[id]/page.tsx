@@ -100,6 +100,12 @@ export default function MerchantDetailPage() {
   const [webhookResult, setWebhookResult] = useState<{ ok: boolean; http_status: number; elapsed_ms: number; body: string; content_type: string | null; signed: boolean } | null>(null);
   const [webhookError, setWebhookError] = useState('');
 
+  // Company IDs (RCCM / ID Nat.) manual edit state
+  const [companyIdsEditing, setCompanyIdsEditing] = useState(false);
+  const [companyIdsSaving, setCompanyIdsSaving] = useState(false);
+  const [editRccm, setEditRccm] = useState('');
+  const [editIdnat, setEditIdnat] = useState('');
+
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
@@ -260,6 +266,33 @@ export default function MerchantDetailPage() {
       setToast({ msg: (e as Error).message, type: 'error' });
     } finally {
       setWebhookSaving(false);
+    }
+  };
+
+  const handleSaveCompanyIds = async () => {
+    if (!merchant || companyIdsSaving) return;
+    setCompanyIdsSaving(true);
+    try {
+      const res = await fetch(`/api/admin/wallet/merchants/${id}/company-ids`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company_rccm: editRccm.trim() || null,
+          company_idnat: editIdnat.trim() || null,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({})) as { error?: string };
+        throw new Error(err.error ?? 'Échec de la sauvegarde');
+      }
+      const data = await res.json() as { company_rccm: string | null; company_idnat: string | null };
+      setMerchant((prev) => prev ? { ...prev, company_rccm: data.company_rccm, company_idnat: data.company_idnat } : prev);
+      setCompanyIdsEditing(false);
+      setToast({ msg: 'RCCM / ID Nat. mis à jour', type: 'success' });
+    } catch (e) {
+      setToast({ msg: (e as Error).message, type: 'error' });
+    } finally {
+      setCompanyIdsSaving(false);
     }
   };
 
@@ -631,6 +664,18 @@ export default function MerchantDetailPage() {
         <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary flex items-center gap-2">
           <Building2 size={16} className="text-blue-500" />
           Profil
+          {!companyIdsEditing && (
+            <button
+              onClick={() => {
+                setEditRccm(merchant.company_rccm ?? '');
+                setEditIdnat(merchant.company_idnat ?? '');
+                setCompanyIdsEditing(true);
+              }}
+              className="ml-auto px-2.5 py-1 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-xs text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
+            >
+              Modifier RCCM / ID Nat.
+            </button>
+          )}
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
           <div>
@@ -651,11 +696,29 @@ export default function MerchantDetailPage() {
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">RCCM</div>
-            <div className="text-gray-900 dark:text-text-primary font-medium">{merchant.company_rccm ?? '—'}</div>
+            {companyIdsEditing ? (
+              <input
+                value={editRccm}
+                onChange={(e) => setEditRccm(e.target.value)}
+                placeholder="CD/KIN/RCCM/XX-X-XXXX"
+                className="mt-0.5 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/30"
+              />
+            ) : (
+              <div className="text-gray-900 dark:text-text-primary font-medium">{merchant.company_rccm ?? '—'}</div>
+            )}
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">ID Nat.</div>
-            <div className="text-gray-900 dark:text-text-primary font-medium">{merchant.company_idnat ?? '—'}</div>
+            {companyIdsEditing ? (
+              <input
+                value={editIdnat}
+                onChange={(e) => setEditIdnat(e.target.value)}
+                placeholder="XX-XX-XXXXXXX"
+                className="mt-0.5 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/30"
+              />
+            ) : (
+              <div className="text-gray-900 dark:text-text-primary font-medium">{merchant.company_idnat ?? '—'}</div>
+            )}
           </div>
           <div>
             <div className="text-xs text-gray-400 uppercase tracking-wider">Mode</div>
@@ -693,6 +756,25 @@ export default function MerchantDetailPage() {
             <div className="text-gray-900 dark:text-text-primary font-medium">{fmtDate(merchant.kyc_reviewed_at)}</div>
           </div>
         </div>
+        {companyIdsEditing && (
+          <div className="flex gap-2">
+            <button
+              onClick={handleSaveCompanyIds}
+              disabled={companyIdsSaving}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-colors disabled:opacity-50"
+            >
+              {companyIdsSaving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+              Enregistrer
+            </button>
+            <button
+              onClick={() => setCompanyIdsEditing(false)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
+            >
+              <X size={14} />
+              Annuler
+            </button>
+          </div>
+        )}
         {merchant.kyc_notes && (
           <div className="text-sm">
             <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Notes KYC</div>
