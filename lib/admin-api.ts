@@ -189,6 +189,7 @@ export interface Merchant {
   last_kyc_reminder_count?: number;
   last_kyc_reminder_at?: string | null;
   settlement_phone?: string | null;
+  callback_url?: string | null;
 }
 
 export interface MerchantStats {
@@ -288,6 +289,58 @@ export function suspendMerchant(id: string): Promise<{ ok: boolean; merchant: Me
 
 export function reactivateMerchant(id: string): Promise<{ ok: boolean; merchant: Merchant }> {
   return post(`${BASE}/merchants/${id}/reactivate`);
+}
+
+export interface SettlementResult {
+  request_id: string;
+  status: string;
+  amount: number;
+  currency: string;
+  provider_ref?: string;
+  balance_after?: number;
+  auto_payout?: boolean;
+  idempotent?: boolean;
+  error?: string;
+  message?: string;
+}
+
+export function settleMerchant(
+  id: string,
+  body: { amount?: number; currency?: string; phone?: string; operator?: string },
+): Promise<SettlementResult> {
+  return post(`${BASE}/merchants/${id}/settle`, body);
+}
+
+export interface MerchantStatsOperator {
+  operator: string;
+  total_attempts: number;
+  success_count: number;
+  failed_count: number;
+  processing_count: number;
+  provider_outage_failures: number;
+  client_error_failures: number;
+  success_rate_pct: number | null;
+}
+
+export interface MerchantStats {
+  window: string;
+  window_days: number;
+  totals: {
+    total_attempts: number;
+    success_count: number;
+    failed_count: number;
+    processing_count: number;
+    provider_outage_failures: number;
+    client_error_failures: number;
+    success_rate_pct: number | null;
+  };
+  operators: MerchantStatsOperator[];
+}
+
+export async function getMerchantStatsById(id: string, window: '7d' | '30d' = '7d'): Promise<MerchantStats> {
+  const res = await fetch(`/api/admin/wallet/merchants/${id}/stats?window=${window}`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Stats fetch failed: ${res.status}`);
+  return res.json();
 }
 
 export function setMerchantMode(id: string, mode: 'sandbox' | 'live'): Promise<{ ok: boolean; merchant: Merchant }> {

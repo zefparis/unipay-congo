@@ -7,13 +7,13 @@ import {
   Building2, ArrowLeft, RefreshCw, KeyRound, Ban, CheckCircle2,
   AlertCircle, Loader2, FlaskConical, Globe, ShieldCheck,
   Copy, Check, Trash2, ArrowDownLeft, ArrowUpRight, Mail, Headset, X, Send, AlertTriangle,
-  Wallet, Banknote,
+  Wallet, Banknote, Coins, Activity,
 } from 'lucide-react';
 import {
   getMerchantDetail, revokeApiKey, regenerateApiKey,
-  suspendMerchant, reactivateMerchant,
+  suspendMerchant, reactivateMerchant, settleMerchant, getMerchantStatsById,
   type Merchant, type MerchantApiKey, type MerchantTransaction,
-  type MerchantBalance, type SettlementRequest,
+  type MerchantBalance, type SettlementRequest, type MerchantStats as MerchantStatsType,
 } from '@/lib/admin-api';
 import clsx from 'clsx';
 
@@ -79,6 +79,27 @@ export default function MerchantDetailPage() {
   const [activeConvId, setActiveConvId] = useState<string | null>(null);
   const [supportLoading, setSupportLoading] = useState(false);
 
+  // Settlement modal state
+  const [settleModalOpen, setSettleModalOpen] = useState(false);
+  const [settleCurrency, setSettleCurrency] = useState('CDF');
+  const [settleAmount, setSettleAmount] = useState('');
+  const [settlePhone, setSettlePhone] = useState('');
+  const [settleOperator, setSettleOperator] = useState('orange');
+  const [settling, setSettling] = useState(false);
+
+  // Stats state
+  const [stats, setStats] = useState<MerchantStatsType | null>(null);
+  const [statsWindow, setStatsWindow] = useState<'7d' | '30d'>('7d');
+  const [statsLoading, setStatsLoading] = useState(false);
+
+  // Callback test state
+  const [callbackUrl, setCallbackUrl] = useState('');
+  const [callbackEditing, setCallbackEditing] = useState(false);
+  const [callbackSaving, setCallbackSaving] = useState(false);
+  const [callbackTesting, setCallbackTesting] = useState(false);
+  const [callbackResult, setCallbackResult] = useState<{ ok: boolean; http_status: number; elapsed_ms: number; body: string; content_type: string | null } | null>(null);
+  const [callbackError, setCallbackError] = useState('');
+
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
@@ -89,6 +110,7 @@ export default function MerchantDetailPage() {
       setTransactions(res.transactions);
       setBalances(res.balances ?? []);
       setSettlementRequests(res.settlement_requests ?? []);
+      setCallbackUrl(res.merchant.callback_url ?? '');
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -97,6 +119,20 @@ export default function MerchantDetailPage() {
   }, [id]);
 
   useEffect(() => { void load(); }, [load]);
+
+  const loadStats = useCallback(async () => {
+    setStatsLoading(true);
+    try {
+      const s = await getMerchantStatsById(id, statsWindow);
+      setStats(s);
+    } catch (e) {
+      console.error('[stats] fetch error:', e);
+    } finally {
+      setStatsLoading(false);
+    }
+  }, [id, statsWindow]);
+
+  useEffect(() => { void loadStats(); }, [loadStats]);
 
   const handleRevoke = async (keyId: string) => {
     if (!merchant) return;
@@ -154,6 +190,97 @@ export default function MerchantDetailPage() {
     navigator.clipboard.writeText(newKey);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const openSettleModal = (currency: string, balance: number) => {
+    setSettleCurrency(currency);
+    setSettleAmount(String(Math.round(balance * 100) / 100));
+    setSettlePhone(merchant?.settlement_phone ?? '');
+    setSettleOperator('orange');
+    setSettleModalOpen(true);
+  };
+
+  const handleSettle = async () => {
+    if (!merchant || settling) return;
+    const amount = parseFloat(settleAmount);
+    if (isNaN(amount) || amount <= 0) {
+      setToast({ msg: 'Montant invalide', type: 'error' });
+      return;
+    }
+    if (!settlePhone.trim()) {
+      setToast({ msg: 'Téléphone de règlement requis', type: 'error' });
+      return;
+    }
+    setSettling(true);
+    try {
+      const res = await settleMerchant(merchant.id, {
+        amount,
+        currency: settleCurrency,
+        phone: settlePhone.trim(),
+        operator: settleOperator,
+      });
+      if (res.error) {
+        setToast({ msg: res.message ?? res.error, type: 'error' });
+      } else if (res.status === 'success') {
+        setToast({ msg: `Règlement de ${fmt(res.amount)} ${res.currency} effectué avec succès`, type: 'success' });
+        setSettleModalOpen(false);
+        void load();
+      } else if (res.status === 'pending_admin_review') {
+        setToast({ msg: `Règlement de ${fmt(res.amount)} ${res.currency} créé — en attente de validation admin`, type: 'success' });
+        setSettleModalOpen(false);
+        void load();
+      } else {
+        setToast({ msg: `Statut: ${res.status}`, type: 'success' });
+        setSettleModalOpen(false);
+        void load();
+      }
+    } catch (e) {
+      setToast({ msg: (e as Error).message, type: 'error' });
+    } finally {
+      setSettling(false);
+    }
+  };
+
+  const handleSaveCallbackUrl = async () => {
+    if (!merchant || callbackSaving) return;
+    setCallbackSaving(true);
+    try {
+      const res = await fetch(`/api/admin/wallet/merchants/${id}/callback-url`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ callback_url: callbackUrl.trim() || null }),
+      });
+      if (!res.ok) throw new Error('Échec de la sauvegarde');
+      const data = await res.json();
+      setCallbackUrl(data.callback_url ?? '');
+      setMerchant((prev) => prev ? { ...prev, callback_url: data.callback_url } : prev);
+      setCallbackEditing(false);
+      setToast({ msg: 'Callback URL mis à jour', type: 'success' });
+    } catch (e) {
+      setToast({ msg: (e as Error).message, type: 'error' });
+    } finally {
+      setCallbackSaving(false);
+    }
+  };
+
+  const handleTestCallback = async () => {
+    if (!merchant || callbackTesting) return;
+    setCallbackTesting(true);
+    setCallbackResult(null);
+    setCallbackError('');
+    try {
+      const res = await fetch(`/api/admin/wallet/merchants/${id}/test-callback`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) {
+        setCallbackError(data.message ?? data.error ?? 'Échec du test');
+      } else {
+        setCallbackResult(data);
+      }
+    } catch (e) {
+      setCallbackError((e as Error).message);
+    } finally {
+      setCallbackTesting(false);
+    }
   };
 
   const openEmailModal = async () => {
@@ -368,6 +495,135 @@ export default function MerchantDetailPage() {
             ))}
           </div>
         )}
+        {balances.some((b) => b.balance > 0) && (
+          <div className="flex gap-2 mt-4 pt-4 border-t border-green-deep/15">
+            {balances.filter((b) => b.balance > 0).map((b) => (
+              <button
+                key={`settle-${b.currency}`}
+                onClick={() => openSettleModal(b.currency, b.balance)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-colors"
+              >
+                <Coins size={14} />
+                Régler {b.currency}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Stats card — success/failure per operator */}
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary flex items-center gap-2">
+            <Activity size={16} className="text-purple-500" />
+            Taux de succès par opérateur
+          </h2>
+          <div className="flex items-center gap-2">
+            <select
+              value={statsWindow}
+              onChange={(e) => setStatsWindow(e.target.value as '7d' | '30d')}
+              className="px-2 py-1 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-xs text-gray-700 dark:text-text-primary"
+            >
+              <option value="7d">7 jours</option>
+              <option value="30d">30 jours</option>
+            </select>
+            <button
+              onClick={() => void loadStats()}
+              disabled={statsLoading}
+              className="p-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-gray-500 hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors disabled:opacity-50"
+            >
+              <RefreshCw size={12} className={statsLoading ? 'animate-spin' : ''} />
+            </button>
+          </div>
+        </div>
+
+        {statsLoading && !stats ? (
+          <div className="flex items-center justify-center py-6">
+            <Loader2 size={20} className="animate-spin text-purple-500" />
+          </div>
+        ) : stats ? (
+          <>
+            {/* Totals row */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="text-center">
+                <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Tentatives</div>
+                <div className="text-lg font-semibold text-gray-900 dark:text-text-primary">{stats.totals.total_attempts}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Succès</div>
+                <div className="text-lg font-semibold text-green-600 dark:text-green-400">{stats.totals.success_count}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Échecs</div>
+                <div className="text-lg font-semibold text-red-600 dark:text-red-400">{stats.totals.failed_count}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Taux succès</div>
+                <div className={clsx(
+                  'text-lg font-semibold',
+                  stats.totals.success_rate_pct === null ? 'text-gray-400'
+                  : stats.totals.success_rate_pct >= 95 ? 'text-green-600 dark:text-green-400'
+                  : stats.totals.success_rate_pct >= 80 ? 'text-amber-600 dark:text-amber-400'
+                  : 'text-red-600 dark:text-red-400',
+                )}>
+                  {stats.totals.success_rate_pct !== null ? `${stats.totals.success_rate_pct}%` : '—'}
+                </div>
+              </div>
+            </div>
+
+            {/* Per-operator breakdown */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-100 dark:border-text-secondary/15">
+                    {['Opérateur', 'Tentatives', 'Succès', 'Échecs', 'Taux', 'Panne provider', 'Erreur client'].map((h) => (
+                      <th key={h} className="text-left px-3 py-2 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider whitespace-nowrap">
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50 dark:divide-text-secondary/15/60">
+                  {stats.operators.map((op) => (
+                    <tr key={op.operator} className="hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors">
+                      <td className="px-3 py-2 font-medium text-gray-900 dark:text-text-primary capitalize">{op.operator}</td>
+                      <td className="px-3 py-2 text-gray-700 dark:text-text-primary">{op.total_attempts}</td>
+                      <td className="px-3 py-2 text-green-600 dark:text-green-400">{op.success_count}</td>
+                      <td className="px-3 py-2 text-red-600 dark:text-red-400">{op.failed_count}</td>
+                      <td className="px-3 py-2">
+                        <span className={clsx(
+                          'inline-flex px-2 py-0.5 rounded-full text-xs font-semibold',
+                          op.success_rate_pct === null ? 'bg-gray-100 text-gray-500 dark:bg-navy-panel dark:text-text-secondary'
+                          : op.success_rate_pct >= 95 ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                          : op.success_rate_pct >= 80 ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                          : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                        )}>
+                          {op.success_rate_pct !== null ? `${op.success_rate_pct}%` : '—'}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2">
+                        {op.provider_outage_failures > 0 ? (
+                          <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 font-medium">
+                            <AlertTriangle size={12} /> {op.provider_outage_failures}
+                          </span>
+                        ) : (
+                          <span className="text-gray-400">0</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-gray-500 dark:text-text-secondary">{op.client_error_failures}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-gray-400">
+              {"« Panne provider » = échec causé par l'opérateur (API unreachable, token error, code 10301/10201)."}
+              {"« Erreur client » = solde insuffisant, MSISDN incorrect, etc."}
+            </p>
+          </>
+        ) : (
+          <div className="text-sm text-gray-400 text-center py-4">Aucune donnée de statistique.</div>
+        )}
       </div>
 
       {/* Profile */}
@@ -549,6 +805,108 @@ export default function MerchantDetailPage() {
             </table>
           </div>
         )}
+      </div>
+
+      {/* Callback test */}
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-4">
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary flex items-center gap-2">
+          <Send size={16} className="text-blue-500" />
+          Callback marchand
+        </h2>
+        <div className="space-y-3">
+          <div>
+            <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">URL de callback</label>
+            {callbackEditing ? (
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  value={callbackUrl}
+                  onChange={(e) => setCallbackUrl(e.target.value)}
+                  placeholder="https://example.com/webhooks/unipay"
+                  className="flex-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/30"
+                />
+                <button
+                  onClick={handleSaveCallbackUrl}
+                  disabled={callbackSaving}
+                  className="px-3 py-2 rounded-lg bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-colors disabled:opacity-50"
+                >
+                  {callbackSaving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                </button>
+                <button
+                  onClick={() => { setCallbackEditing(false); setCallbackUrl(merchant?.callback_url ?? ''); }}
+                  className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <code className="flex-1 bg-gray-50 dark:bg-navy-panel/50 rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-text-primary break-all">
+                  {merchant?.callback_url ?? '—'}
+                </code>
+                <button
+                  onClick={() => { setCallbackEditing(true); setCallbackUrl(merchant?.callback_url ?? ''); }}
+                  className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors whitespace-nowrap"
+                >
+                  Modifier
+                </button>
+              </div>
+            )}
+          </div>
+
+          {merchant?.callback_url ? (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleTestCallback}
+                disabled={callbackTesting}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition-colors disabled:opacity-50"
+              >
+                  {callbackTesting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                  Tester le callback
+                </button>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-400">Aucun callback configuré. Cliquez sur « Modifier » pour en ajouter un.</p>
+            )}
+
+          {/* Test result */}
+          {callbackError && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-lg p-3 text-sm text-red-600 dark:text-red-400 flex items-start gap-2">
+              <AlertCircle size={16} className="flex-shrink-0 mt-0.5" />
+              <span>{callbackError}</span>
+            </div>
+          )}
+          {callbackResult && (
+            <div className="bg-gray-50 dark:bg-navy-panel/50 border border-gray-200 dark:border-text-secondary/15 rounded-lg p-3 space-y-2">
+              <div className="flex items-center gap-3 flex-wrap text-sm">
+                <span className={clsx(
+                  'inline-flex px-2 py-0.5 rounded-full text-xs font-semibold',
+                  callbackResult.ok
+                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                    : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                )}>
+                  HTTP {callbackResult.http_status}
+                </span>
+                <span className="text-gray-500 dark:text-text-secondary">
+                  Temps de réponse: <span className="font-medium text-gray-900 dark:text-text-primary">{callbackResult.elapsed_ms}ms</span>
+                </span>
+                {callbackResult.content_type && (
+                  <span className="text-gray-500 dark:text-text-secondary">
+                    Type: <span className="font-mono text-xs">{callbackResult.content_type}</span>
+                  </span>
+                )}
+              </div>
+              {callbackResult.body && (
+                <div>
+                  <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Corps de la réponse</div>
+                  <pre className="text-xs font-mono text-gray-700 dark:text-text-primary bg-white dark:bg-navy-panel rounded-lg p-2 max-h-48 overflow-auto whitespace-pre-wrap break-all">
+                    {callbackResult.body}
+                  </pre>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Recent transactions */}
@@ -818,6 +1176,88 @@ export default function MerchantDetailPage() {
               >
                 {sendingEmail ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                 Envoyer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Settlement modal */}
+      {settleModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSettleModalOpen(false)} />
+          <div className="relative w-full max-w-md bg-white dark:bg-navy-panel rounded-2xl shadow-2xl border border-gray-200 dark:border-text-secondary/15 max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-text-secondary/15">
+              <h3 className="text-lg font-serif font-bold text-gray-900 dark:text-text-primary flex items-center gap-2">
+                <Coins size={18} className="text-green-deep" />
+                Régler le marchand
+              </h3>
+              <button onClick={() => setSettleModalOpen(false)} className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors">
+                <X size={18} />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">Devise</label>
+                <select
+                  value={settleCurrency}
+                  onChange={(e) => setSettleCurrency(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary"
+                >
+                  <option value="CDF">CDF</option>
+                  <option value="USD">USD</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">Montant</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={settleAmount}
+                  onChange={(e) => setSettleAmount(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/30"
+                  placeholder="Montant du règlement"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">Téléphone de règlement</label>
+                <input
+                  type="tel"
+                  value={settlePhone}
+                  onChange={(e) => setSettlePhone(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary focus:outline-none focus:ring-2 focus:ring-green-deep/30"
+                  placeholder="Ex: 0998338854"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">Opérateur</label>
+                <select
+                  value={settleOperator}
+                  onChange={(e) => setSettleOperator(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary"
+                >
+                  <option value="orange">Orange Money</option>
+                  <option value="airtel">Airtel Money</option>
+                  <option value="afrimoney">Afrimoney</option>
+                </select>
+              </div>
+              <p className="text-xs text-gray-400">
+                Utilise le même flux que le règlement marchand (RPC process_merchant_settlement + payout Unipesa).
+                Si le montant dépasse le seuil auto, le règlement passera en validation admin.
+              </p>
+            </div>
+            <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-gray-100 dark:border-text-secondary/15">
+              <button onClick={() => setSettleModalOpen(false)} className="px-4 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors">
+                Annuler
+              </button>
+              <button
+                onClick={handleSettle}
+                disabled={settling || !settleAmount || !settlePhone.trim()}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-colors disabled:opacity-50"
+              >
+                {settling ? <Loader2 size={14} className="animate-spin" /> : <Coins size={14} />}
+                Régler maintenant
               </button>
             </div>
           </div>
