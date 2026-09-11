@@ -6,6 +6,7 @@ import { Link } from '@/i18n/navigation';
 import {
   CheckCircle2, ChevronDown, ArrowRight, Zap,
   ShieldCheck, HeadphonesIcon, LayoutDashboard, Code2,
+  Search, Link2,
 } from 'lucide-react';
 import Footer from '@/components/Footer';
 
@@ -161,6 +162,50 @@ export default function PricingPage() {
                 <span className="text-xs font-medium text-gray-600 dark:text-text-secondary leading-snug">{label}</span>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* ── Value justification: what the 5% funds ───────────── */}
+        <section className="py-20">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-gray-900 dark:text-text-primary mb-3 tracking-tight">
+                {t('value_title')}
+              </h2>
+              <p className="text-gray-600 dark:text-text-secondary max-w-2xl mx-auto text-sm sm:text-base">
+                {t('value_subtitle')}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {[
+                { icon: ShieldCheck, title: t('value_b1_title'), body: t('value_b1_body') },
+                { icon: Search,     title: t('value_b2_title'), body: t('value_b2_body') },
+                { icon: Zap,         title: t('value_b3_title'), body: t('value_b3_body') },
+                { icon: Link2,      title: t('value_b4_title'), body: t('value_b4_body') },
+              ].map(({ icon: Icon, title, body }) => (
+                <div
+                  key={title}
+                  className="flex gap-4 p-5 rounded-2xl border border-gray-200 dark:border-text-secondary/15 bg-white dark:bg-navy/60"
+                >
+                  <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-green-deep/10 flex items-center justify-center">
+                    <Icon size={20} className="text-green-deep" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-text-primary mb-1.5 leading-snug">
+                      {title}
+                    </h3>
+                    <p className="text-xs text-gray-600 dark:text-text-secondary leading-relaxed">
+                      {body}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-center text-base sm:text-lg font-serif font-semibold text-green-deep mt-10 max-w-2xl mx-auto">
+              {t('value_closing')}
+            </p>
           </div>
         </section>
 

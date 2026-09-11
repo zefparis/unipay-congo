@@ -467,7 +467,18 @@
     "faq_5_q": "How do I get my API credentials?",
     "faq_5_a": "Create a merchant account on this page, then go to your dashboard → API Key. Your key is generated instantly and ready to use.",
     "cta_title": "Ready to integrate Mobile Money payments?",
-    "cta_subtitle": "Create your account in 2 minutes. No credit card required."
+    "cta_subtitle": "Create your account in 2 minutes. No credit card required.",
+    "value_title": "What your 5% really funds",
+    "value_subtitle": "UniPay is more than a payment rail. It's a complete infrastructure built to protect your business.",
+    "value_b1_title": "A licensed aggregator, not just another middleman",
+    "value_b1_body": "UniPay Congo operates under official ARPTC license (ASVA-ARPTC n°0573/008/Mars/2023). Your business is covered by a strict regulatory framework, with continuous oversight — not just a bare technical rail.",
+    "value_b2_title": "Identity verification that goes further",
+    "value_b2_body": "Every merchant goes through enhanced KYC, with identity verification and cognitive checks. The result: fewer fraudulent accounts at the door, fewer bad surprises for you.",
+    "value_b3_title": "A dual network protection layer",
+    "value_b3_body": "Every transaction is filtered by Cloudflare Edge Workers and the HCS-U7 cognitive firewall before it even reaches our servers. Bots and malicious traffic are blocked upstream — your infrastructure stays stable, even under load.",
+    "value_b4_title": "One integration, all networks",
+    "value_b4_body": "Orange Money, Airtel Money, Afrimoney — one contract, one API, a dedicated support team that actually responds.",
+    "value_closing": "It's not just a price. It's a payment infrastructure built to last."
   },
   "admin": {
     "title": "KYC Administration",
