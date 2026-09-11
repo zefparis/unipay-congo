@@ -284,7 +284,7 @@ export default function KycMerchantsPage() {
             KYC Merchants
           </h1>
           <p className="text-sm text-gray-500 dark:text-text-secondary mt-0.5">
-            Approuvez ou refusez les dossiers KYC. L'approbation active le mode Live.
+            Approuvez ou refusez les dossiers KYC. L&apos;approbation active le mode Live.
           </p>
         </div>
         <button onClick={() => void load()} className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-all">
@@ -397,7 +397,7 @@ export default function KycMerchantsPage() {
                       className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-green-deep text-white hover:bg-green-deep/85 text-sm font-semibold transition-all disabled:opacity-50"
                     >
                       {acting === m.id + ':approve' ? <RefreshCw size={13} className="animate-spin" /> : <CheckCircle2 size={13} />}
-                      Approuver & Live
+                      Approuver &amp; Live
                     </button>
                   </div>
                 </div>
