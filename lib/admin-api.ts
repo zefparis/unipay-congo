@@ -186,6 +186,7 @@ export interface Merchant {
   rccm_file_signed_url?: string | null;
   idnat_file_signed_url?: string | null;
   rep_id_file_signed_url?: string | null;
+  kyc_docs_count?: number;
   created_at?: string;
   updated_at?: string | null;
   transaction_count?: number;
@@ -271,6 +272,28 @@ export function getMerchantStats(): Promise<MerchantStats> {
 
 export function getMerchantDetail(id: string): Promise<{ merchant: Merchant; api_keys: MerchantApiKey[]; transactions: MerchantTransaction[]; balances: MerchantBalance[]; settlement_requests: SettlementRequest[] }> {
   return get(`${BASE}/merchants/${id}`);
+}
+
+export interface MerchantKycDoc {
+  path: string | null;
+  signed_url: string | null;
+}
+export interface MerchantKycDocs {
+  merchant_id: string;
+  kyc_status: string;
+  docs: {
+    rccm_file: MerchantKycDoc;
+    idnat_file: MerchantKycDoc;
+    rep_id_file: MerchantKycDoc;
+  };
+}
+export async function getMerchantKycDocs(id: string): Promise<MerchantKycDocs> {
+  const res = await fetch(`${BASE}/merchants/${id}/kyc-docs`, { cache: 'no-store' });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` })) as { error?: string };
+    throw new Error(err.error ?? `HTTP ${res.status}`);
+  }
+  return res.json() as Promise<MerchantKycDocs>;
 }
 
 export function getMerchantTransactions(params: Record<string, string | number>): Promise<{ data: MerchantTransaction[]; pagination: Pagination }> {
