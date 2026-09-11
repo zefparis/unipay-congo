@@ -35,6 +35,7 @@ export default function MerchantTransactionsPage() {
   const [filterDir, setFilterDir] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [filterOp, setFilterOp] = useState('');
+  const [filterMode, setFilterMode] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [page, setPage] = useState(1);
@@ -45,10 +46,11 @@ export default function MerchantTransactionsPage() {
     if (filterDir) p.direction = filterDir;
     if (filterStatus) p.status = filterStatus;
     if (filterOp) p.operator = filterOp;
+    if (filterMode) p.mode = filterMode;
     if (dateFrom) p.date_from = dateFrom;
     if (dateTo) p.date_to = dateTo;
     return p;
-  }, [page, filterMerchant, filterDir, filterStatus, filterOp, dateFrom, dateTo]);
+  }, [page, filterMerchant, filterDir, filterStatus, filterOp, filterMode, dateFrom, dateTo]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -149,6 +151,11 @@ export default function MerchantTransactionsPage() {
           <option value="afrimoney">Afrimoney</option>
           <option value="usdt">USDT</option>
         </select>
+        <select value={filterMode} onChange={(e) => setFilterMode(e.target.value)} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary">
+          <option value="">Tous modes</option>
+          <option value="live">Live</option>
+          <option value="sandbox">Sandbox</option>
+        </select>
         <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary" />
         <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary" />
         <button type="submit" className="px-4 py-2 rounded-lg bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-colors">
@@ -159,6 +166,20 @@ export default function MerchantTransactionsPage() {
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl px-4 py-3 text-sm text-red-600 dark:text-red-400">
           {error}
+        </div>
+      )}
+
+      {/* Mode breakdown summary */}
+      {!loading && rows.length > 0 && (
+        <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-text-secondary">
+          <span className="font-semibold uppercase tracking-wider">Répartition :</span>
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 font-semibold">
+            {rows.filter((tx) => tx.merchants?.[0]?.mode !== 'sandbox').length} Live
+          </span>
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 font-semibold">
+            {rows.filter((tx) => tx.merchants?.[0]?.mode === 'sandbox').length} Sandbox
+          </span>
+          <span className="text-gray-400">(sur la page courante)</span>
         </div>
       )}
 
