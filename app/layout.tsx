@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import { Space_Grotesk, DM_Sans, JetBrains_Mono, Source_Serif_4 } from 'next/font/google';
 import './globals.css';
 
@@ -57,7 +58,14 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" suppressHydrationWarning className={`${spaceGrotesk.variable} ${dmSans.variable} ${jetbrainsMono.variable} ${sourceSerif.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Script
+          src="https://hcs-widget-mvp.vercel.app/widget/v3/hcs-widget.js"
+          data-widget="wid_252792d76ceaa21f2d263aab"
+          strategy="afterInteractive"
+        />
+      </body>
     </html>
   );
 }
