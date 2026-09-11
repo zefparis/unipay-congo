@@ -17,6 +17,7 @@ interface CurrencyBreakdown {
 interface MerchantRevenue {
   merchant_id: string;
   name: string;
+  mode?: string;
   transaction_count: number;
   volume_collected: number;
   client_fees: number;
@@ -24,6 +25,18 @@ interface MerchantRevenue {
   net_margin: number;
   net_amount_owed: number;
   by_currency: CurrencyBreakdown[];
+}
+
+interface SandboxExcludedCurrency {
+  currency: string;
+  transaction_count: number;
+  volume_collected: number;
+}
+
+interface SandboxExcluded {
+  transaction_count: number;
+  volume_collected: number;
+  by_currency: SandboxExcludedCurrency[];
 }
 
 interface RevenueResponse {
@@ -38,6 +51,7 @@ interface RevenueResponse {
     merchant_count: number;
   };
   totals_by_currency: CurrencyBreakdown[];
+  sandbox_excluded?: SandboxExcluded;
   merchants: MerchantRevenue[];
 }
 
@@ -538,17 +552,40 @@ export default function MerchantRevenuePage() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {kpis.map((kpi) => (
-            <div key={kpi.label} className="p-5 rounded-2xl bg-white dark:bg-navy-panel border border-gray-100 dark:border-text-secondary/15">
-              <div className={clsx('inline-flex p-2 rounded-lg mb-3', kpi.bg)}>
-                <kpi.icon size={20} className={kpi.color} />
+        <>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {kpis.map((kpi) => (
+              <div key={kpi.label} className="p-5 rounded-2xl bg-white dark:bg-navy-panel border border-gray-100 dark:border-text-secondary/15">
+                <div className={clsx('inline-flex p-2 rounded-lg mb-3', kpi.bg)}>
+                  <kpi.icon size={20} className={kpi.color} />
+                </div>
+                <p className="text-2xl font-bold text-gray-900 dark:text-text-primary">{kpi.value}</p>
+                <p className="text-xs text-gray-500 dark:text-text-secondary mt-1">{kpi.label}</p>
               </div>
-              <p className="text-2xl font-bold text-gray-900 dark:text-text-primary">{kpi.value}</p>
-              <p className="text-xs text-gray-500 dark:text-text-secondary mt-1">{kpi.label}</p>
+            ))}
+          </div>
+          {/* Sandbox exclusion indicator */}
+          {data?.sandbox_excluded && data.sandbox_excluded.transaction_count > 0 && (
+            <div className="flex items-center gap-2 flex-wrap text-xs text-gray-400 dark:text-text-secondary/60">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-semibold">
+                Live uniquement
+              </span>
+              <span>
+                {data.sandbox_excluded.transaction_count} transaction{data.sandbox_excluded.transaction_count > 1 ? 's' : ''} Sandbox exclue{data.sandbox_excluded.transaction_count > 1 ? 's' : ''} sur la période
+              </span>
+              {(() => {
+                const sbCur = data.sandbox_excluded.by_currency.find((c) => c.currency === kpiCurrency);
+                const vol = sbCur ? sbCur.volume_collected : 0;
+                const cnt = sbCur ? sbCur.transaction_count : 0;
+                return cnt > 0 ? (
+                  <span className="text-gray-400 dark:text-text-secondary/50">
+                    · Volume Sandbox exclu ({kpiCurrency}) : {fmt(vol)} {kpiCurrency} ({cnt} tx)
+                  </span>
+                ) : null;
+              })()}
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
 
       {/* Daily evolution chart */}
@@ -592,7 +629,14 @@ export default function MerchantRevenuePage() {
                   return rows.map((c, idx) => (
                     <tr key={`${m.merchant_id}-${c.currency}`} className="border-b border-gray-50 dark:border-text-secondary/15/50 hover:bg-gray-50 dark:hover:bg-navy-panel/30">
                       <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary">
-                        {idx === 0 ? m.name : ''}
+                        <div className="flex items-center gap-2">
+                          {idx === 0 ? m.name : ''}
+                          {idx === 0 && m.mode === 'sandbox' && (
+                            <span className="inline-flex px-1.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                              Sandbox
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 py-3">
                         <span className={clsx(
