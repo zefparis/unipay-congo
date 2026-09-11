@@ -7,7 +7,7 @@ import {
   Building2, ArrowLeft, RefreshCw, KeyRound, Ban, CheckCircle2,
   AlertCircle, Loader2, FlaskConical, Globe, ShieldCheck,
   Copy, Check, Trash2, ArrowDownLeft, ArrowUpRight, Mail, Headset, X, Send, AlertTriangle,
-  Wallet, Banknote, Coins, Activity,
+  Wallet, Banknote, Coins, Activity, FileText, Download,
 } from 'lucide-react';
 import {
   getMerchantDetail, revokeApiKey, regenerateApiKey,
@@ -819,6 +819,38 @@ export default function MerchantDetailPage() {
           <div className="text-sm">
             <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Notes KYC</div>
             <div className="text-gray-700 dark:text-text-primary bg-gray-50 dark:bg-navy-panel/50 rounded-lg p-3">{merchant.kyc_notes}</div>
+          </div>
+        )}
+        {/* KYC documents — download links (signed URLs) */}
+        {(merchant.rccm_file_signed_url || merchant.idnat_file_signed_url || merchant.rep_id_file_signed_url) && (
+          <div className="text-sm">
+            <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Documents KYC soumis</div>
+            <div className="space-y-2">
+              {merchant.rccm_file_signed_url && (
+                <a href={merchant.rccm_file_signed_url} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-gray-50 dark:bg-navy-panel/50 hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors text-gray-700 dark:text-text-primary">
+                  <FileText size={14} className="text-green-deep flex-shrink-0" />
+                  <span className="flex-1">RCCM scanné</span>
+                  <Download size={14} className="text-gray-400 flex-shrink-0" />
+                </a>
+              )}
+              {merchant.idnat_file_signed_url && (
+                <a href={merchant.idnat_file_signed_url} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-gray-50 dark:bg-navy-panel/50 hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors text-gray-700 dark:text-text-primary">
+                  <FileText size={14} className="text-green-deep flex-shrink-0" />
+                  <span className="flex-1">ID NAT scanné</span>
+                  <Download size={14} className="text-gray-400 flex-shrink-0" />
+                </a>
+              )}
+              {merchant.rep_id_file_signed_url && (
+                <a href={merchant.rep_id_file_signed_url} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-gray-50 dark:bg-navy-panel/50 hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors text-gray-700 dark:text-text-primary">
+                  <FileText size={14} className="text-green-deep flex-shrink-0" />
+                  <span className="flex-1">Pièce d’identité du représentant légal</span>
+                  <Download size={14} className="text-gray-400 flex-shrink-0" />
+                </a>
+              )}
+            </div>
           </div>
         )}
         {/* Suspend/Reactivate */}

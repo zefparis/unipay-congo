@@ -180,6 +180,12 @@ export interface Merchant {
   kyc_submitted_at: string | null;
   kyc_notes: string | null;
   kyc_reviewed_at?: string | null;
+  rccm_file_url?: string | null;
+  idnat_file_url?: string | null;
+  rep_id_file_url?: string | null;
+  rccm_file_signed_url?: string | null;
+  idnat_file_signed_url?: string | null;
+  rep_id_file_signed_url?: string | null;
   created_at?: string;
   updated_at?: string | null;
   transaction_count?: number;
