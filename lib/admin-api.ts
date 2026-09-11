@@ -225,7 +225,7 @@ export interface MerchantTransaction {
   avada_transaction_id: string | null;
   created_at: string;
   updated_at: string;
-  merchants?: { name: string; email: string }[] | null;
+  merchants?: { name: string; email: string; mode?: string }[] | null;
 }
 
 export interface MerchantBalance {
