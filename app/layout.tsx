@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { Space_Grotesk, DM_Sans, JetBrains_Mono, Source_Serif_4 } from 'next/font/google';
+import ProtectionBadge from '@/components/ProtectionBadge';
 import './globals.css';
 
 const spaceGrotesk = Space_Grotesk({
@@ -60,9 +61,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" suppressHydrationWarning className={`${spaceGrotesk.variable} ${dmSans.variable} ${jetbrainsMono.variable} ${sourceSerif.variable}`}>
       <body>
         {children}
+        <ProtectionBadge />
         <Script
           src="https://hcs-widget-mvp.vercel.app/widget/v3/hcs-widget.js"
           data-widget="wid_252792d76ceaa21f2d263aab"
+          data-badge="false"
           strategy="afterInteractive"
         />
       </body>
