@@ -478,6 +478,8 @@
     "value_b3_body": "Every transaction is filtered by Cloudflare Edge Workers and the HCS-U7 cognitive firewall before it even reaches our servers. Bots and malicious traffic are blocked upstream — your infrastructure stays stable, even under load.",
     "value_b4_title": "One integration, all networks",
     "value_b4_body": "Orange Money, Airtel Money, Afrimoney — one contract, one API, a dedicated support team that actually responds.",
+    "value_b5_title": "🧪 A test environment before production",
+    "value_b5_body": "Every merchant gets a full sandbox mode to validate their integration before processing real transactions. No surprises on launch day.",
     "value_closing": "It's not just a price. It's a payment infrastructure built to last."
   },
   "admin": {

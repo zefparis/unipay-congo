@@ -6,7 +6,7 @@ import { Link } from '@/i18n/navigation';
 import {
   CheckCircle2, ChevronDown, ArrowRight, Zap,
   ShieldCheck, HeadphonesIcon, LayoutDashboard, Code2,
-  Search, Link2,
+  Search, Link2, FlaskConical,
 } from 'lucide-react';
 import Footer from '@/components/Footer';
 
@@ -179,14 +179,15 @@ export default function PricingPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {[
-                { icon: ShieldCheck, title: t('value_b1_title'), body: t('value_b1_body') },
-                { icon: Search,     title: t('value_b2_title'), body: t('value_b2_body') },
-                { icon: Zap,         title: t('value_b3_title'), body: t('value_b3_body') },
-                { icon: Link2,      title: t('value_b4_title'), body: t('value_b4_body') },
-              ].map(({ icon: Icon, title, body }) => (
+                { icon: ShieldCheck,  title: t('value_b1_title'), body: t('value_b1_body'), span: false },
+                { icon: Search,       title: t('value_b2_title'), body: t('value_b2_body'), span: false },
+                { icon: Zap,          title: t('value_b3_title'), body: t('value_b3_body'), span: false },
+                { icon: Link2,         title: t('value_b4_title'), body: t('value_b4_body'), span: false },
+                { icon: FlaskConical,  title: t('value_b5_title'), body: t('value_b5_body'), span: true  },
+              ].map(({ icon: Icon, title, body, span }) => (
                 <div
                   key={title}
-                  className="flex gap-4 p-5 rounded-2xl border border-gray-200 dark:border-text-secondary/15 bg-white dark:bg-navy/60"
+                  className={`flex gap-4 p-5 rounded-2xl border border-gray-200 dark:border-text-secondary/15 bg-white dark:bg-navy/60 ${span ? 'sm:col-span-2' : ''}`}
                 >
                   <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-green-deep/10 flex items-center justify-center">
                     <Icon size={20} className="text-green-deep" />
