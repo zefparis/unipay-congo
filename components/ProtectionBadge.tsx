@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 /**
  * Fixed bottom-right pill badge showing that the site is protected by
@@ -10,35 +10,69 @@ import { useEffect, useState } from 'react';
  * with more prudent wording — "Cognitive Firewall" over-promised a
  * behavioral scoring layer that is not yet reliable. The network
  * protection (Cloudflare + HCS-U7 Edge) is real and worth displaying.
+ *
+ * Responsive behavior:
+ *   - Desktop (≥640px): full badge always visible (icon + text).
+ *   - Mobile (<640px): collapsed to icon-only by default to avoid
+ *     overlapping content/buttons. Expands on tap to reveal the text,
+ *     auto-collapses after 3s. Positioned 16px from edges (avoids
+ *     iOS safe-area gesture zone).
  */
 export default function ProtectionBadge() {
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDark(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
+    const mqDark = window.matchMedia('(prefers-color-scheme: dark)');
+    setIsDark(mqDark.matches);
+    const darkHandler = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    mqDark.addEventListener('change', darkHandler);
+
+    const mqMobile = window.matchMedia('(max-width: 639px)');
+    setIsMobile(mqMobile.matches);
+    const mobileHandler = (e: MediaQueryListEvent) => {
+      setIsMobile(e.matches);
+      if (!e.matches) setExpanded(false);
+    };
+    mqMobile.addEventListener('change', mobileHandler);
+
+    return () => {
+      mqDark.removeEventListener('change', darkHandler);
+      mqMobile.removeEventListener('change', mobileHandler);
+    };
   }, []);
+
+  // Auto-collapse after 3s on mobile when expanded
+  useEffect(() => {
+    if (!isMobile || !expanded) return;
+    const timer = setTimeout(() => setExpanded(false), 3000);
+    return () => clearTimeout(timer);
+  }, [isMobile, expanded]);
+
+  const handleClick = useCallback(() => {
+    if (isMobile) setExpanded((prev) => !prev);
+  }, [isMobile]);
 
   if (!mounted) return null;
 
   const dark = isDark;
+  const showText = !isMobile || expanded;
 
   return (
     <div
       aria-label="Site protégé — Infrastructure sécurisée"
+      onClick={handleClick}
       style={{
         position: 'fixed',
-        bottom: '20px',
-        right: '20px',
+        bottom: '16px',
+        right: '16px',
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
-        padding: '8px 14px',
+        gap: showText ? '8px' : '0',
+        padding: showText ? '8px 14px' : '8px',
         borderRadius: '20px',
         background: dark ? 'rgba(6,14,26,0.92)' : 'rgba(255,255,255,0.95)',
         border: dark
@@ -51,38 +85,41 @@ export default function ProtectionBadge() {
         WebkitBackdropFilter: 'blur(12px)',
         zIndex: 9999,
         userSelect: 'none',
-        fontFamily:
-          "-apple-system, system-ui, 'Segoe UI', sans-serif",
+        cursor: isMobile ? 'pointer' : 'default',
+        fontFamily: "-apple-system, system-ui, 'Segoe UI', sans-serif",
         maxWidth: 'calc(100vw - 32px)',
+        transition: 'gap 0.2s ease, padding 0.2s ease',
       }}
     >
       <span style={{ fontSize: '16px', flexShrink: 0, lineHeight: 1 }}>
         🛡️
       </span>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-        <span
-          style={{
-            fontFamily: "'JetBrains Mono', 'Courier New', monospace",
-            fontSize: '11px',
-            fontWeight: 600,
-            color: '#10B981',
-            letterSpacing: '0.08em',
-            lineHeight: '1.3',
-          }}
-        >
-          PROTÉGÉ
-        </span>
-        <span
-          style={{
-            fontSize: '10px',
-            color: dark ? 'rgba(255,255,255,0.55)' : 'rgba(13,27,42,0.5)',
-            letterSpacing: '0.02em',
-            lineHeight: '1.3',
-          }}
-        >
-          Cloudflare + HCS-U7
-        </span>
-      </div>
+      {showText && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+          <span
+            style={{
+              fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+              fontSize: '11px',
+              fontWeight: 600,
+              color: '#10B981',
+              letterSpacing: '0.08em',
+              lineHeight: '1.3',
+            }}
+          >
+            PROTÉGÉ
+          </span>
+          <span
+            style={{
+              fontSize: '10px',
+              color: dark ? 'rgba(255,255,255,0.55)' : 'rgba(13,27,42,0.5)',
+              letterSpacing: '0.02em',
+              lineHeight: '1.3',
+            }}
+          >
+            Cloudflare + HCS-U7
+          </span>
+        </div>
+      )}
     </div>
   );
 }
