@@ -149,7 +149,7 @@ export default function MerchantsListPage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Recherche nom, email, entreprise…"
+            placeholder="Recherche nom, email, entreprise, téléphone…"
             className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/30"
           />
         </div>
@@ -191,10 +191,10 @@ export default function MerchantsListPage() {
           <div className="text-center py-12 text-sm text-gray-400 dark:text-text-secondary/50">Aucun marchand trouvé.</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[1100px] text-sm">
+            <table className="w-full min-w-[1200px] text-sm">
               <thead>
                 <tr className="border-b border-gray-100 dark:border-text-secondary/15">
-                  {['Email', 'Entreprise', 'KYC', 'Mode', 'Statut', 'Clé API', 'Volume', 'Dernière tx', 'Actions'].map((h) => (
+                  {['Email', 'Téléphone', 'Entreprise', 'KYC', 'Mode', 'Statut', 'Clé API', 'Volume', 'Dernière tx', 'Actions'].map((h) => (
                     <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
@@ -205,6 +205,7 @@ export default function MerchantsListPage() {
                 {merchants.map((m) => (
                   <tr key={m.id} className="hover:bg-gray-50 dark:hover:bg-navy-panel/30 transition-colors">
                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary whitespace-nowrap">{m.email}</td>
+                    <td className="px-4 py-3 text-gray-500 dark:text-text-secondary whitespace-nowrap">{m.phone ?? '—'}</td>
                     <td className="px-4 py-3 text-gray-500 dark:text-text-secondary whitespace-nowrap">{m.company_name ?? m.name ?? '—'}</td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
