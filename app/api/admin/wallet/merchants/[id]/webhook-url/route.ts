@@ -25,6 +25,6 @@ export async function PUT(
   return adminProxyFetch(`/v1/admin/merchants/${params.id}/webhook-url`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body,
   });
 }

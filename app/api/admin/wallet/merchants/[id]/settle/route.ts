@@ -25,6 +25,6 @@ export async function POST(
   return adminProxyFetch(`/v1/admin/merchants/${params.id}/settle`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body,
   });
 }

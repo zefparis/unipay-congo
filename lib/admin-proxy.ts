@@ -77,14 +77,12 @@ export async function adminProxyFetch(
     ? `${apiUrl}${backendPath}${backendPath.includes('?') ? '&' : '?'}${extraQueryParams}`
     : `${apiUrl}${backendPath}`;
 
-  const headers: Record<string, string> = {
-    'x-admin-secret': adminSecret,
-  };
+  const headers = new Headers({ 'x-admin-secret': adminSecret });
 
   if (extraHeaders) {
     const h = new Headers(extraHeaders);
     h.forEach((v, k) => {
-      headers[k] = v;
+      headers.set(k, v);
     });
   }
 
@@ -93,7 +91,9 @@ export async function adminProxyFetch(
     if (body instanceof FormData) {
       fetchBody = body;
     } else {
-      headers['Content-Type'] = headers['Content-Type'] ?? 'application/json';
+      if (!headers.has('content-type')) {
+        headers.set('content-type', 'application/json');
+      }
       fetchBody = JSON.stringify(body);
     }
   }
