@@ -372,7 +372,7 @@ export default function WalletUserDetailPage() {
                 className="w-full max-w-xs px-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/40 focus:border-green-deep transition-colors font-mono"
               />
               <p className="mt-1.5 text-xs text-gray-400">
-                Format attendu : +243 suivi de 9 chiffres (ex: +243853315944). L'ancien numéro sera conservé dans le log d'audit.
+                Format attendu : +243 suivi de 9 chiffres (ex: +243853315944). L&apos;ancien numéro sera conservé dans le log d&apos;audit.
               </p>
             </div>
             <div className="flex gap-2">
