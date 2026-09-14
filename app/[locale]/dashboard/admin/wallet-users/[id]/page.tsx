@@ -6,9 +6,9 @@ import { Link } from '@/i18n/navigation';
 import {
   ArrowLeft, User, Wallet, ShieldCheck, ShieldX,
   ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Loader2,
-  CheckCircle2, XCircle, AlertCircle, Plus, Minus, Mail, X,
+  CheckCircle2, XCircle, AlertCircle, Plus, Minus, Mail, X, Phone,
 } from 'lucide-react';
-import { getUserDetail, blockUser, unblockUser, adjustBalance, approveUserKyc, type WalletUser, type WalletTransaction, type LedgerEntry } from '@/lib/admin-api';
+import { getUserDetail, blockUser, unblockUser, adjustBalance, approveUserKyc, correctPhone, type WalletUser, type WalletTransaction, type LedgerEntry } from '@/lib/admin-api';
 import clsx from 'clsx';
 
 function fmt(n: number) {
@@ -60,6 +60,11 @@ export default function WalletUserDetailPage() {
   const [adjusting, setAdjusting] = useState(false);
   const [blocking, setBlocking] = useState(false);
   const [approvingKyc, setApprovingKyc] = useState(false);
+
+  // Phone correction state
+  const [editPhone, setEditPhone] = useState(false);
+  const [newPhone, setNewPhone] = useState('');
+  const [correctingPhone, setCorrectingPhone] = useState(false);
 
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
 
@@ -204,6 +209,30 @@ export default function WalletUserDetailPage() {
     }
   };
 
+  const handleCorrectPhone = async () => {
+    if (!user) return;
+    const trimmed = newPhone.trim();
+    if (!trimmed) {
+      showToast('Numéro requis', 'error');
+      return;
+    }
+    setCorrectingPhone(true);
+    try {
+      const res = await correctPhone(id, trimmed);
+      if (res.user) setUser(res.user);
+      setEditPhone(false);
+      setNewPhone('');
+      showToast(res.changed
+        ? `Numéro corrigé : ${res.old_phone} → ${res.new_phone}`
+        : `Numéro inchangé (${res.new_phone})`,
+        'success');
+    } catch (e) {
+      showToast((e as Error).message, 'error');
+    } finally {
+      setCorrectingPhone(false);
+    }
+  };
+
   const dirIcon = (dir: string) => {
     if (dir === 'collect') return <ArrowDownLeft size={13} className="text-green-500" />;
     if (dir === 'payout') return <ArrowUpRight size={13} className="text-orange-500" />;
@@ -309,6 +338,62 @@ export default function WalletUserDetailPage() {
             <p className="text-gray-700 dark:text-text-primary">{fmtDate(user.kyc_submitted_at ?? null)}</p>
           </div>
         </div>
+      </div>
+
+      {/* Phone correction */}
+      <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-4">
+        <div className="flex items-center gap-2">
+          <Phone size={16} className="text-green-deep" />
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-text-primary">Correction du numéro de téléphone</h2>
+        </div>
+        {!editPhone ? (
+          <div className="flex items-center gap-3 flex-wrap">
+            <p className="text-sm text-gray-700 dark:text-text-primary">
+              Numéro actuel : <span className="font-mono font-semibold">{user.phone}</span>
+            </p>
+            <button
+              onClick={() => { setNewPhone(user.phone); setEditPhone(true); }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800/40 hover:bg-blue-100 dark:hover:bg-blue-900/30"
+            >
+              <Phone size={13} /> Corriger le numéro
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">
+                Nouveau numéro
+              </label>
+              <input
+                type="tel"
+                value={newPhone}
+                onChange={(e) => setNewPhone(e.target.value)}
+                placeholder="+243XXXXXXXXX"
+                className="w-full max-w-xs px-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/40 focus:border-green-deep transition-colors font-mono"
+              />
+              <p className="mt-1.5 text-xs text-gray-400">
+                Format attendu : +243 suivi de 9 chiffres (ex: +243853315944). L'ancien numéro sera conservé dans le log d'audit.
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={handleCorrectPhone}
+                disabled={correctingPhone || !newPhone.trim()}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-green-deep hover:bg-green-deep/85 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all"
+              >
+                {correctingPhone ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
+                Enregistrer
+              </button>
+              <button
+                onClick={() => { setEditPhone(false); setNewPhone(''); }}
+                disabled={correctingPhone}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-text-secondary/20 text-gray-600 dark:text-text-secondary hover:bg-gray-50 dark:hover:bg-navy-panel/30 text-sm font-semibold transition-all disabled:opacity-50"
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Balance adjustment */}
