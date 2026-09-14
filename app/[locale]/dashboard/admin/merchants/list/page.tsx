@@ -5,10 +5,10 @@ import { Link } from '@/i18n/navigation';
 import {
   Building2, Search, ChevronLeft, ChevronRight, Eye,
   Loader2, RefreshCw, FlaskConical, Globe, ShieldCheck,
-  Ban, CheckCircle2, AlertCircle, KeyRound, Bell,
+  Ban, CheckCircle2, AlertCircle, KeyRound, Bell, Clock,
 } from 'lucide-react';
 import {
-  getMerchants, setMerchantMode, suspendMerchant, reactivateMerchant,
+  getMerchants, getMerchantStats, setMerchantMode, suspendMerchant, reactivateMerchant,
   type Merchant, type Pagination,
 } from '@/lib/admin-api';
 import clsx from 'clsx';
@@ -24,6 +24,17 @@ const KYC_STYLES: Record<string, string> = {
   submitted: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   approved: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   rejected: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+};
+
+const INACTIVITY_LABELS: Record<string, string> = {
+  active: 'Actif',
+  to_relaunch: 'À relancer',
+  inactive: 'Inactif',
+};
+const INACTIVITY_STYLES: Record<string, string> = {
+  active: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  to_relaunch: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  inactive: 'bg-gray-100 text-gray-500 dark:bg-navy-panel dark:text-text-secondary',
 };
 
 function fmt(n: number) {
@@ -47,17 +58,22 @@ export default function MerchantsListPage() {
   const [filterMode, setFilterMode] = useState('');
   const [filterKyc, setFilterKyc] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [filterInactivity, setFilterInactivity] = useState('');
+  const [includeInactive, setIncludeInactive] = useState(false);
   const [page, setPage] = useState(1);
+  const [stats, setStats] = useState<{ inactivity_breakdown?: { to_relaunch: number; inactive: number } } | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
-      const params: Record<string, string | number> = { page, limit: 20 };
+      const params: Record<string, string | number | boolean> = { page, limit: 20 };
       if (search) params.search = search;
       if (filterMode) params.mode = filterMode;
       if (filterKyc) params.kyc_status = filterKyc;
       if (filterStatus) params.status = filterStatus;
+      if (filterInactivity) params.inactivity_status = filterInactivity;
+      if (includeInactive) params.include_inactive = true;
       const res = await getMerchants(params);
       setMerchants(res.data);
       setPagination(res.pagination);
@@ -66,9 +82,15 @@ export default function MerchantsListPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, search, filterMode, filterKyc, filterStatus]);
+  }, [page, search, filterMode, filterKyc, filterStatus, filterInactivity, includeInactive]);
 
   useEffect(() => { void load(); }, [load]);
+
+  useEffect(() => {
+    getMerchantStats()
+      .then(setStats)
+      .catch(() => {});
+  }, [load]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,10 +149,21 @@ export default function MerchantsListPage() {
 
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary flex items-center gap-2">
-          <Building2 className="text-green-deep" size={22} />
-          Marchands
-        </h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary flex items-center gap-2">
+            <Building2 className="text-green-deep" size={22} />
+            Marchands
+          </h1>
+          {stats?.inactivity_breakdown && stats.inactivity_breakdown.to_relaunch > 0 && (
+            <span
+              title="Comptes en attente de relance (KYC non soumis, volume = 0, inscription > 7 jours)"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+            >
+              <Clock size={11} />
+              {stats.inactivity_breakdown.to_relaunch} à relancer
+            </span>
+          )}
+        </div>
         <button
           onClick={load}
           disabled={loading}
@@ -170,6 +203,21 @@ export default function MerchantsListPage() {
           <option value="active">Actif</option>
           <option value="suspended">Suspendu</option>
         </select>
+        <select value={filterInactivity} onChange={(e) => { setFilterInactivity(e.target.value); setIncludeInactive(false); }} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary">
+          <option value="">Toute activité</option>
+          <option value="active">Actif</option>
+          <option value="to_relaunch">À relancer</option>
+          <option value="inactive">Inactif</option>
+        </select>
+        <label className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-700 dark:text-text-secondary cursor-pointer">
+          <input
+            type="checkbox"
+            checked={includeInactive}
+            onChange={(e) => { setIncludeInactive(e.target.checked); setFilterInactivity(''); }}
+            className="rounded border-gray-300 text-green-deep focus:ring-green-deep/30"
+          />
+          Afficher inactifs
+        </label>
         <button type="submit" className="px-4 py-2 rounded-lg bg-green-deep text-white text-sm font-medium hover:bg-green-deep/85 transition-colors">
           Filtrer
         </button>
@@ -191,10 +239,10 @@ export default function MerchantsListPage() {
           <div className="text-center py-12 text-sm text-gray-400 dark:text-text-secondary/50">Aucun marchand trouvé.</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[1200px] text-sm">
+            <table className="w-full min-w-[1300px] text-sm">
               <thead>
                 <tr className="border-b border-gray-100 dark:border-text-secondary/15">
-                  {['Email', 'Téléphone', 'Entreprise', 'KYC', 'Mode', 'Statut', 'Clé API', 'Volume', 'Dernière tx', 'Actions'].map((h) => (
+                  {['Email', 'Téléphone', 'Entreprise', 'KYC', 'Mode', 'Statut', 'Activité', 'Clé API', 'Volume', 'Dernière tx', 'Actions'].map((h) => (
                     <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-text-secondary/70 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
@@ -236,6 +284,13 @@ export default function MerchantsListPage() {
                         m.status === 'active' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
                       )}>
                         {m.status === 'active' ? 'Actif' : 'Suspendu'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold',
+                        INACTIVITY_STYLES[m.inactivity_status ?? 'active'] ?? INACTIVITY_STYLES.active,
+                      )}>
+                        {INACTIVITY_LABELS[m.inactivity_status ?? 'active'] ?? 'Actif'}
                       </span>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">

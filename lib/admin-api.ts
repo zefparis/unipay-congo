@@ -202,6 +202,10 @@ export interface Merchant {
   settlement_phone?: string | null;
   webhook_url?: string | null;
   webhook_secret?: string | null;
+  inactivity_status?: 'active' | 'to_relaunch' | 'inactive';
+  inactivity_status_changed_at?: string | null;
+  last_reminder_sent_at?: string | null;
+  last_reminder_step?: number;
 }
 
 export interface MerchantStats {
@@ -210,6 +214,7 @@ export interface MerchantStats {
   kyc_breakdown: { pending: number; submitted: number; approved: number };
   volume_30d: Record<string, number>;
   transactions_today: number;
+  inactivity_breakdown?: { to_relaunch: number; inactive: number };
 }
 
 export interface MerchantApiKey {
@@ -263,7 +268,7 @@ export interface SettlementRequest {
   updated_at: string;
 }
 
-export function getMerchants(params?: Record<string, string | number>): Promise<{ data: Merchant[]; pagination: Pagination }> {
+export function getMerchants(params?: Record<string, string | number | boolean>): Promise<{ data: Merchant[]; pagination: Pagination }> {
   if (params && Object.keys(params).length > 0) {
     const qs = new URLSearchParams(
       Object.entries(params)
