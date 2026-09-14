@@ -225,7 +225,12 @@ export default function MerchantTransactionsPage() {
                       <td className="px-4 py-3 font-medium text-gray-900 dark:text-text-primary whitespace-nowrap">{fmt(tx.net_amount)} <span className="text-gray-400 text-xs font-normal">{tx.currency}</span></td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="flex items-center gap-1.5">
-                          <span className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status] ?? 'bg-gray-100 text-gray-600')}>
+                          <span
+                            className={clsx('inline-flex px-2 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[tx.status] ?? 'bg-gray-100 text-gray-600')}
+                            title={tx.status === 'failed' && tx.metadata?.provider_result?.message
+                              ? `Cause: ${tx.metadata.provider_result.message}`
+                              : undefined}
+                          >
                             {tx.status}
                           </span>
                           {m?.mode === 'sandbox' && (

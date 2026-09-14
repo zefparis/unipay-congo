@@ -152,6 +152,10 @@ export function adjustBalance(wallet_user_id: string, amount: number, reason: st
   return post(`${BASE}/adjust`, { wallet_user_id, amount, reason });
 }
 
+export function correctPhone(id: string, phone: string): Promise<{ ok: boolean; old_phone: string; new_phone: string; changed: boolean; user: WalletUser }> {
+  return post(`${BASE}/users/${id}/correct-phone`, { phone });
+}
+
 export function getTransactions(params: Record<string, string | number>): Promise<{ data: WalletTransaction[]; pagination: Pagination }> {
   const qs = new URLSearchParams(
     Object.entries(params)
@@ -232,6 +236,11 @@ export interface MerchantTransaction {
   avada_transaction_id: string | null;
   created_at: string;
   updated_at: string;
+  metadata?: {
+    provider_result?: { code?: string; message?: string };
+    failure_kind?: string;
+    [key: string]: unknown;
+  } | null;
   merchants?: { name: string; email: string; mode?: string }[] | null;
 }
 
