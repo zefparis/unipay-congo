@@ -376,7 +376,7 @@ export default function WalletUserDetailPage() {
             {new Date(user.locked_until).getFullYear() >= 2099 ? (
               <p className="font-semibold">Verrouillage permanent — déverrouillage admin requis.</p>
             ) : (
-              <p>Jusqu'au : <span className="font-mono">{fmtDate(user.locked_until)}</span></p>
+              <p>{`Jusqu'au : `}<span className="font-mono">{fmtDate(user.locked_until)}</span></p>
             )}
           </div>
           <button
