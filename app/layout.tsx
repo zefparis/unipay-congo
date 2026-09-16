@@ -30,10 +30,13 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  title: 'UniPay Congo — Paiements mobiles unifiés pour la RDC',
+  title: {
+    default: 'UniPay Congo — Paiements mobiles unifiés pour la RDC',
+    template: '%s — UniPay Congo',
+  },
   description:
     'Agrégateur de paiements mobiles licencié en République Démocratique du Congo. Intégrez Orange Money, Airtel Money, Afrimoney via une seule API.',
-  metadataBase: new URL('https://unipaycongo.com'),
+  metadataBase: new URL('https://www.unipaycongo.com'),
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
@@ -42,7 +45,7 @@ export const metadata: Metadata = {
     title: 'UniPay Congo — Paiements mobiles unifiés pour la RDC',
     description:
       'Agrégateur de paiements mobiles licencié en RDC. Intégrez Orange Money, Airtel Money, Afrimoney via une seule API.',
-    url: 'https://unipaycongo.com',
+    url: 'https://www.unipaycongo.com',
     siteName: 'UniPay Congo',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'UniPay Congo — Your Payment Infrastructure in DRC' }],
     locale: 'fr_CD',

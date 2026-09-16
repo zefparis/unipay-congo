@@ -1,6 +1,11 @@
 import { cookies } from 'next/headers';
+import type { Metadata } from 'next';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import { verifySessionToken } from '@/lib/admin-session';
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 interface DashboardLayoutProps {
   children: React.ReactNode;

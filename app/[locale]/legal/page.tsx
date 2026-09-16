@@ -1,5 +1,13 @@
 import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
 import LegalLayout, { LegalSection } from '@/components/LegalLayout';
+import { pageMetadata } from '@/lib/seo';
+
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: 'legal' });
+  return pageMetadata({ locale, path: '/legal', title: t('title'), description: t('subtitle') });
+}
 
 export default function LegalPage() {
   const t = useTranslations('legal');

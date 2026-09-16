@@ -1,7 +1,15 @@
 import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { MapPin, Phone, Mail, Globe, ShieldCheck } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
 import Footer from '@/components/Footer';
+import { pageMetadata } from '@/lib/seo';
+
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: 'contact_page' });
+  return pageMetadata({ locale, path: '/contact', title: t('hero_title'), description: t('hero_subtitle') });
+}
 
 export default function ContactPage() {
   const t = useTranslations('contact_page');
