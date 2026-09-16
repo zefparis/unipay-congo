@@ -55,6 +55,19 @@ export interface WalletUser {
   created_at: string;
   updated_at: string | null;
   kyc_submitted_at?: string | null;
+  // PIN lockout fields (added by migration 20260921000000)
+  failed_pin_attempts?: number;
+  locked_until?: string | null;
+  pin_lockout_count?: number;
+}
+
+export interface LockoutStatus {
+  wallet_id: string;
+  is_locked: boolean;
+  is_permanent: boolean;
+  failed_pin_attempts: number;
+  locked_until: string | null;
+  pin_lockout_count: number;
 }
 
 export interface WalletTransaction {
@@ -142,6 +155,14 @@ export function blockUser(id: string): Promise<{ ok: boolean }> {
 
 export function unblockUser(id: string): Promise<{ ok: boolean }> {
   return post(`${BASE}/users/${id}/unblock`);
+}
+
+export function unlockPin(id: string): Promise<{ ok: boolean; was_locked: boolean; status?: string }> {
+  return post(`${BASE}/users/${id}/unlock-pin`);
+}
+
+export function getLockoutStatus(id: string): Promise<LockoutStatus> {
+  return get<LockoutStatus>(`${BASE}/users/${id}/lockout-status`);
 }
 
 export function approveUserKyc(id: string): Promise<{ ok: boolean; user: WalletUser }> {

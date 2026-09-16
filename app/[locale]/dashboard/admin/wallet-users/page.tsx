@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link } from '@/i18n/navigation';
 import {
   Users, Search, ChevronLeft, ChevronRight, Eye,
-  ShieldCheck, ShieldOff, Loader2, RefreshCw, CheckCircle2, XCircle,
+  ShieldCheck, ShieldOff, Loader2, RefreshCw, CheckCircle2, XCircle, Lock,
 } from 'lucide-react';
 import { getUsers, type WalletUser, type Pagination } from '@/lib/admin-api';
 import clsx from 'clsx';
@@ -168,6 +168,11 @@ export default function WalletUsersPage() {
                       ) : (
                         <span className="inline-flex items-center gap-1 text-red-500 dark:text-red-400 text-xs font-semibold">
                           <XCircle size={13} /> Bloqué
+                        </span>
+                      )}
+                      {u.locked_until && new Date(u.locked_until) > new Date() && (
+                        <span className="ml-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 text-xs font-semibold">
+                          <Lock size={11} /> PIN verrouillé
                         </span>
                       )}
                     </td>

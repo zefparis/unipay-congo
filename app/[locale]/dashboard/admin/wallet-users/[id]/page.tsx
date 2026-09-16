@@ -6,9 +6,9 @@ import { Link } from '@/i18n/navigation';
 import {
   ArrowLeft, User, Wallet, ShieldCheck, ShieldX,
   ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Loader2,
-  CheckCircle2, XCircle, AlertCircle, Plus, Minus, Mail, X, Phone,
+  CheckCircle2, XCircle, AlertCircle, Plus, Minus, Mail, X, Phone, Lock, LockOpen,
 } from 'lucide-react';
-import { getUserDetail, blockUser, unblockUser, adjustBalance, approveUserKyc, correctPhone, type WalletUser, type WalletTransaction, type LedgerEntry } from '@/lib/admin-api';
+import { getUserDetail, blockUser, unblockUser, adjustBalance, approveUserKyc, correctPhone, unlockPin, type WalletUser, type WalletTransaction, type LedgerEntry } from '@/lib/admin-api';
 import clsx from 'clsx';
 
 function fmt(n: number) {
@@ -65,6 +65,9 @@ export default function WalletUserDetailPage() {
   const [editPhone, setEditPhone] = useState(false);
   const [newPhone, setNewPhone] = useState('');
   const [correctingPhone, setCorrectingPhone] = useState(false);
+
+  // PIN lockout state
+  const [unlocking, setUnlocking] = useState(false);
 
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
 
@@ -233,6 +236,24 @@ export default function WalletUserDetailPage() {
     }
   };
 
+  const handleUnlockPin = async () => {
+    if (!user) return;
+    setUnlocking(true);
+    try {
+      const res = await unlockPin(id);
+      if (res.was_locked) {
+        setUser((u) => u ? { ...u, failed_pin_attempts: 0, locked_until: null, pin_lockout_count: 0 } : u);
+        showToast('Verrouillage PIN levé', 'success');
+      } else {
+        showToast('Compte déjà déverrouillé', 'success');
+      }
+    } catch (e) {
+      showToast((e as Error).message, 'error');
+    } finally {
+      setUnlocking(false);
+    }
+  };
+
   const dirIcon = (dir: string) => {
     if (dir === 'collect') return <ArrowDownLeft size={13} className="text-green-500" />;
     if (dir === 'payout') return <ArrowUpRight size={13} className="text-orange-500" />;
@@ -339,6 +360,35 @@ export default function WalletUserDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* PIN lockout status */}
+      {user.locked_until && new Date(user.locked_until) > new Date() && (
+        <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800/50 rounded-2xl p-6 shadow-sm space-y-3">
+          <div className="flex items-center gap-2">
+            <Lock size={16} className="text-orange-600 dark:text-orange-400" />
+            <h2 className="text-sm font-semibold text-orange-700 dark:text-orange-400">Verrouillage PIN</h2>
+          </div>
+          <div className="text-sm text-orange-700 dark:text-orange-400 space-y-1">
+            <p>
+              Ce compte est verrouillé suite à trop de tentatives PIN échouées
+              {user.pin_lockout_count !== undefined && user.pin_lockout_count > 0 && ` (verrouillage #${user.pin_lockout_count})`}.
+            </p>
+            {new Date(user.locked_until).getFullYear() >= 2099 ? (
+              <p className="font-semibold">Verrouillage permanent — déverrouillage admin requis.</p>
+            ) : (
+              <p>Jusqu'au : <span className="font-mono">{fmtDate(user.locked_until)}</span></p>
+            )}
+          </div>
+          <button
+            onClick={handleUnlockPin}
+            disabled={unlocking}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all"
+          >
+            {unlocking ? <Loader2 size={14} className="animate-spin" /> : <LockOpen size={14} />}
+            Déverrouiller le PIN
+          </button>
+        </div>
+      )}
 
       {/* Phone correction */}
       <div className="bg-white dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 shadow-sm space-y-4">
