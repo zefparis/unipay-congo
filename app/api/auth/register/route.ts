@@ -24,5 +24,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: data.error ?? 'Registration failed' }, { status: upstream.status });
   }
 
-  return NextResponse.json({ ok: true, merchant_id: data.merchant_id }, { status: 201 });
+  return NextResponse.json({
+    ok: true,
+    merchant_id: data.merchant_id,
+    api_key: data.api_key,
+  }, { status: 201 });
 }

@@ -213,7 +213,11 @@
       "has_account": "Already have an account?",
       "login_link": "Sign in",
       "error": "Error creating account",
-      "success": "Account created successfully"
+      "success": "Account created successfully",
+      "api_key_warning": "Save your API key now",
+      "api_key_warning_desc": "Your API key will never be shown in full again. Copy it and store it in a safe place.",
+      "api_key_once": "⚠️ This key will never be shown again. If you lose it, you will need to generate a new one from the dashboard.",
+      "copy": "Copy"
     },
     "forgot_password": "Forgot password?",
     "forgot_password_title": "Forgot password",

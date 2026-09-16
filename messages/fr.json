@@ -213,7 +213,11 @@
       "has_account": "Déjà un compte ?",
       "login_link": "Se connecter",
       "error": "Erreur lors de la création du compte",
-      "success": "Compte créé avec succès"
+      "success": "Compte créé avec succès",
+      "api_key_warning": "Notez votre clé API maintenant",
+      "api_key_warning_desc": "Votre clé API ne sera plus jamais affichée en entier. Copiez-la et stockez-la dans un endroit sûr.",
+      "api_key_once": "⚠️ Cette clé ne sera plus jamais affichée. Si vous la perdez, vous devrez en générer une nouvelle depuis le dashboard.",
+      "copy": "Copier"
     },
     "forgot_password": "Mot de passe oublié ?",
     "forgot_password_title": "Mot de passe oublié",

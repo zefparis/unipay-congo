@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
-import { Eye, EyeOff, Loader2, CheckCircle2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, CheckCircle2, Key, Copy, Check, AlertTriangle } from 'lucide-react';
 
 export default function RegisterPage() {
   const t = useTranslations('auth.register');
@@ -16,6 +16,8 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [apiKey, setApiKey] = useState<string | null>(null);
+  const [copiedKey, setCopiedKey] = useState(false);
 
   const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [key]: e.target.value }));
@@ -32,8 +34,11 @@ export default function RegisterPage() {
     });
 
     if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (data.api_key) {
+        setApiKey(data.api_key);
+      }
       setSuccess(true);
-      setTimeout(() => router.push('/login'), 2000);
     } else {
       const data = await res.json().catch(() => ({}));
       setError((data as { error?: string }).error ?? t('error'));
@@ -62,10 +67,46 @@ export default function RegisterPage() {
         {/* Card */}
         <div className="bg-gray-50 dark:bg-navy-panel/60 border border-gray-200 dark:border-text-secondary/15 rounded-2xl p-6 sm:p-8 shadow-xl shadow-black/5 dark:shadow-black/40 backdrop-blur-sm">
           {success ? (
-            <div className="text-center py-6">
+            <div className="text-center py-6 space-y-4">
               <CheckCircle2 className="mx-auto mb-4 text-green-deep" size={48} />
               <h2 className="text-xl font-serif font-bold text-gray-900 dark:text-text-primary mb-2">{t('success')}</h2>
+
+              {apiKey && (
+                <div className="bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-800/40 rounded-2xl p-5 space-y-3 text-left">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="text-amber-500 dark:text-amber-400 flex-shrink-0" size={18} />
+                    <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">{t('api_key_warning')}</p>
+                  </div>
+                  <p className="text-xs text-amber-700 dark:text-amber-400">{t('api_key_warning_desc')}</p>
+                  <div className="relative">
+                    <div className="font-mono text-sm text-gray-800 dark:text-text-primary bg-white dark:bg-navy-panel border border-amber-200 dark:border-amber-800/50 rounded-xl px-4 py-3 pr-12 break-all select-all">
+                      {apiKey}
+                    </div>
+                    <button
+                      onClick={async () => {
+                        if (apiKey) {
+                          await navigator.clipboard.writeText(apiKey);
+                          setCopiedKey(true);
+                          setTimeout(() => setCopiedKey(false), 2500);
+                        }
+                      }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                      title={t('copy')}
+                    >
+                      {copiedKey ? <Check size={15} /> : <Copy size={15} />}
+                    </button>
+                  </div>
+                  <p className="text-xs text-amber-700 dark:text-amber-400 font-semibold">{t('api_key_once')}</p>
+                </div>
+              )}
+
               <p className="text-sm text-gray-500 dark:text-text-secondary">{t('login_link')} →</p>
+              <button
+                onClick={() => router.push('/login')}
+                className="text-green-deep hover:text-green-deep/85 font-medium text-sm"
+              >
+                {t('login_link')}
+              </button>
             </div>
           ) : (
             <>
