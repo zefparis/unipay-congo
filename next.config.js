@@ -94,6 +94,28 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    // Legacy wallet routes — the wallet app moved to app.unipaycongo.com
+    // (unipay-app repo, same /{locale}/wallet/* structure). 301 so Google
+    // transfers indexing signals; /wallet/gaming has no equivalent there.
+    return [
+      {
+        source: '/:locale(fr|en)/wallet/gaming',
+        destination: 'https://app.unipaycongo.com/:locale/wallet',
+        permanent: true,
+      },
+      {
+        source: '/:locale(fr|en)/wallet/:path*',
+        destination: 'https://app.unipaycongo.com/:locale/wallet/:path*',
+        permanent: true,
+      },
+      {
+        source: '/wallet/:path*',
+        destination: 'https://app.unipaycongo.com/fr/wallet/:path*',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 const withPWAConfig = withPWA({
