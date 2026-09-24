@@ -4,12 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 
 /**
  * Fixed bottom-right pill badge showing that the site is protected by
- * Cloudflare Edge Workers + HCS-U7 network filtering.
- *
- * Replaces the default HCS-U7 widget badge (hidden via data-badge="false")
- * with more prudent wording — "Cognitive Firewall" over-promised a
- * behavioral scoring layer that is not yet reliable. The network
- * protection (Cloudflare + HCS-U7 Edge) is real and worth displaying.
+ * Cloudflare network filtering.
  *
  * Responsive behavior:
  *   - Desktop (≥640px): full badge always visible (icon + text).
@@ -116,7 +111,7 @@ export default function ProtectionBadge() {
               lineHeight: '1.3',
             }}
           >
-            Cloudflare + HCS-U7
+            par Cloudflare
           </span>
         </div>
       )}

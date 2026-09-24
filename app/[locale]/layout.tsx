@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import Script from 'next/script';
 import { Space_Grotesk, DM_Sans, JetBrains_Mono, Source_Serif_4 } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -94,12 +93,6 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
           </ThemeProvider>
         </NextIntlClientProvider>
         <ProtectionBadge />
-        <Script
-          src="https://hcs-widget-mvp.vercel.app/widget/v3/hcs-widget.js"
-          data-widget="wid_252792d76ceaa21f2d263aab"
-          data-badge="false"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );

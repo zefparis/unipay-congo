@@ -12,17 +12,8 @@
 
 ### Architecture decision — headers at Next.js level, NOT the Worker
 
-`unipaycongo.com` is a standalone Next.js app on Vercel. It is **not** routed
-through the `hcs-u7-proxy` Cloudflare Worker. The Worker's routes
-(`wrangler.toml`) cover `congogaming.com`, `hcs-u7.org`, `hcs-u7.online`,
-`hybrid-vector.com`, and a wildcard scoped to the `hcs-u7.org` zone only.
-`unipaycongo.com` has no Worker route and no KV tenant entry — it was never
-intended to go through the proxy.
-
-Security headers are therefore set in `next.config.js` via the `headers()`
-function. If `unipaycongo.com` is ever routed through the Worker, the
-Worker's `addCorsHeaders` already respects upstream CSP (only sets a
-fallback when none is present — see `src/index.ts:2328`), so no conflicts.
+`unipaycongo.com` is a standalone Next.js app on Vercel. Security headers are
+set in `next.config.js` via the `headers()` function.
 
 ### Headers deployed
 
@@ -31,7 +22,7 @@ fallback when none is present — see `src/index.ts:2328`), so no conflicts.
 | X-Frame-Options | DENY | Enforced |
 | X-Content-Type-Options | nosniff | Enforced |
 | Referrer-Policy | strict-origin-when-cross-origin | Enforced |
-| Permissions-Policy | camera=(), microphone=(self), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=() | Enforced |
+| Permissions-Policy | camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=() | Enforced |
 | X-XSS-Protection | 0 | Enforced (0 = disables buggy auditor; CSP is the modern defense) |
 | Strict-Transport-Security | max-age=31536000; includeSubDomains; preload | Enforced |
 | Cross-Origin-Opener-Policy | same-origin | Enforced |
@@ -41,11 +32,11 @@ fallback when none is present — see `src/index.ts:2328`), so no conflicts.
 
 ```
 default-src 'self';
-script-src 'self' 'unsafe-inline' https://hcs-widget-mvp.vercel.app;
+script-src 'self' 'unsafe-inline';
 style-src 'self' 'unsafe-inline';
 img-src 'self' data: blob: https:;
 font-src 'self' data:;
-connect-src 'self' https://api.hcs-u7.org https://hcs-widget-mvp.vercel.app https://unipay-api.onrender.com https://api.unipaycongo.com;
+connect-src 'self' https://unipay-api.onrender.com https://api.unipaycongo.com;
 worker-src 'self' blob:;
 object-src 'none';
 base-uri 'self';
@@ -56,8 +47,6 @@ upgrade-insecure-requests;
 
 **Sources listed in connect-src:**
 - `'self'` — same-origin Next.js API routes (`/api/merchant/*`, `/api/auth/*`)
-- `https://api.hcs-u7.org` — HCS-U7 widget API (DEFAULT_API_URL in widget)
-- `https://hcs-widget-mvp.vercel.app` — widget bunker-verify/bunker-pass endpoints
 - `https://unipay-api.onrender.com` — direct browser→backend calls via `lib/api.ts` (NEXT_PUBLIC_API_URL default)
 - `https://api.unipaycongo.com` — production API custom domain (CNAME to onrender)
 
