@@ -48,7 +48,7 @@ const OPERATOR_VISUAL: Record<string, { color: string; bgColor: string; descript
 
 const OPERATOR_ORDER = ['orange', 'airtel', 'afrimoney'];
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://unipay-api.onrender.com';
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.unipaycongo.com';
 const AUTO_REFRESH_SECONDS = 60;
 
 /* ── status config ────────────────────────────────────────────── */

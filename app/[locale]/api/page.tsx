@@ -5,7 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Copy, Check, ExternalLink, Code2, ShieldCheck } from 'lucide-react';
 import Footer from '@/components/Footer';
 
-const BASE = 'https://unipay-api.onrender.com';
+const BASE = 'https://api.unipaycongo.com';
 
 /* ── types ─────────────────────────────────────────────────── */
 type Lang = 'shell' | 'node' | 'python';

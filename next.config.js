@@ -64,7 +64,7 @@ const securityHeaders = [
       "font-src 'self' data:",
       // connect-src: same-origin API routes + UniPay backend
       // (lib/api.ts makes direct browser→backend fetch calls via NEXT_PUBLIC_API_URL)
-      "connect-src 'self' https://unipay-api.onrender.com https://api.unipaycongo.com",
+      "connect-src 'self' https://api.unipaycongo.com",
       // Service worker + workbox blob workers
       "worker-src 'self' blob:",
       "object-src 'none'",

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://unipay-api.onrender.com';
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.unipaycongo.com';
 
 // Public swap rate + AMM pool reserves. Proxies the UniPay API so the admin
 // dashboard can display the USDT reserve without exposing the upstream host.

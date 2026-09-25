@@ -36,7 +36,7 @@ script-src 'self' 'unsafe-inline';
 style-src 'self' 'unsafe-inline';
 img-src 'self' data: blob: https:;
 font-src 'self' data:;
-connect-src 'self' https://unipay-api.onrender.com https://api.unipaycongo.com;
+connect-src 'self' https://api.unipaycongo.com;
 worker-src 'self' blob:;
 object-src 'none';
 base-uri 'self';
@@ -47,8 +47,7 @@ upgrade-insecure-requests;
 
 **Sources listed in connect-src:**
 - `'self'` — same-origin Next.js API routes (`/api/merchant/*`, `/api/auth/*`)
-- `https://unipay-api.onrender.com` — direct browser→backend calls via `lib/api.ts` (NEXT_PUBLIC_API_URL default)
-- `https://api.unipaycongo.com` — production API custom domain (CNAME to onrender)
+- `https://api.unipaycongo.com` — UniPay API backend on x2 via Cloudflare Tunnel (direct browser→backend calls via `lib/api.ts`, NEXT_PUBLIC_API_URL default)
 
 ### To enforce CSP
 

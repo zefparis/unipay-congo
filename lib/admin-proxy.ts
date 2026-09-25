@@ -6,7 +6,7 @@ function getApiUrl(): string {
   return (
     process.env.API_URL ??
     process.env.NEXT_PUBLIC_API_URL ??
-    'https://unipay-api.onrender.com'
+    'https://api.unipaycongo.com'
   );
 }
 
