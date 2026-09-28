@@ -565,9 +565,12 @@
     "s_collect": "Collect (C2B)",
     "s_payout": "Payout (B2C)",
     "s_status": "Transaction Status",
+    "s_webhooks": "Webhooks",
+    "s_sandbox": "Sandbox Mode",
     "s_balance": "Merchant Balance",
     "s_history": "History",
     "s_apikey": "API Key",
+    "s_settlement": "Settlement",
     "s_operators": "Operators",
     "s_errors": "Error Codes",
     "s_fees": "Pricing"
