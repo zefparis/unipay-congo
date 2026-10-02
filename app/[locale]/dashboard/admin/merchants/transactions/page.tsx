@@ -5,7 +5,8 @@ import {
   ArrowLeftRight, Download, ChevronLeft, ChevronRight,
   Loader2, RefreshCw, ArrowDownLeft, ArrowUpRight,
 } from 'lucide-react';
-import { getMerchantTransactions, type MerchantTransaction, type Pagination } from '@/lib/admin-api';
+import { getMerchantTransactions, getMerchants, type MerchantTransaction, type Pagination } from '@/lib/admin-api';
+import { isValidUUID } from '@/lib/validate-uuid';
 import clsx from 'clsx';
 
 function fmt(n: number) {
@@ -40,23 +41,53 @@ export default function MerchantTransactionsPage() {
   const [dateTo, setDateTo] = useState('');
   const [page, setPage] = useState(1);
 
-  const buildParams = useCallback(() => {
+  /**
+   * Build the query params for /merchants/transactions.
+   * merchant_id must be a UUID — free text is resolved to a merchant id via
+   * the merchants list (search on name/email/company_name/phone) instead of
+   * being sent raw (the API would 400). Returns { error } to abort the load
+   * when the text matches zero or several merchants.
+   */
+  const resolveParams = useCallback(async (): Promise<{ params: Record<string, string | number> } | { error: string }> => {
     const p: Record<string, string | number> = { page, limit: 20 };
-    if (filterMerchant) p.merchant_id = filterMerchant;
     if (filterDir) p.direction = filterDir;
     if (filterStatus) p.status = filterStatus;
     if (filterOp) p.operator = filterOp;
     if (filterMode) p.mode = filterMode;
     if (dateFrom) p.date_from = dateFrom;
     if (dateTo) p.date_to = dateTo;
-    return p;
+
+    const raw = filterMerchant.trim();
+    if (!raw) return { params: p };
+    if (isValidUUID(raw)) {
+      p.merchant_id = raw;
+      return { params: p };
+    }
+
+    const res = await getMerchants({ search: raw, limit: 10 });
+    if (res.data.length === 0) {
+      return { error: `Aucun marchand ne correspond à « ${raw} ».` };
+    }
+    if (res.data.length > 1) {
+      const names = res.data.slice(0, 4).map((m) => m.name ?? m.email).join(', ');
+      return { error: `${res.data.length} marchands correspondent à « ${raw} » : ${names}${res.data.length > 4 ? '…' : ''}. Précisez le nom ou collez l'UUID.` };
+    }
+    p.merchant_id = res.data[0].id;
+    return { params: p };
   }, [page, filterMerchant, filterDir, filterStatus, filterOp, filterMode, dateFrom, dateTo]);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
-      const res = await getMerchantTransactions(buildParams());
+      const resolved = await resolveParams();
+      if ('error' in resolved) {
+        setError(resolved.error);
+        setRows([]);
+        setPagination({ page: 1, limit: 20, total: 0, pages: 0 });
+        return;
+      }
+      const res = await getMerchantTransactions(resolved.params);
       setRows(res.data);
       setPagination(res.pagination);
     } catch (e) {
@@ -64,14 +95,19 @@ export default function MerchantTransactionsPage() {
     } finally {
       setLoading(false);
     }
-  }, [buildParams]);
+  }, [resolveParams]);
 
   useEffect(() => { void load(); }, [load]);
 
   const handleExport = async () => {
     setExporting(true);
     try {
-      const p = buildParams();
+      const resolved = await resolveParams();
+      if ('error' in resolved) {
+        setError(resolved.error);
+        return;
+      }
+      const p = resolved.params;
       const qs = new URLSearchParams(Object.entries(p).map(([k, v]) => [k, String(v)]));
       const res = await fetch(`/api/admin/wallet/merchants/transactions/export?${qs}`);
       if (!res.ok) throw new Error('Export failed');
@@ -128,7 +164,7 @@ export default function MerchantTransactionsPage() {
           type="text"
           value={filterMerchant}
           onChange={(e) => setFilterMerchant(e.target.value)}
-          placeholder="Merchant ID (UUID)"
+          placeholder="Marchand : nom, email ou UUID"
           className="flex-1 min-w-48 px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-deep/30 font-mono"
         />
         <select value={filterDir} onChange={(e) => setFilterDir(e.target.value)} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-white dark:bg-navy-panel text-sm text-gray-900 dark:text-text-primary">
