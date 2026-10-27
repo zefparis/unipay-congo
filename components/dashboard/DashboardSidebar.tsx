@@ -74,7 +74,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
     { href: '/dashboard/kyc', label: t('dashboard.nav.kyc'), icon: ShieldCheck, exact: false },
     { href: '/dashboard/sandbox', label: t('dashboard.nav.sandbox'), icon: FlaskConical, exact: false },
     { href: '/dashboard/support', label: 'Support', icon: Headset, exact: false },
-    { href: '/dashboard/profile', label: 'Profil', icon: UserCircle, exact: false },
+    { href: '/dashboard/profile', label: t('dashboard.nav.profile_security'), icon: UserCircle, exact: false },
   ];
 
   const isActive = (href: string, exact: boolean) =>

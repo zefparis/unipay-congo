@@ -6,11 +6,17 @@ export async function POST(request: NextRequest) {
   let body: unknown = {};
   try { body = await request.json(); } catch { /* empty body */ }
 
-  const upstream = await fetch(`${API_URL}/v1/merchant/password-reset/confirm`, {
+  let upstream: Response;
+  try {
+    upstream = await fetch(`${API_URL}/v1/merchant/password-reset/confirm`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
+  } catch {
+    return NextResponse.json({ error: 'SERVICE_UNAVAILABLE', statusCode: 503 }, { status: 503 });
+  }
+
 
   const data = await upstream.json();
   return NextResponse.json(data, { status: upstream.status });

@@ -19,11 +19,15 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setLoading(true);
 
-    await fetch('/api/merchant/password-reset/request', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    });
+    try {
+      await fetch('/api/merchant/password-reset/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+    } catch {
+      /* network failure — still show the neutral confirmation below */
+    }
 
     // Always show the same generic message regardless of response
     setLoading(false);

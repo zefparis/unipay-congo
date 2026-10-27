@@ -249,7 +249,8 @@
       "webhooks": "Webhooks",
       "kyc": "Vérification KYC",
       "sandbox": "Mode Test",
-      "partner": "Partenaire"
+      "partner": "Partenaire",
+      "profile_security": "Profil & sécurité"
     },
     "overview": {
       "title": "Tableau de bord",
