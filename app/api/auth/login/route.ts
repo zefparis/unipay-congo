@@ -10,13 +10,21 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const upstream = await fetch(`${API_URL}/v1/merchant/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+  let upstream: Response;
+  try {
+    upstream = await fetch(`${API_URL}/v1/merchant/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    return NextResponse.json(
+      { error: 'SERVICE_UNAVAILABLE', statusCode: 503 },
+      { status: 503 },
+    );
+  }
 
-  const data = await upstream.json();
+  const data = await upstream.json().catch(() => ({} as Record<string, unknown>));
 
   if (!upstream.ok) {
     return NextResponse.json({ error: data.error ?? 'Login failed' }, { status: upstream.status });

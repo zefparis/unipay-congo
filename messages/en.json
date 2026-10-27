@@ -217,7 +217,11 @@
       "api_key_warning": "Save your API key now",
       "api_key_warning_desc": "Your API key will never be shown in full again. Copy it and store it in a safe place.",
       "api_key_once": "⚠️ This key will never be shown again. If you lose it, you will need to generate a new one from the dashboard.",
-      "copy": "Copy"
+      "copy": "Copy",
+      "invited": "You were invited by a UniPay partner",
+      "email_sent": "A welcome email has been sent to you.",
+      "error_email_taken": "This email address is already in use. Sign in or reset your password.",
+      "error_network": "The service is temporarily unavailable. Please try again."
     },
     "forgot_password": "Forgot password?",
     "forgot_password_title": "Forgot password",
@@ -244,7 +248,8 @@
       "api_keys": "API Keys",
       "webhooks": "Webhooks",
       "kyc": "KYC Verification",
-      "sandbox": "Test Mode"
+      "sandbox": "Test Mode",
+      "partner": "Partner"
     },
     "overview": {
       "title": "Dashboard",

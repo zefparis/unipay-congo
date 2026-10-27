@@ -1,15 +1,48 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
-import { Eye, EyeOff, Loader2, CheckCircle2, Key, Copy, Check, AlertTriangle } from 'lucide-react';
+import { Eye, EyeOff, Loader2, CheckCircle2, Key, Copy, Check, AlertTriangle, Handshake } from 'lucide-react';
 
-export default function RegisterPage() {
+const REF_STORAGE_KEY = 'unipay_partner_ref';
+
+function readStoredRef(): string {
+  try {
+    return sessionStorage.getItem(REF_STORAGE_KEY) ?? '';
+  } catch {
+    return '';
+  }
+}
+
+function persistRef(code: string) {
+  try {
+    sessionStorage.setItem(REF_STORAGE_KEY, code);
+  } catch {
+    /* storage unavailable — ref is just not persisted */
+  }
+}
+
+function RegisterForm() {
   const t = useTranslations('auth.register');
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Partner referral code: from ?ref= in the URL, persisted so it
+  // survives navigation before the user completes the form.
+  const [refCode, setRefCode] = useState('');
+
+  useEffect(() => {
+    const urlRef = searchParams.get('ref')?.trim() ?? '';
+    if (urlRef) {
+      persistRef(urlRef);
+      setRefCode(urlRef);
+    } else {
+      setRefCode(readStoredRef());
+    }
+  }, [searchParams]);
 
   const [form, setForm] = useState({ name: '', email: '', password: '', phone: '', country: '' });
   const [showPassword, setShowPassword] = useState(false);
@@ -27,21 +60,39 @@ export default function RegisterPage() {
     setLoading(true);
     setError('');
 
-    const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: form.name, email: form.email, password: form.password }),
-    });
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          ref: refCode || undefined,
+        }),
+      });
 
-    if (res.ok) {
-      const data = await res.json().catch(() => ({}));
-      if (data.api_key) {
-        setApiKey(data.api_key);
+      const data = await res.json().catch(() => ({} as { error?: string; api_key?: string }));
+
+      if (res.ok) {
+        if (data.api_key) setApiKey(data.api_key);
+        setSuccess(true);
+        try {
+          sessionStorage.removeItem(REF_STORAGE_KEY);
+        } catch { /* noop */ }
+        return;
       }
-      setSuccess(true);
-    } else {
-      const data = await res.json().catch(() => ({}));
-      setError((data as { error?: string }).error ?? t('error'));
+
+      if (res.status === 409) {
+        setError(t('error_email_taken'));
+      } else if (res.status === 400 && data.error) {
+        setError(data.error);
+      } else {
+        setError(t('error_network'));
+      }
+    } catch {
+      setError(t('error_network'));
+    } finally {
       setLoading(false);
     }
   };
@@ -70,6 +121,7 @@ export default function RegisterPage() {
             <div className="text-center py-6 space-y-4">
               <CheckCircle2 className="mx-auto mb-4 text-green-deep" size={48} />
               <h2 className="text-xl font-serif font-bold text-gray-900 dark:text-text-primary mb-2">{t('success')}</h2>
+              <p className="text-sm text-gray-500 dark:text-text-secondary">{t('email_sent')}</p>
 
               {apiKey && (
                 <div className="bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-800/40 rounded-2xl p-5 space-y-3 text-left">
@@ -112,6 +164,13 @@ export default function RegisterPage() {
             <>
               <h1 className="text-2xl font-serif font-bold text-gray-900 dark:text-text-primary mb-1">{t('title')}</h1>
               <p className="text-sm text-gray-500 dark:text-text-secondary mb-8">{t('subtitle')}</p>
+
+              {refCode && (
+                <div className="flex items-center gap-2 mb-4 px-4 py-2.5 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/50 text-sm text-green-700 dark:text-green-400">
+                  <Handshake size={16} className="flex-shrink-0" />
+                  {t('invited')}
+                </div>
+              )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 {fields.map(({ key, type: fieldType, autoComplete }) => (
@@ -169,5 +228,14 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  // useSearchParams must sit inside a Suspense boundary for static prerender.
+  return (
+    <Suspense fallback={null}>
+      <RegisterForm />
+    </Suspense>
   );
 }

@@ -7,21 +7,33 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid JSON', statusCode: 400 }, { status: 400 });
   }
 
-  const { name, email, password, webhook_url } = body;
+  const { name, email, password, webhook_url, ref } = body;
 
-  const upstream = await fetch(`${API_URL}/v1/merchant/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, email, password, webhook_url }),
-  });
+  let upstream: Response;
+  try {
+    upstream = await fetch(`${API_URL}/v1/merchant/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password, webhook_url, ref: ref ?? undefined }),
+    });
+  } catch {
+    // Network/DNS failure reaching the API — always return JSON, never an HTML 500.
+    return NextResponse.json(
+      { error: 'SERVICE_UNAVAILABLE', statusCode: 503 },
+      { status: 503 },
+    );
+  }
 
-  const data = await upstream.json();
+  const data = await upstream.json().catch(() => ({} as Record<string, unknown>));
 
   if (!upstream.ok) {
-    return NextResponse.json({ error: data.error ?? 'Registration failed' }, { status: upstream.status });
+    return NextResponse.json(
+      { error: data.error ?? 'REGISTRATION_FAILED', statusCode: upstream.status },
+      { status: upstream.status },
+    );
   }
 
   return NextResponse.json({

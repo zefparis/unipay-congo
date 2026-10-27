@@ -1,8 +1,9 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X, Shield, Users, SlidersHorizontal, Landmark, Wallet, Receipt, Building2, TrendingUp, Headset, DollarSign, ArrowDownToLine, UserCircle } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftRight, Key, Webhook, ShieldCheck, FlaskConical, LogOut, X, Shield, Users, SlidersHorizontal, Landmark, Wallet, Receipt, Building2, TrendingUp, Headset, DollarSign, ArrowDownToLine, UserCircle, Handshake } from 'lucide-react';
 import clsx from 'clsx';
 import BrandLogo from '../BrandLogo';
 
@@ -16,6 +17,22 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
   const t = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
+  const [isPartner, setIsPartner] = useState(false);
+
+  // One call on mount, merchants only — decides whether the
+  // "Partenaire" nav item is shown. No partner endpoints are hit
+  // when the merchant is not a partner.
+  useEffect(() => {
+    if (isAdmin) return;
+    let cancelled = false;
+    fetch('/api/merchant/partner', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { is_partner?: boolean } | null) => {
+        if (!cancelled && d?.is_partner === true) setIsPartner(true);
+      })
+      .catch(() => { /* non-critical — tab stays hidden */ });
+    return () => { cancelled = true; };
+  }, [isAdmin]);
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -51,6 +68,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
     { href: '/dashboard', label: t('dashboard.nav.overview'), icon: LayoutDashboard, exact: true },
     { href: '/dashboard/transactions', label: t('dashboard.nav.transactions'), icon: ArrowLeftRight, exact: false },
     { href: '/dashboard/settlement', label: 'Règlement', icon: ArrowDownToLine, exact: false },
+    ...(isPartner ? [{ href: '/dashboard/partner', label: t('dashboard.nav.partner'), icon: Handshake, exact: false }] : []),
     { href: '/dashboard/api-keys', label: t('dashboard.nav.api_keys'), icon: Key, exact: false },
     { href: '/dashboard/webhooks', label: t('dashboard.nav.webhooks'), icon: Webhook, exact: false },
     { href: '/dashboard/kyc', label: t('dashboard.nav.kyc'), icon: ShieldCheck, exact: false },
@@ -73,6 +91,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {!isAdmin && navItems.map(({ href, label, icon: Icon, exact }) => (
           <Link
+            prefetch={false}
             key={href}
             href={href}
             onClick={onItemClick}
@@ -98,6 +117,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
             </div>
             {walletAdminItems.map(({ href, label, icon: Icon, exact }) => (
               <Link
+            prefetch={false}
                 key={href}
                 href={href}
                 onClick={onItemClick}
@@ -121,6 +141,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
             </div>
             {merchantAdminItems.map(({ href, label, icon: Icon, exact }) => (
               <Link
+            prefetch={false}
                 key={href}
                 href={href}
                 onClick={onItemClick}
@@ -144,6 +165,7 @@ export default function DashboardSidebar({ mobileOpen = false, onClose, isAdmin 
             </div>
             {infraAdminItems.map(({ href, label, icon: Icon, exact }) => (
               <Link
+            prefetch={false}
                 key={href}
                 href={href}
                 onClick={onItemClick}

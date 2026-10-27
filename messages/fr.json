@@ -217,7 +217,11 @@
       "api_key_warning": "Notez votre clé API maintenant",
       "api_key_warning_desc": "Votre clé API ne sera plus jamais affichée en entier. Copiez-la et stockez-la dans un endroit sûr.",
       "api_key_once": "⚠️ Cette clé ne sera plus jamais affichée. Si vous la perdez, vous devrez en générer une nouvelle depuis le dashboard.",
-      "copy": "Copier"
+      "copy": "Copier",
+      "invited": "Vous êtes invité par un partenaire UniPay",
+      "email_sent": "Un email de bienvenue vous a été envoyé.",
+      "error_email_taken": "Cette adresse email est déjà utilisée. Connectez-vous ou réinitialisez votre mot de passe.",
+      "error_network": "Le service est momentanément indisponible. Veuillez réessayer."
     },
     "forgot_password": "Mot de passe oublié ?",
     "forgot_password_title": "Mot de passe oublié",
@@ -244,7 +248,8 @@
       "api_keys": "Clés API",
       "webhooks": "Webhooks",
       "kyc": "Vérification KYC",
-      "sandbox": "Mode Test"
+      "sandbox": "Mode Test",
+      "partner": "Partenaire"
     },
     "overview": {
       "title": "Tableau de bord",
