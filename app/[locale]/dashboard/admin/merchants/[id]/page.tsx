@@ -1099,10 +1099,10 @@ export default function MerchantDetailPage() {
               </button>
             </div>
             {secretGenerated && (
-              <p className="mt-1.5 text-xs text-emerald-600">Un secret vient d'être généré — affichez-le et transmettez-le au marchand.</p>
+              <p className="mt-1.5 text-xs text-emerald-600">Un secret vient d&rsquo;être généré — affichez-le et transmettez-le au marchand.</p>
             )}
             {!merchant?.has_webhook_secret && !secretRevealed && (
-              <p className="mt-1.5 text-xs text-gray-400">Aucun secret : un nouveau sera généré à l'enregistrement de l'URL ou via « Régénérer ».</p>
+              <p className="mt-1.5 text-xs text-gray-400">Aucun secret : un nouveau sera généré à l&rsquo;enregistrement de l&rsquo;URL ou via « Régénérer ».</p>
             )}
           </div>
 
