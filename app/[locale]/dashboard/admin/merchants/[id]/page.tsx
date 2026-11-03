@@ -99,6 +99,11 @@ export default function MerchantDetailPage() {
   const [webhookTesting, setWebhookTesting] = useState(false);
   const [webhookResult, setWebhookResult] = useState<{ ok: boolean; http_status: number; elapsed_ms: number; body: string; content_type: string | null; signed: boolean } | null>(null);
   const [webhookError, setWebhookError] = useState('');
+  const [secretValue, setSecretValue] = useState('');
+  const [secretRevealed, setSecretRevealed] = useState(false);
+  const [secretLoading, setSecretLoading] = useState(false);
+  const [secretCopied, setSecretCopied] = useState(false);
+  const [secretGenerated, setSecretGenerated] = useState(false);
 
   // Company IDs (RCCM / ID Nat.) manual edit state
   const [companyIdsEditing, setCompanyIdsEditing] = useState(false);
@@ -259,13 +264,52 @@ export default function MerchantDetailPage() {
       if (!res.ok) throw new Error('Échec de la sauvegarde');
       const data = await res.json();
       setWebhookUrl(data.webhook_url ?? '');
-      setMerchant((prev) => prev ? { ...prev, webhook_url: data.webhook_url } : prev);
+      setMerchant((prev) => prev ? { ...prev, webhook_url: data.webhook_url, has_webhook_secret: prev?.has_webhook_secret || data.secret_generated } : prev);
       setWebhookEditing(false);
-      setToast({ msg: 'Webhook URL mis à jour', type: 'success' });
+      if (data.secret_generated) setSecretGenerated(true);
+      setToast({ msg: data.secret_generated ? 'Webhook URL mis à jour — secret généré' : 'Webhook URL mis à jour', type: 'success' });
     } catch (e) {
       setToast({ msg: (e as Error).message, type: 'error' });
     } finally {
       setWebhookSaving(false);
+    }
+  };
+
+  const handleRevealSecret = async () => {
+    if (!merchant || secretLoading) return;
+    if (!confirm('Afficher le secret de signature ? Cette action sera journalisée.')) return;
+    setSecretLoading(true);
+    try {
+      const res = await fetch(`/api/admin/wallet/merchants/${id}/webhook-secret`);
+      if (!res.ok) throw new Error(res.status === 404 ? 'Aucun secret configuré' : 'Échec de la lecture');
+      const data = await res.json() as { webhook_secret: string };
+      setSecretValue(data.webhook_secret);
+      setSecretRevealed(true);
+      setToast({ msg: 'Secret affiché (journalisé)', type: 'success' });
+    } catch (e) {
+      setToast({ msg: (e as Error).message, type: 'error' });
+    } finally {
+      setSecretLoading(false);
+    }
+  };
+
+  const handleRegenerateSecret = async () => {
+    if (!merchant || secretLoading) return;
+    if (!confirm('Régénérer le secret ? L\'ancien sera invalidé immédiatement — les signatures précédentes seront rejetées.')) return;
+    setSecretLoading(true);
+    try {
+      const res = await fetch(`/api/admin/wallet/merchants/${id}/webhook-secret/regenerate`, { method: 'POST' });
+      if (!res.ok) throw new Error('Échec de la régénération');
+      const data = await res.json() as { webhook_secret: string };
+      setSecretValue(data.webhook_secret);
+      setSecretRevealed(true);
+      setSecretGenerated(true);
+      setMerchant((prev) => prev ? { ...prev, has_webhook_secret: true } : prev);
+      setToast({ msg: 'Secret régénéré — l\'ancien est invalide', type: 'success' });
+    } catch (e) {
+      setToast({ msg: (e as Error).message, type: 'error' });
+    } finally {
+      setSecretLoading(false);
     }
   };
 
@@ -1005,6 +1049,60 @@ export default function MerchantDetailPage() {
                   Modifier
                 </button>
               </div>
+            )}
+          </div>
+
+          {/* Secret de signature (X-UniPay-Signature) */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-500 dark:text-text-secondary uppercase tracking-wider mb-1.5">Secret de signature</label>
+            <div className="flex flex-wrap items-center gap-2">
+              {secretRevealed && secretValue ? (
+                <div className="flex flex-1 items-center gap-2">
+                  <code className="flex-1 bg-gray-50 dark:bg-navy-panel/50 rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-text-primary break-all">
+                    {secretValue}
+                  </code>
+                  <button
+                    onClick={() => { navigator.clipboard.writeText(secretValue); setSecretCopied(true); setTimeout(() => setSecretCopied(false), 1500); }}
+                    className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
+                    title="Copier"
+                  >
+                    {secretCopied ? <Check size={14} className="text-green-600" /> : <Copy size={14} />}
+                  </button>
+                  <button
+                    onClick={() => { setSecretRevealed(false); setSecretValue(''); }}
+                    className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors"
+                    title="Masquer"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ) : (
+                <code className="flex-1 bg-gray-50 dark:bg-navy-panel/50 rounded-lg px-3 py-2 text-sm font-mono text-gray-400 dark:text-text-secondary">
+                  {merchant?.has_webhook_secret ? 'whsec_••••••••' : 'Aucun secret'}
+                </code>
+              )}
+              {!secretRevealed && merchant?.has_webhook_secret && (
+                <button
+                  onClick={handleRevealSecret}
+                  disabled={secretLoading}
+                  className="px-3 py-2 rounded-lg border border-gray-200 dark:border-text-secondary/20 text-sm text-gray-600 dark:text-text-secondary hover:bg-gray-100 dark:hover:bg-navy-panel transition-colors whitespace-nowrap"
+                >
+                  {secretLoading ? <Loader2 size={14} className="animate-spin" /> : 'Afficher le secret'}
+                </button>
+              )}
+              <button
+                onClick={handleRegenerateSecret}
+                disabled={secretLoading}
+                className="px-3 py-2 rounded-lg border border-red-200 dark:border-red-800/40 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors whitespace-nowrap"
+              >
+                {secretLoading ? <Loader2 size={14} className="animate-spin" /> : 'Régénérer le secret'}
+              </button>
+            </div>
+            {secretGenerated && (
+              <p className="mt-1.5 text-xs text-emerald-600">Un secret vient d'être généré — affichez-le et transmettez-le au marchand.</p>
+            )}
+            {!merchant?.has_webhook_secret && !secretRevealed && (
+              <p className="mt-1.5 text-xs text-gray-400">Aucun secret : un nouveau sera généré à l'enregistrement de l'URL ou via « Régénérer ».</p>
             )}
           </div>
 

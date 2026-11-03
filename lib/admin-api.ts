@@ -222,6 +222,7 @@ export interface Merchant {
   last_kyc_reminder_at?: string | null;
   settlement_phone?: string | null;
   webhook_url?: string | null;
+  has_webhook_secret?: boolean;
   webhook_secret?: string | null;
   inactivity_status?: 'active' | 'to_relaunch' | 'inactive';
   inactivity_status_changed_at?: string | null;
