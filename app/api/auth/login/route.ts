@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { signedClientIpHeaders } from '@/lib/bff-client-ip';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.unipaycongo.com';
 
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest) {
   try {
     upstream = await fetch(`${API_URL}/v1/merchant/login`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...signedClientIpHeaders(request), 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
   } catch {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { signedClientIpHeaders } from '@/lib/bff-client-ip';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.unipaycongo.com';
 
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest) {
   try {
     upstream = await fetch(`${API_URL}/v1/merchant/profile/change-password`, {
     method: 'POST',
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    headers: { ...signedClientIpHeaders(request), Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
   } catch {

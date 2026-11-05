@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { signedClientIpHeaders } from '@/lib/bff-client-ip';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.unipaycongo.com';
 
@@ -15,13 +16,13 @@ async function forwardJson(upstream: Response) {
   return NextResponse.json(data, { status: upstream.status });
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const token = cookies().get('auth_token')?.value;
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
     const upstream = await fetch(`${API_URL}/v1/merchant/kyc`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { ...signedClientIpHeaders(request), Authorization: `Bearer ${token}` },
     });
     return await forwardJson(upstream);
   } catch {
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
       const body = await request.formData();
       const upstream = await fetch(`${API_URL}/v1/merchant/kyc`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { ...signedClientIpHeaders(request), Authorization: `Bearer ${token}`, ...signedClientIpHeaders(request) },
         body,
       });
       return await forwardJson(upstream);
@@ -56,7 +57,7 @@ export async function POST(request: NextRequest) {
   try {
     const upstream = await fetch(`${API_URL}/v1/merchant/kyc`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      headers: { ...signedClientIpHeaders(request), Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', ...signedClientIpHeaders(request) },
       body: JSON.stringify(body),
     });
     return await forwardJson(upstream);

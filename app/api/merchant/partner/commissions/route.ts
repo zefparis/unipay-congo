@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { signedClientIpHeaders } from '@/lib/bff-client-ip';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.unipaycongo.com';
 
@@ -10,7 +11,7 @@ export async function GET(request: NextRequest) {
   let upstream: Response;
   try {
     upstream = await fetch(`${API_URL}/v1/merchant/partner/commissions${request.nextUrl.search}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { ...signedClientIpHeaders(request), Authorization: `Bearer ${token}` },
       cache: 'no-store',
     });
   } catch {
