@@ -151,7 +151,7 @@ function KycDocsModal({
                       <div key={key} className="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-gray-200 dark:border-text-secondary/20 bg-gray-50 dark:bg-navy-panel/50 text-sm text-gray-400">
                         <FileText size={14} className="flex-shrink-0" />
                         <span className="flex-1">{label}</span>
-                        <span className="text-xs italic">Non fourni</span>
+                        <span className="text-xs italic">Document indisponible</span>
                       </div>
                     );
                   }
