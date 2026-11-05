@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { signedClientIpHeaders } from '@/lib/bff-client-ip';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.unipaycongo.com';
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } },
 ) {
   const token = cookies().get('auth_token')?.value;
@@ -12,7 +13,7 @@ export async function GET(
 
   const upstream = await fetch(
     `${API_URL}/v1/merchant/support/conversations/${params.id}/messages`,
-    { headers: { Authorization: `Bearer ${token}` } },
+    { headers: { ...signedClientIpHeaders(request), Authorization: `Bearer ${token}` } },
   );
   const data = await upstream.json();
   return NextResponse.json(data, { status: upstream.status });

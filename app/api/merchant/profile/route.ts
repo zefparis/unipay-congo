@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { signedClientIpHeaders } from '@/lib/bff-client-ip';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.unipaycongo.com';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const token = cookies().get('auth_token')?.value;
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   let upstream: Response;
   try {
     upstream = await fetch(`${API_URL}/v1/merchant/profile`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { ...signedClientIpHeaders(request), Authorization: `Bearer ${token}` },
     cache: 'no-store',
   });
   } catch {
@@ -33,7 +34,7 @@ export async function PATCH(request: NextRequest) {
   try {
     upstream = await fetch(`${API_URL}/v1/merchant/profile`, {
     method: 'PATCH',
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    headers: { ...signedClientIpHeaders(request), Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
   } catch {

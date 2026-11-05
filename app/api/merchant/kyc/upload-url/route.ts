@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
   try {
     const upstream = await fetch(`${API_URL}/v1/merchant/kyc/upload-url`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', ...signedClientIpHeaders(request) },
+      headers: { ...signedClientIpHeaders(request), Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', ...signedClientIpHeaders(request) },
       body: JSON.stringify(body),
     });
     const data = await upstream.json().catch(() => ({})) as { error?: string };
