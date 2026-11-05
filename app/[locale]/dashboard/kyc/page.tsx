@@ -6,6 +6,7 @@ import {
   ShieldCheck, Clock, CheckCircle2, XCircle,
   Loader2, AlertTriangle, Send, Upload, FileText, Lock,
 } from 'lucide-react';
+import { compressForUpload } from '@/lib/kyc-image';
 
 /* ── types ──────────────────────────────────────────────────── */
 type KycStatus = 'pending' | 'submitted' | 'approved' | 'rejected';
@@ -37,18 +38,19 @@ function fmt(iso: string | null) {
 }
 
 /* ── file validation ────────────────────────────────────────── */
-const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
-const ACCEPTED = '.pdf,.jpg,.jpeg,.png';
-const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/png'];
+const MAX_FILE_BYTES = 10 * 1024 * 1024;   // limite API par fichier
+const MAX_TOTAL_BYTES = 4 * 1024 * 1024;   // limite Vercel (4,5 Mo) - marge multipart
+const ACCEPTED = '.pdf,.jpg,.jpeg,.png,.heic,.heif,image/jpeg,image/png,image/heic,image/heif,application/pdf';
+const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/heic', 'image/heif'];
 
 function validateFile(file: File): string | null {
   if (file.size > MAX_FILE_BYTES) {
     return 'Le fichier dépasse la taille maximale de 10 Mo.';
   }
-  const nameOk = /\.(pdf|jpe?g|png)$/i.test(file.name);
+  const nameOk = /\.(pdf|jpe?g|png|hei[cf])$/i.test(file.name);
   const typeOk = ACCEPTED_TYPES.includes(file.type) || nameOk;
   if (!typeOk) {
-    return 'Type de fichier non autorisé (PDF, JPG ou PNG uniquement).';
+    return 'Type de fichier non autorisé (PDF, JPG, PNG ou HEIC uniquement).';
   }
   return null;
 }
@@ -80,7 +82,7 @@ function Field({
 
 /* ── file input ─────────────────────────────────────────────── */
 function FileInput({
-  label, file, onPick, onClear, error, disabled, required,
+  label, file, onPick, onClear, error, disabled, required, busy,
 }: {
   label: string;
   file: File | null;
@@ -89,6 +91,7 @@ function FileInput({
   error?: string;
   disabled?: boolean;
   required?: boolean;
+  busy?: boolean;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   return (
@@ -118,7 +121,12 @@ function FileInput({
             e.target.value = '';
           }}
         />
-        {file && (
+        {busy && (
+          <span className="inline-flex items-center gap-1 text-xs text-gray-500 dark:text-text-secondary">
+            <Loader2 size={13} className="animate-spin" /> Compression…
+          </span>
+        )}
+        {file && !busy && (
           <>
             <span className="inline-flex items-center gap-1 text-sm text-gray-700 dark:text-text-primary truncate">
               <FileText size={14} className="text-green-deep flex-shrink-0" />
@@ -134,7 +142,7 @@ function FileInput({
         )}
       </div>
       {error && <p className="text-xs text-red-500 dark:text-red-400 mt-1">{error}</p>}
-      <p className="text-xs text-gray-400 mt-1">PDF, JPG ou PNG — 10 Mo max.</p>
+      <p className="text-xs text-gray-400 mt-1">PDF, JPG, PNG ou HEIC — 4 Mo au total maximum. Les photos sont compressées automatiquement.</p>
     </div>
   );
 }
@@ -152,6 +160,7 @@ export default function KycPage() {
   const [idnatFile, setIdnatFile] = useState<File | null>(null);
   const [repIdFile, setRepIdFile] = useState<File | null>(null);
   const [fileErrors, setFileErrors] = useState<Record<string, string>>({});
+  const [compressing, setCompressing] = useState<Record<string, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -169,6 +178,23 @@ export default function KycPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const pickFile = (
+    field: 'rccm' | 'idnat' | 'repId',
+    setter: (f: File | null) => void,
+  ) => async (f: File | null) => {
+    setFileErrors((p) => ({ ...p, [field]: '' }));
+    if (!f) { setter(null); return; }
+    const invalid = validateFile(f);
+    if (invalid) { setter(null); setFileErrors((p) => ({ ...p, [field]: invalid })); return; }
+    if (f.type === 'application/pdf' || /\.pdf$/i.test(f.name)) { setter(f); return; }
+    setCompressing((p) => ({ ...p, [field]: true }));
+    try {
+      setter(await compressForUpload(f));
+    } finally {
+      setCompressing((p) => ({ ...p, [field]: false }));
+    }
+  };
+
   const handleSubmit = async () => {
     // Validate text
     if (!companyName.trim()) { setSubmitError(t('company_name') + ' requis'); return; }
@@ -179,6 +205,13 @@ export default function KycPage() {
     if (repIdFile) { const e = validateFile(repIdFile); if (e) errs.repId = e; }
     setFileErrors(errs);
     if (Object.keys(errs).length > 0) { setSubmitError('Vérifiez les fichiers sélectionnés.'); return; }
+
+    // Vercel refuse tout corps > 4,5 Mo : les 3 fichiers voyagent dans la même requête
+    const total = [rccmFile, idnatFile, repIdFile].reduce((s, f) => s + (f?.size ?? 0), 0);
+    if (total > MAX_TOTAL_BYTES) {
+      setSubmitError('Fichiers trop lourds : 4 Mo au total maximum. Compressez le PDF ou envoyez une photo plus légère.');
+      return;
+    }
 
     setSubmitting(true);
     setSubmitError('');
@@ -192,11 +225,19 @@ export default function KycPage() {
     if (idnatFile) fd.append('idnat_file', idnatFile);
     if (repIdFile) fd.append('rep_id_file', repIdFile);
 
-    const res = await fetch('/api/merchant/kyc', {
-      method: 'POST',
-      body: fd,
-    });
-    const result = await res.json() as { ok?: boolean; kyc_status?: string; error?: string };
+    let res: Response;
+    let result: { ok?: boolean; kyc_status?: string; error?: string } = {};
+    try {
+      res = await fetch('/api/merchant/kyc', { method: 'POST', body: fd });
+      result = await res.json().catch(() => ({}));
+    } catch {
+      setSubmitError('Connexion interrompue, réessayez.');
+      setSubmitting(false);
+      return;
+    }
+    if (res.status === 413) {
+      result.error = 'Fichiers trop lourds (4 Mo au total maximum). Réduisez les fichiers et réessayez.';
+    }
 
     if (res.ok) {
       setData((prev) => prev ? {
@@ -215,7 +256,7 @@ export default function KycPage() {
       setRepIdFile(null);
       setSubmitSuccess(true);
     } else {
-      setSubmitError(result.error ?? 'Error');
+      setSubmitError(result.error ?? 'Envoi impossible, réessayez.');
     }
     setSubmitting(false);
   };
@@ -347,25 +388,28 @@ export default function KycPage() {
               <FileInput
                 label={t('rccm_file')}
                 file={rccmFile}
-                onPick={(f) => { setRccmFile(f); setFileErrors((p) => ({ ...p, rccm: '' })); }}
+                onPick={pickFile('rccm', setRccmFile)}
                 onClear={() => setRccmFile(null)}
                 error={fileErrors.rccm}
+                busy={compressing.rccm}
                 required
               />
               <FileInput
                 label={t('idnat_file')}
                 file={idnatFile}
-                onPick={(f) => { setIdnatFile(f); setFileErrors((p) => ({ ...p, idnat: '' })); }}
+                onPick={pickFile('idnat', setIdnatFile)}
                 onClear={() => setIdnatFile(null)}
                 error={fileErrors.idnat}
+                busy={compressing.idnat}
                 required
               />
               <FileInput
                 label={t('rep_id_file')}
                 file={repIdFile}
-                onPick={(f) => { setRepIdFile(f); setFileErrors((p) => ({ ...p, repId: '' })); }}
+                onPick={pickFile('repId', setRepIdFile)}
                 onClear={() => setRepIdFile(null)}
                 error={fileErrors.repId}
+                busy={compressing.repId}
               />
             </div>
           )}
@@ -384,7 +428,7 @@ export default function KycPage() {
           {!formLocked && (
             <button
               onClick={handleSubmit}
-              disabled={submitting || !companyName.trim()}
+              disabled={submitting || !companyName.trim() || compressing.rccm || compressing.idnat || compressing.repId}
               className="flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-green-deep hover:bg-green-deep/85 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-all shadow-sm shadow-green-deep/20"
             >
               {submitting ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
