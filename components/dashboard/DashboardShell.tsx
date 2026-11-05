@@ -5,6 +5,7 @@ import DashboardSidebar from './DashboardSidebar';
 import DashboardTopBar from './DashboardTopBar';
 import SandboxBanner from './SandboxBanner';
 import KycAccessGuard from './KycAccessGuard';
+import KycNoticeBanner from './KycNoticeBanner';
 
 export default function DashboardShell({ children, isAdmin = false }: { children: React.ReactNode; isAdmin?: boolean }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -15,6 +16,7 @@ export default function DashboardShell({ children, isAdmin = false }: { children
       <DashboardSidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} isAdmin={isAdmin} />
       <main className="md:ml-64 min-h-screen">
         <SandboxBanner isAdmin={isAdmin} />
+        <KycNoticeBanner isAdmin={isAdmin} />
         <div className="px-4 sm:px-6 lg:px-8 pt-20 pb-8 md:pt-8">
           <KycAccessGuard isAdmin={isAdmin}>{children}</KycAccessGuard>
         </div>
