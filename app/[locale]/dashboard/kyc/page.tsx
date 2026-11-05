@@ -38,8 +38,7 @@ function fmt(iso: string | null) {
 }
 
 /* ── file validation ────────────────────────────────────────── */
-const MAX_FILE_BYTES = 10 * 1024 * 1024;   // limite API par fichier
-const MAX_TOTAL_BYTES = 4 * 1024 * 1024;   // limite Vercel (4,5 Mo) - marge multipart
+const MAX_FILE_BYTES = 10 * 1024 * 1024;   // limite par fichier (bucket Storage)
 const ACCEPTED = '.pdf,.jpg,.jpeg,.png,.heic,.heif,image/jpeg,image/png,image/heic,image/heif,application/pdf';
 const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/heic', 'image/heif'];
 
@@ -142,7 +141,7 @@ function FileInput({
         )}
       </div>
       {error && <p className="text-xs text-red-500 dark:text-red-400 mt-1">{error}</p>}
-      <p className="text-xs text-gray-400 mt-1">PDF, JPG, PNG ou HEIC — 4 Mo au total maximum. Les photos sont compressées automatiquement.</p>
+      <p className="text-xs text-gray-400 mt-1">PDF, JPG, PNG ou HEIC — 10 Mo max par fichier. Les photos sont compressées automatiquement.</p>
     </div>
   );
 }
@@ -161,6 +160,7 @@ export default function KycPage() {
   const [repIdFile, setRepIdFile] = useState<File | null>(null);
   const [fileErrors, setFileErrors] = useState<Record<string, string>>({});
   const [compressing, setCompressing] = useState<Record<string, boolean>>({});
+  const [docPaths, setDocPaths] = useState<Record<'rccm' | 'idnat' | 'repId', string | null>>({ rccm: null, idnat: null, repId: null });
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -178,18 +178,46 @@ export default function KycPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Upload direct navigateur → Supabase Storage via URL signée.
+  // Le fichier ne passe ni par Vercel ni par l'API : la limite
+  // devient 10 Mo par fichier (imposée par le bucket).
+  const uploadDoc = async (field: 'rccm' | 'idnat' | 'repId', file: File): Promise<string> => {
+    const urlRes = await fetch('/api/merchant/kyc/upload-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ field, filename: file.name, size: file.size, mime: file.type }),
+    });
+    const urlData = await urlRes.json().catch(() => ({})) as { path?: string; token?: string; upload_url?: string; error?: string };
+    if (!urlRes.ok || !urlData.upload_url || !urlData.path) {
+      throw new Error(urlData.error ?? 'Impossible de préparer l’envoi du fichier.');
+    }
+    const put = await fetch(urlData.upload_url, {
+      method: 'PUT',
+      headers: { 'Content-Type': file.type || 'application/octet-stream' },
+      body: file,
+    });
+    if (!put.ok) throw new Error('Échec de l’envoi du fichier, réessayez.');
+    return urlData.path;
+  };
+
   const pickFile = (
     field: 'rccm' | 'idnat' | 'repId',
     setter: (f: File | null) => void,
   ) => async (f: File | null) => {
     setFileErrors((p) => ({ ...p, [field]: '' }));
+    setDocPaths((p) => ({ ...p, [field]: null }));
     if (!f) { setter(null); return; }
     const invalid = validateFile(f);
     if (invalid) { setter(null); setFileErrors((p) => ({ ...p, [field]: invalid })); return; }
-    if (f.type === 'application/pdf' || /\.pdf$/i.test(f.name)) { setter(f); return; }
     setCompressing((p) => ({ ...p, [field]: true }));
     try {
-      setter(await compressForUpload(f));
+      const final = (f.type === 'application/pdf' || /\.pdf$/i.test(f.name)) ? f : await compressForUpload(f);
+      setter(final);
+      const path = await uploadDoc(field, final);
+      setDocPaths((p) => ({ ...p, [field]: path }));
+    } catch (err) {
+      setter(null);
+      setFileErrors((p) => ({ ...p, [field]: err instanceof Error ? err.message : 'Envoi impossible, réessayez.' }));
     } finally {
       setCompressing((p) => ({ ...p, [field]: false }));
     }
@@ -206,10 +234,13 @@ export default function KycPage() {
     setFileErrors(errs);
     if (Object.keys(errs).length > 0) { setSubmitError('Vérifiez les fichiers sélectionnés.'); return; }
 
-    // Vercel refuse tout corps > 4,5 Mo : les 3 fichiers voyagent dans la même requête
-    const total = [rccmFile, idnatFile, repIdFile].reduce((s, f) => s + (f?.size ?? 0), 0);
-    if (total > MAX_TOTAL_BYTES) {
-      setSubmitError('Fichiers trop lourds : 4 Mo au total maximum. Compressez le PDF ou envoyez une photo plus légère.');
+    // Chaque pièce est obligatoire : nouvel upload OU pièce déjà enregistrée
+    const missing: string[] = [];
+    if (!docPaths.rccm  && !data?.rccm_file_url)  missing.push('RCCM');
+    if (!docPaths.idnat && !data?.idnat_file_url) missing.push('ID NAT');
+    if (!docPaths.repId && !data?.rep_id_file_url) missing.push('Pièce d’identité du représentant');
+    if (missing.length > 0) {
+      setSubmitError(`Documents manquants : ${missing.join(', ')}.`);
       return;
     }
 
@@ -217,18 +248,21 @@ export default function KycPage() {
     setSubmitError('');
     setSubmitSuccess(false);
 
-    const fd = new FormData();
-    fd.append('company_name', companyName.trim());
-    if (companyRccm.trim())  fd.append('company_rccm', companyRccm.trim());
-    if (companyIdnat.trim()) fd.append('company_idnat', companyIdnat.trim());
-    if (rccmFile)  fd.append('rccm_file', rccmFile);
-    if (idnatFile) fd.append('idnat_file', idnatFile);
-    if (repIdFile) fd.append('rep_id_file', repIdFile);
-
     let res: Response;
     let result: { ok?: boolean; kyc_status?: string; error?: string } = {};
     try {
-      res = await fetch('/api/merchant/kyc', { method: 'POST', body: fd });
+      res = await fetch('/api/merchant/kyc', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company_name: companyName.trim(),
+          company_rccm: companyRccm.trim() || undefined,
+          company_idnat: companyIdnat.trim() || undefined,
+          rccm_path: docPaths.rccm ?? undefined,
+          idnat_path: docPaths.idnat ?? undefined,
+          rep_id_path: docPaths.repId ?? undefined,
+        }),
+      });
       result = await res.json().catch(() => ({}));
     } catch {
       setSubmitError('Connexion interrompue, réessayez.');
@@ -236,7 +270,7 @@ export default function KycPage() {
       return;
     }
     if (res.status === 413) {
-      result.error = 'Fichiers trop lourds (4 Mo au total maximum). Réduisez les fichiers et réessayez.';
+      result.error = 'Fichier trop volumineux (10 Mo maximum par fichier).';
     }
 
     if (res.ok) {

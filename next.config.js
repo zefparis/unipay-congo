@@ -64,7 +64,10 @@ const securityHeaders = [
       "font-src 'self' data:",
       // connect-src: same-origin API routes + UniPay backend
       // (lib/api.ts makes direct browser→backend fetch calls via NEXT_PUBLIC_API_URL)
-      "connect-src 'self' https://api.unipaycongo.com",
+      // connect-src: same-origin API routes + UniPay backend
+      // (lib/api.ts makes direct browser→backend fetch calls via NEXT_PUBLIC_API_URL)
+      // + Supabase Storage for direct KYC document uploads (signed URLs)
+      "connect-src 'self' https://api.unipaycongo.com https://fwoecsflmpoesvunnmqi.supabase.co",
       // Service worker + workbox blob workers
       "worker-src 'self' blob:",
       "object-src 'none'",
