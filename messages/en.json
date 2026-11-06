@@ -362,7 +362,9 @@
       "submitted_at": "Submitted on",
       "reviewed_at": "Reviewed on",
       "what_is_title": "What is KYC?",
-      "what_is_body": "KYC (Know Your Customer) verification is required to activate payments. It allows us to verify your company identity in compliance with DRC regulations."
+      "what_is_body": "KYC (Know Your Customer) verification is required to activate payments. It allows us to verify your company identity in compliance with DRC regulations.",
+      "suspended_banner": "Account suspended: incomplete verification file",
+      "suspended_banner_hint": "Send the three documents below to reactivate your account. Your data and history are preserved."
     },
     "webhooks": {
       "title": "Webhooks",

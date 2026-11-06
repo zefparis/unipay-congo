@@ -13,6 +13,9 @@ type KycStatus = 'pending' | 'submitted' | 'approved' | 'rejected';
 
 interface KycData {
   kyc_status: KycStatus;
+  access_status: string | null;
+  access_status_reason: string | null;
+  kyc_deadline: string | null;
   kyc_submitted_at: string | null;
   kyc_reviewed_at: string | null;
   kyc_notes: string | null;
@@ -174,7 +177,7 @@ export default function KycPage() {
         setCompanyRccm(d.company_rccm ?? '');
         setCompanyIdnat(d.company_idnat ?? '');
       })
-      .catch(() => setData({ kyc_status: 'pending', kyc_submitted_at: null, kyc_reviewed_at: null, kyc_notes: null, company_name: null, company_rccm: null, company_idnat: null, rccm_file_url: null, idnat_file_url: null, rep_id_file_url: null }))
+      .catch(() => setData({ kyc_status: 'pending', access_status: null, access_status_reason: null, kyc_deadline: null, kyc_submitted_at: null, kyc_reviewed_at: null, kyc_notes: null, company_name: null, company_rccm: null, company_idnat: null, rccm_file_url: null, idnat_file_url: null, rep_id_file_url: null }))
       .finally(() => setLoading(false));
   }, []);
 
@@ -322,6 +325,21 @@ export default function KycPage() {
         </div>
         <p className="text-sm text-gray-500 dark:text-text-secondary ml-12">{t('subtitle')}</p>
       </div>
+
+      {/* ── Bandeau suspension (access_status=suspended_kyc) ──── */}
+      {data?.access_status === 'suspended_kyc' && (
+        <div className="rounded-2xl border border-red-300 dark:border-red-800/50 bg-red-50 dark:bg-red-900/20 p-4 flex items-start gap-3">
+          <AlertTriangle size={20} className="text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-red-800 dark:text-red-300">
+              {t('suspended_banner')}
+            </p>
+            <p className="text-sm text-red-700 dark:text-red-300/80 mt-0.5">
+              {t('suspended_banner_hint')}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ── Status card ───────────────────────────────────────── */}
       <div className={`rounded-2xl border p-5 ${

@@ -362,7 +362,9 @@
       "submitted_at": "Soumis le",
       "reviewed_at": "Examiné le",
       "what_is_title": "Qu’est-ce que le KYC ?",
-      "what_is_body": "La vérification KYC (Know Your Customer) est obligatoire pour activer les paiements. Elle nous permet de vérifier l’identité de votre entreprise conformément à la réglementation en RDC."
+      "what_is_body": "La vérification KYC (Know Your Customer) est obligatoire pour activer les paiements. Elle nous permet de vérifier l’identité de votre entreprise conformément à la réglementation en RDC.",
+      "suspended_banner": "Compte suspendu : dossier de vérification incomplet",
+      "suspended_banner_hint": "Envoyez les trois documents ci-dessous pour réactiver votre compte. Vos données et votre historique sont conservés."
     },
     "webhooks": {
       "title": "Webhooks",
